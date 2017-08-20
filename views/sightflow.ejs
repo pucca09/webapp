@@ -1,0 +1,424 @@
+<% include header.ejs %>
+            <div class="row">
+                <div class="col-lg-12" style="height:25px">
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            选择景点: <select name="sightid" id="sightid">
+                                <option value=0>南山文化旅游区</option>
+                                <option value=2>呀诺达雨林文化旅游区</option>
+                                <option value=3>分界洲岛旅游区</option>
+                                <option value=4>中国雷琼海口火山群世界地质公园</option>
+                                <option value=5>甘什岭槟榔谷原生态黎苗文化旅游区</option>
+                                <option value=6>假日海滩旅游区</option>
+                                <option value=7>天涯海角风景区</option>
+                                <option value=8>海南热带野生动植物园</option>
+                                <option value=9>三亚蜈支洲岛度假中心</option>
+                                <option value=10>兴隆热带植物园</option>
+                                <option value=11>博鳌亚洲论坛永久会址</option>
+                                <option value=12>亚龙湾国家旅游度假区</option>
+                                <option value=13>三亚大东海旅游景区</option>
+                                <option value=14>南湾猴岛生态景区</option>
+                                <option value=15>海口观澜湖旅游度假区</option>
+                                <option value=16>海南文笔峰盘古文化旅游区</option>
+                                <option value=17>三亚西岛海洋文化旅游区</option>
+                                <option value=18>万宁东山岭文化旅游区</option>
+                                <option value=19>三亚免税店</option>
+                                <option value=20>三亚解放路步行街</option>
+                                <option value=21>万宁首创奥特莱斯</option>
+                                <option value=22>三亚百花谷商业街</option>
+                                <option value=23>三亚1号港湾城</option>
+                            </select>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body" id="sightbarcharts" style="height: 410px">
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            选择景点: <select name="sightid1" id="sightid1">
+                                <option value=0>南山文化旅游区</option>
+                                <option value=2>呀诺达雨林文化旅游区</option>
+                                <option value=3>分界洲岛旅游区</option>
+                                <option value=4>中国雷琼海口火山群世界地质公园</option>
+                                <option value=5>甘什岭槟榔谷原生态黎苗文化旅游区</option>
+                                <option value=6>假日海滩旅游区</option>
+                                <option value=7>天涯海角风景区</option>
+                                <option value=8>海南热带野生动植物园</option>
+                                <option value=9>三亚蜈支洲岛度假中心</option>
+                                <option value=10>兴隆热带植物园</option>
+                                <option value=11>博鳌亚洲论坛永久会址</option>
+                                <option value=12>亚龙湾国家旅游度假区</option>
+                                <option value=13>三亚大东海旅游景区</option>
+                                <option value=14>南湾猴岛生态景区</option>
+                                <option value=15>海口观澜湖旅游度假区</option>
+                                <option value=16>海南文笔峰盘古文化旅游区</option>
+                                <option value=17>三亚西岛海洋文化旅游区</option>
+                                <option value=18>万宁东山岭文化旅游区</option>
+                                <option value=19>三亚免税店</option>
+                                <option value=20>三亚解放路步行街</option>
+                                <option value=21>万宁首创奥特莱斯</option>
+                                <option value=22>三亚百花谷商业街</option>
+                                <option value=23>三亚1号港湾城</option>
+                            </select>
+                            统计日期: <input type="date" name="selectdate1" id="selectdate1" value="2015-08-01"/>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body" id="sightbarcharts1" style="height: 400px">
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+
+    <script type="text/javascript">
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+
+        // 使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+                    'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart = ec.init(document.getElementById('sightbarcharts'),'macarons');
+                    var myChart1 = ec.init(document.getElementById('sightbarcharts1'),'macarons');
+
+                    option = {
+                        timeline:{
+                            data:(function () {
+                                var d = []
+                                <% for(j=0; j< sightflow.length; j++) {%>
+                                date='<%=sightflow[j].date%>';
+                                d.push(date.slice(0,4)+'-'+date.slice(4,6)+'-01');
+                                <%}%>
+                                return d;
+                            })(),
+                            label : {
+                                formatter : function(s) {
+                                    return s.slice(0, 7);
+                                }
+                            },
+                            y:340,
+                            autoPlay : true,
+                            playInterval : 1000
+                        },
+                        options:(function () {
+                            var d = []
+                            <% for(i=0; i< sightflow.length; i++) {%>
+                            d.push({
+                                title : {
+                                    text: '某景区一个月每天客流量分布图',
+                                    x:'center',
+                                    textStyle:{
+                                        color:"black",
+                                        fontWeight:'bold'
+                                    }
+                                },
+                                tooltip : {
+                                    trigger: 'axis'
+                                },
+                                legend: {
+                                    data:['游客数量'],
+                                    x:'left'
+                                },
+                                toolbox: {
+                                    show : true,
+                                    orient:'vertical',
+                                    feature : {
+                                        magicType : {show: true, type: ['line', 'bar']},
+                                        dataView : {show: true},
+                                        restore : {show: true},
+                                        saveAsImage : {show: true}
+                                    }
+                                },
+                                calculable : true,
+                                xAxis : [
+                                    {
+                                        type : 'category',
+                                        boundaryGap : false,
+                                        axisLabel:{
+                                            rotate:45
+                                        },
+                                        data :(function () {
+                                            var d = []
+                                            <% for(j=0; j< sightflow[i].flow[0].visitorflowbyday.length; j++) {%>
+                                            d.push(<%=j+1%>+'号');
+                                            <%}%>
+                                            return d;
+                                        })()
+                                    }
+                                ],
+                                yAxis : [
+                                    {
+                                        type : 'value'
+                                    }
+                                ],
+                                grid:{y2:80},
+                                series : [
+                                    {
+                                        name:'游客数量',
+                                        type:'line',
+                                        smooth:true,
+                                        itemStyle: {
+                                            normal: {
+                                                color: 	'#FFA54F',
+                                                areaStyle: {type: 'default'}
+                                            }
+                                        },
+                                        data:(function () {
+                                            var d = []
+                                            <% for(j=0; j< sightflow[i].flow[0].visitorflowbyday.length; j++) {%>
+                                            d.push(parseInt('<%=sightflow[i].flow[0].visitorflowbyday[j]%>'));
+                                            <%}%>
+                                            return d;
+                                        })(),
+                                        markPoint : {
+                                            itemStyle: {
+                                                normal: {
+                                                    color:     '#EE8262'
+                                                }
+                                            },
+                                            data : [
+                                                {type : 'max', name: '最大值'},
+                                                {type : 'min', name: '最小值'}
+                                            ]
+                                        }
+                                    }
+                                ]
+                            });
+                            <%}%>
+                            return d;
+                        })()
+                    };
+
+                    option1 = {
+                        title : {
+                            text: '某景区指定日期内每小时客流量分布图',
+                            x:'center',
+                            textStyle:{
+                                color:"black",
+                                fontWeight:'bold'
+                            }
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:['游客数量'],
+                            x:'left'
+                        },
+                        toolbox: {
+                            show : true,
+                            orient:'vertical',
+                            feature : {
+                                magicType : {show: true, type: ['line', 'bar']},
+                                dataView : {show: true},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis : [
+                            {
+                                type : 'category',
+                                boundaryGap : false,
+                                data :['7点','8点','9点','10点','11点','12点','13点','14点','15点','16点','17点','18点','19点','20点']
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value'
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'游客数量',
+                                type:'line',
+                                smooth:true,
+                                itemStyle: {
+                                    normal: {
+                                        color: 	'#66CDAA',
+                                        areaStyle: {type: 'default'}
+                                    }
+                                },
+                                data:(function () {
+                                    var d = []
+                                    <% for(j=0; j< dayflow[0].visitorflowbyhour.length; j++) {%>
+                                    d.push(parseInt('<%=dayflow[0].visitorflowbyhour[j]%>'));
+                                    <%}%>
+                                    return d;
+                                })(),
+                                markPoint : {
+                                    data : [
+                                        {type : 'max', name: '最大值'},
+                                        {type : 'min', name: '最小值'}
+                                    ]
+                                }
+                            }
+                        ]
+                    };
+
+                    // 为echarts对象加载数据
+                    myChart.setOption(option);
+
+                    var sightselect=document.getElementById("sightid");
+                    sightselect.addEventListener('change',function(){
+                        option.options=[];       //清空
+                        var k = parseInt(sightselect.value);
+                        <% for(i=0; i< sightflow.length; i++) {%>
+                        option.options.push({
+                            title : {
+                                text: '某景区一个月每天客流量分布图',
+                                x:'center',
+                                textStyle:{
+                                    color:"black",
+                                    fontWeight:'bold'
+                                }
+                            },
+                            tooltip : {
+                                trigger: 'axis'
+                            },
+                            legend: {
+                                data:['游客数量'],
+                                x:'left'
+                            },
+                            toolbox: {
+                                show : true,
+                                orient:'vertical',
+                                feature : {
+                                    magicType : {show: true, type: ['line', 'bar']},
+                                    dataView : {show: true},
+                                    restore : {show: true},
+                                    saveAsImage : {show: true}
+                                }
+                            },
+                            calculable : true,
+                            xAxis : [
+                                {
+                                    type : 'category',
+                                    boundaryGap : false,
+                                    axisLabel:{
+                                        rotate:45
+                                    },
+                                    data :(function () {
+                                        var d = []
+                                        <% for(j=0; j< sightflow[i].flow[0].visitorflowbyday.length; j++) {%>
+                                        d.push(<%=j+1%>+'号');
+                                        <%}%>
+                                        return d;
+                                    })()
+                                }
+                            ],
+                            yAxis : [
+                                {
+                                    type : 'value'
+                                }
+                            ],
+                            series : [
+                                {
+                                    name:'游客数量',
+                                    type:'line',
+                                    smooth:true,
+                                    itemStyle: {
+                                        normal: {
+                                            color: 	'#FFA54F',
+                                            areaStyle: {type: 'default'}
+                                        }
+                                    },
+                                    data:(function () {
+                                        var d = []
+                                        <% for(j=0; j< sightflow[i].flow.length; j++) {%>
+                                        if('<%=sightflow[i].flow[j].sightid%>'==k){
+                                            <% for(l=0; l<sightflow[i].flow[j].visitorflowbyday.length; l++) {%>
+                                            d.push(parseInt('<%=sightflow[i].flow[j].visitorflowbyday[l]%>'));
+                                            <%}%>
+                                        }
+                                        <%}%>
+                                        return d;
+                                    })(),
+                                    markPoint : {
+                                        itemStyle: {
+                                            normal: {
+                                                color:     '#EE8262'
+                                            }
+                                        },
+                                        data : [
+                                            {type : 'max', name: '最大值'},
+                                            {type : 'min', name: '最小值'}
+                                        ]
+                                    }
+                                }
+                            ]
+                        });
+                        <%}%>
+                        myChart.clear();
+                        myChart.setOption(option);
+                    });
+
+                    myChart1.setOption(option1);
+
+                    var sightselect1=document.getElementById("sightid1");
+                    var dateinput=document.getElementById("selectdate1");
+                    sightselect1.addEventListener('change',function(){
+                        option1.series[0].data=[];       //清空data
+                        var k1 = parseInt(sightselect1.value);
+                        var k2 = dateinput.value.replace("-","").replace("-","");
+
+                        <% for(i=0; i< dayflow.length; i++) {%>
+                        if(('<%=dayflow[i].sightid%>'==k1)&&('<%=dayflow[i].date%>'==k2)){
+                            <%for(l=0;l<14;l++) {%>
+                                option1.series[0].data.push(parseInt('<%=dayflow[i].visitorflowbyhour[l]%>'));
+                            <%}%>
+                        }
+                        <%}%>
+
+                        myChart1.clear();
+                        myChart1.setOption(option1);
+                    });
+
+                    dateinput.addEventListener('change',function(){
+                        option1.series[0].data=[];       //清空data
+                        var k1 = parseInt(sightselect1.value);
+                        var k2 = dateinput.value.replace("-","").replace("-","");
+
+                        <% for(i=0; i< dayflow.length; i++) {%>
+                        if(('<%=dayflow[i].sightid%>'==k1)&&('<%=dayflow[i].date%>'==k2)){
+                            <%for(l=0;l<14;l++) {%>
+                            option1.series[0].data.push(parseInt('<%=dayflow[i].visitorflowbyhour[l]%>'));
+                            <%}%>
+                        }
+                        <%}%>
+
+                        myChart1.clear();
+                        myChart1.setOption(option1);
+                    });
+
+
+                }
+        );
+    </script>
+<% include footer.ejs %>

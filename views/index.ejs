@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>电信用户洞察</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="media/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="media/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="media/dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="media/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" href="img/favicon.ico" />
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mmh6uKBZs2bvMVvWAYrnkt7G"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+    <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
+    <style type="text/css">
+        #prostaygraph{
+            border-width: 1px 1px 0px 1px;
+            border-style: dashed;
+            border-color: #CACACA;
+            background:#000; 
+            color:#000
+        }
+        #piegraph{
+            border-width: 1px 1px 0px 1px;
+            border-style: dashed;
+            border-color: #CACACA;
+            background:#000; 
+            color:#000
+        }
+        #Map2{
+            border-width: 1px 0px 0px 0px;
+            border-style: dashed;
+            border-color: #CACACA;
+            background:#000; 
+            color:#000
+        }
+        #transgraph{
+            border-width: 1px 1px 0px 1px;
+            border-style: dashed;
+            border-color: #CACACA;
+            background:#000; 
+            color:#000          
+        }
+        #linegraph{
+            border-width: 1px 0px 1px 1px;
+            border-style: dashed;
+            border-color: #CACACA;
+            background:#000; 
+            color:#000  
+        }
+        #radargraph{
+            border-width: 1px 1px 1px 1px;
+            border-style: dashed;
+            border-color: #CACACA;
+            background:#000; 
+            color:#000              
+        }
+        #bargraph{
+            border-width: 1px 1px 0px 1px;
+            border-style: dashed;
+            border-color: #CACACA;
+            background:#000; 
+            color:#000              
+        }
+        #migrationgraph{
+            border-width: 1px 0px 1px 1px;
+            border-style: dashed;
+            border-color: #CACACA;
+            background:#000; 
+            color:#000     
+        }
+        .row,.col-md-3,.col-md-6,.col-md-12{
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 0px;
+            padding-right: 0px;
+        }  
+        .container{
+            padding-left: 0px;
+            padding-right: 0px
+        }
+    </style>
+</head>
+
+<body >
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0;">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index"><img src="img/logo.png"  height="28px" /></a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <!--bootstrapmin nav>li>a:hover 和.open>a:hover的颜色可以变-->
+            <ul class="nav navbar-top-links navbar-right" style="margin-right: 30px">
+                <li class="dropdown" >
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw" ></i> <%= req.session.user.username %> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="/settings"><i class="fa fa-gear fa-fw"></i> 设置</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="/login"><i class="fa fa-sign-out fa-fw"></i> 注销</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+
+            </ul>
+            <!-- /.navbar-top-links -->
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                        <li class="active">
+                            <a href="#"><i class="fa fa-dashboard "></i>区域旅游行业分析指标<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/index" class="active"><i class="fa fa-circle "></i> 景区概览</a>
+                                </li>
+                                <li>
+                                    <a href="/sightdistribute"><i class="fa fa-circle-o "></i> 景区分布</a>
+                                </li>                                
+                                <li>
+                                    <a href="#"><i class="fa fa-circle-o "></i> 归属统计<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li >
+                                            <a href="/guishubyday">&nbsp;○&nbsp;按天统计</a>
+                                        </li>
+                                        <li >
+                                            <a href="/guishubymonth">&nbsp;○&nbsp;按月统计</a>
+                                        </li>
+                                        <li >
+                                            <a href="/guishubysight">&nbsp;○&nbsp;景区统计</a>
+                                        </li>
+                                        <li >
+                                            <a href="/traffic">&nbsp;○&nbsp;交通方式</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="#"><i class="fa fa-circle-o "></i> 客流统计<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li >
+                                            <a href="/sightflow">&nbsp;○&nbsp;景区流量</a>
+                                        </li>
+                                        <li >
+                                            <a href="/prostay">&nbsp;○&nbsp;省内驻留</a>
+                                        </li>
+                                        <li >
+                                            <a href="/migration">&nbsp;○&nbsp;游客迁徙</a>
+                                        </li>
+                                        <li >
+                                            <a href="/sightstay">&nbsp;○&nbsp;景区驻留</a>
+                                        </li>
+                                        <li >
+                                            <a href="/live">&nbsp;○&nbsp;住宿分布</a>
+                                        </li>
+                                        <li >
+                                            <a href="/inandout">&nbsp;○&nbsp;漫入漫出</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="/zeppelin"><i class="fa fa-circle-o "></i> 景区客源结构分析</a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fa fa-circle-o "></i>行程推荐<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li >
+                                            <a href="/travel">&nbsp;○&nbsp;经典推荐</a>
+                                        </li>
+                                        <li >
+                                            <a href="/personalTravel1">&nbsp;○&nbsp;个性化推荐</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+                        <li>
+                            <a href="#"><i class="fa fa-user"></i> 本省人分析<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/peoplelist"><i class="fa fa-circle-o "></i> 个人列表</a>
+                                </li>
+                                <li>
+                                    <a href="/benshengselect" ><i class="fa fa-circle-o "></i> 人群筛选</a>
+                                </li>
+                                <li>
+                                    <a href="/xingwei" ><i class="fa fa-circle-o "></i> 行为分析</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+                        <li>
+                            <a href="/waishengselect"><i class="fa fa-user-md"></i> 外省人分析</a>
+                        </li>
+<li style="display:none;">                     <a href="/jinghe"><i class="fa fa-certificate"></i> 竞合分析</a>                 </li>
+                        <li>
+                            <a href="#"><i class="fa fa-users"></i> 社交分析<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/shejiaoquan"><i class="fa fa-circle-o "></i> 社交圈分析</a>
+                                </li>
+                                <li>
+                                    <a href="/jingdianxiangguan"><i class="fa fa-circle-o "></i> 用户游览行为的社交关联分析</a>
+                                </li>
+                                <li>
+                                    <a href="/yidongxiangguan"><i class="fa fa-circle-o "></i> 用户移动行为的社交关联分析</a>
+                                </li>
+                                <li>
+                                    <a href="/fourg"><i class="fa fa-circle-o "></i> 兴趣偏好预测及4g案例分析</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+                        <li>
+                            <a href="#"><i class="fa fa-legal"></i> 用户移动行为挖掘<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/motif"><i class="fa fa-circle-o "></i> 移动模式图模型</a>
+                                </li>
+                                <li>
+                                    <a href="/motifOfArea"><i class="fa fa-circle-o "></i> 区域人群移动模式画像与用地分析</a>
+                                </li>
+                                <li>
+                                    <a href="/trafficHeat"><i class="fa fa-circle-o "></i> 道路映射（北京）</a>
+                                </li>
+                                <li>
+                                    <a href="/dbscan"><i class="fa fa-circle-o "></i> 重要位置识别（dbscan)</a>
+                                </li>
+                                <li>
+                                    <a href="/mapmatching"><i class="fa fa-circle-o"></i> 用户移动（北京）</a>
+                                </li>
+                                <li>
+                                    <a href="/recommend"><i class="fa fa-circle-o"></i>基于语义轨迹的好友推荐</a>
+                                </li>
+                                <li>
+                                    <a href="/deepspace"><i class="fa fa-circle-o"></i>基于深度学习的轨迹生成</a>
+                                </li>                             
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="/zaixian"><i class="fa fa-list"></i> 在线大数据分析平台</a>
+                        </li>
+                        <li>
+                            <a href="http://123.56.71.119:8080/1-1%20premiseOverall.html"><i class="fa fa-list"></i> 楼盘平台</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <!-- Page Content -->
+        <div id="page-wrapper">
+                <div class="row">
+                    <div class="col-lg-12" style="height:25px">
+
+                    </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+                <!-- /.row -->
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" >
+                <li class="active"><a href="#sightensemble" data-toggle="tab">景区综合图</a>
+                </li>
+                <li><a href="#sighttable" data-toggle="tab">景区列表</a>
+                </li>
+                <li><a href="#sightline" data-toggle="tab">旅游线路</a>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="sightensemble" style="height: 700px">
+                    <div class="row">                               
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12" id="prostaygraph" style="height: 235px;"></div>
+                                <div class="col-md-12" id="bargraph" style="height: 235px;"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6" id="Map2" style="height:470px;"></div>                 
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12" id="transgraph" style="height: 235px;"></div>
+                                <div class="col-md-12" id="piegraph" style="height: 235px;"></div>                        
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="row" id="detailInfo">
+                        <div class="col-md-3">
+                            <div id="migrationgraph" style="height:240px"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="linegraph" style="height:240px"></div>
+                        </div>
+                        <div class="col-md-3">
+                            <div id="radargraph" style="height:240px"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="sighttable">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>景区编号</th>
+                                <th>景区名称</th>
+                                <th>经度</th>
+                                <th>纬度</th>
+                                <th>景区级别</th>
+                                <th>当月访问人次</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <% for(j=0; j< hotpoint.length; j++) {%>
+                            <tr>
+                                <td><%=hotpoint[j].sightid%></td>
+                                <td><%=hotpoint[j].sightname%></td>
+                                <td><%=hotpoint[j].lng%></td>
+                                <td><%=hotpoint[j].lat%></td>
+                                <td><%=hotpoint[j].sightclass%></td>
+                                <td><%=hotpoint[j].visitormonth%></td>
+                            </tr>
+                            <%}%>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="sightline">
+                    <div class="panel-group" id="accordion">
+                        <div class="row">
+                            <div class="col-lg-12" style="height:25px">
+                            </div>
+                        </div>
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">短期旅游线路</a>
+                                </h3>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-lg-7" >
+                                            <h4 style="font-weight: bold">路线概览</h4>
+                                            <p style="color:#5C5C5C;"><span>两地游</span>&nbsp;&nbsp;&nbsp;&nbsp;亚龙湾国家旅游度假区 → 三亚百花谷商业街</p>
+                                            <p style="color:#5C5C5C;"><span style="color: white">两地游</span>&nbsp;&nbsp;&nbsp;&nbsp;三亚大东海旅游景区 → 三亚1号港湾城</p>
+                                            <p style="color:#5C5C5C;"><span style="color: white">两地游</span>&nbsp;&nbsp;&nbsp;&nbsp;三亚1号港湾城 → 三亚大东海旅游景区</p>
+                                            <p style="color:#5C5C5C;"><span>三地游</span>&nbsp;&nbsp;&nbsp;&nbsp;亚龙湾国家旅游度假区 → 三亚百花谷商业街 → 三亚免税店</p>
+                                            <p style="color:#5C5C5C;"><span style="color: white">三地游</span>&nbsp;&nbsp;&nbsp;&nbsp;分界洲岛旅游区 → 兴隆热带植物园 → 万宁首创奥特莱斯</p>
+                                            <p style="color:#5C5C5C;"><span style="color: white">三地游</span>&nbsp;&nbsp;&nbsp;&nbsp;三亚百花谷商业街 → 亚龙湾国家旅游度假区 → 三亚免税店</p>
+                                            <p style="color:#5C5C5C;"><span>四地游</span>&nbsp;&nbsp;&nbsp;&nbsp;三亚大东海旅游景区 → 三亚1号港湾城 → 亚龙湾国家旅游度假区→ 三亚百花谷商业街</p>
+                                            <p style="color:#5C5C5C;"><span style="color: white">四地游</span>&nbsp;&nbsp;&nbsp;&nbsp;南山文化旅游区 → 天涯海角风景区 → 三亚西岛海洋文化旅游区→ 万宁首创奥特莱斯</p>
+                                            <p style="color:#5C5C5C;"><span style="color: white">四地游</span>&nbsp;&nbsp;&nbsp;&nbsp;三亚1号港湾城 → 三亚大东海旅游景区 → 三亚西岛海洋文化旅游区→ 天涯海角风景区</p>
+                                        </div>
+                                        <div class="col-lg-5" style="height:300px" id="routeshort">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-warning">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">中期旅游线路</a>
+                                </h4>
+                            </div>
+                            <div id="collapseTwo" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-lg-7" >
+                                            <h4 style="font-weight: bold">路线概览</h4>
+                                            <p style="color:#5C5C5C;"><span>两地游</span>&nbsp;&nbsp;&nbsp;&nbsp;亚龙湾国家旅游度假区 → 三亚百花谷商业街</p>
+                                            <p style="color:#5C5C5C;"><span style="color: white">两地游</span>&nbsp;&nbsp;&nbsp;&nbsp;三亚大东海旅游景区 → 三亚1号港湾城</p>
+                                            <p style="color:#5C5C5C;"><span style="color: white">两地游</span>&nbsp;&nbsp;&nbsp;&nbsp;三亚1号港湾城 → 三亚大东海旅游景区</p>
+                                            <p style="color:#5C5C5C;"><span>三地游</span>&nbsp;&nbsp;&nbsp;&nbsp;亚龙湾国家旅游度假区 → 三亚百花谷商业街 → 三亚免税店</p>
+                                            <p style="color:#5C5C5C;"><span style="color: white">三地游</span>&nbsp;&nbsp;&nbsp;&nbsp;分界洲岛旅游区 → 兴隆热带植物园 → 万宁首创奥特莱斯</p>
+                                            <p style="color:#5C5C5C;"><span style="color: white">三地游</span>&nbsp;&nbsp;&nbsp;&nbsp;三亚百花谷商业街 → 亚龙湾国家旅游度假区 → 三亚免税店</p>
+                                            <p style="color:#5C5C5C;"><span>四地游</span>&nbsp;&nbsp;&nbsp;&nbsp;三亚大东海旅游景区 → 三亚1号港湾城 → 亚龙湾国家旅游度假区→ 三亚百花谷商业街</p>
+                                            <p style="color:#5C5C5C;"><span style="color: white">四地游</span>&nbsp;&nbsp;&nbsp;&nbsp;南山文化旅游区 → 天涯海角风景区 → 三亚西岛海洋文化旅游区→ 万宁首创奥特莱斯</p>
+                                            <p style="color:#5C5C5C;"><span style="color: white">四地游</span>&nbsp;&nbsp;&nbsp;&nbsp;三亚1号港湾城 → 三亚大东海旅游景区 → 三亚西岛海洋文化旅游区→ 天涯海角风景区</p>
+                                        </div>
+                                        <div class="col-lg-5" style="height:300px" id="routemid">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">长期旅游线路</a>
+                                </h4>
+                            </div>
+                            <div id="collapseThree" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-lg-7" >
+                                            <h4 style="font-weight: bold">路线概览</h4>
+                                            <p style="color:#5C5C5C;"><span>两地游</span>&nbsp;&nbsp;&nbsp;&nbsp;亚龙湾国家旅游度假区 → 三亚百花谷商业街</p>
+                                            <p style="color:#5C5C5C;"><span style="color: white">两地游</span>&nbsp;&nbsp;&nbsp;&nbsp;三亚大东海旅游景区 → 三亚1号港湾城</p>
+                                            <p style="color:#5C5C5C;"><span style="color: white">两地游</span>&nbsp;&nbsp;&nbsp;&nbsp;三亚1号港湾城 → 三亚大东海旅游景区</p>
+                                            <p style="color:#5C5C5C;"><span>三地游</span>&nbsp;&nbsp;&nbsp;&nbsp;亚龙湾国家旅游度假区 → 三亚百花谷商业街 → 三亚免税店</p>
+                                            <p style="color:#5C5C5C;"><span style="color: white">三地游</span>&nbsp;&nbsp;&nbsp;&nbsp;分界洲岛旅游区 → 兴隆热带植物园 → 万宁首创奥特莱斯</p>
+                                            <p style="color:#5C5C5C;"><span style="color: white">三地游</span>&nbsp;&nbsp;&nbsp;&nbsp;三亚百花谷商业街 → 亚龙湾国家旅游度假区 → 三亚免税店</p>
+                                            <p style="color:#5C5C5C;"><span>四地游</span>&nbsp;&nbsp;&nbsp;&nbsp;三亚大东海旅游景区 → 三亚1号港湾城 → 亚龙湾国家旅游度假区→ 三亚百花谷商业街</p>
+                                            <p style="color:#5C5C5C;"><span style="color: white">四地游</span>&nbsp;&nbsp;&nbsp;&nbsp;南山文化旅游区 → 天涯海角风景区 → 三亚西岛海洋文化旅游区→ 万宁首创奥特莱斯</p>
+                                            <p style="color:#5C5C5C;"><span style="color: white">四地游</span>&nbsp;&nbsp;&nbsp;&nbsp;三亚1号港湾城 → 三亚大东海旅游景区 → 三亚西岛海洋文化旅游区→ 天涯海角风景区</p>
+                                        </div>
+                                        <div class="col-lg-5" style="height:300px" id="routelong">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+
+    <script type="text/javascript">
+        var map = new BMap.Map("routeshort");          // 创建地图实例
+        var map1 = new BMap.Map("routemid");          // 创建地图实例
+        var map2 = new BMap.Map("routelong");          // 创建地图实例
+
+        var point = new BMap.Point(109.244, 18.854);
+        map.centerAndZoom(point, 10);             // 初始化地图，设置中心点坐标和地图级别
+        map.enableScrollWheelZoom();
+
+        map1.centerAndZoom(point, 10);             // 初始化地图，设置中心点坐标和地图级别
+        map1.enableScrollWheelZoom();
+
+        map2.centerAndZoom(point, 10);             // 初始化地图，设置中心点坐标和地图级别
+        map2.enableScrollWheelZoom();
+
+            <% for(i=0; i< hotroute.length; i++) {%>
+            var polyline = new BMap.Polyline((function () {
+                var d = []
+                <% for(j=0; j< hotroute[i].geo.length; j++) {%>
+                d.push(new BMap.Point('<%=hotroute[i].geo[j][0]%>','<%=hotroute[i].geo[j][1]%>'));
+                <%}%>
+                return d;
+            })(), {strokeColor:"orange", strokeWeight:2, strokeOpacity:0.5});
+
+            map.addOverlay(polyline);          //增加折线
+            <%}%>
+
+            <% for(i=0; i< hotroute.length; i++) {%>
+            <% for(j=0; j< hotroute[i].geo.length; j++) {%>
+            var circle = new BMap.Circle(new BMap.Point('<%=hotroute[i].geo[j][0]%>','<%=hotroute[i].geo[j][1]%>'),800,{strokeColor:"orange", strokeWeight:2, strokeOpacity:0.5,fillOpacity:1}); //创建圆
+            map.addOverlay(circle);            //增加点
+            var opts = {
+                width : 200,     // 信息窗口宽度
+                height: 20
+            }
+            circle.addEventListener("click", function(){
+                map.openInfoWindow(new BMap.InfoWindow('<%=hotroute[i].name[j]%>', opts),new BMap.Point('<%=hotroute[i].geo[j][0]%>','<%=hotroute[i].geo[j][1]%>')); //开启信息窗口
+            });
+            <%}%>
+            <%}%>
+
+            <% for(i=0; i< hotroute.length; i++) {%>
+        var polyline1 = new BMap.Polyline((function () {
+            var d = []
+            <% for(j=0; j< hotroute[i].geo.length; j++) {%>
+            d.push(new BMap.Point('<%=hotroute[i].geo[j][0]%>','<%=hotroute[i].geo[j][1]%>'));
+            <%}%>
+            return d;
+        })(), {strokeColor:"orange", strokeWeight:2, strokeOpacity:0.5});
+
+        map1.addOverlay(polyline1);          //增加折线
+        <%}%>
+
+        <% for(i=0; i< hotroute.length; i++) {%>
+        <% for(j=0; j< hotroute[i].geo.length; j++) {%>
+        var circle1 = new BMap.Circle(new BMap.Point('<%=hotroute[i].geo[j][0]%>','<%=hotroute[i].geo[j][1]%>'),800,{strokeColor:"orange", strokeWeight:2, strokeOpacity:0.5,fillOpacity:1}); //创建圆
+        map1.addOverlay(circle1);            //增加点
+        var opts1 = {
+            width : 200,     // 信息窗口宽度
+            height: 20
+        }
+        circle1.addEventListener("click", function(){
+            map1.openInfoWindow(new BMap.InfoWindow('<%=hotroute[i].name[j]%>', opts1),new BMap.Point('<%=hotroute[i].geo[j][0]%>','<%=hotroute[i].geo[j][1]%>')); //开启信息窗口
+        });
+        <%}%>
+        <%}%>
+
+        <% for(i=0; i< hotroute.length; i++) {%>
+        var polyline2 = new BMap.Polyline((function () {
+            var d = []
+            <% for(j=0; j< hotroute[i].geo.length; j++) {%>
+            d.push(new BMap.Point('<%=hotroute[i].geo[j][0]%>','<%=hotroute[i].geo[j][1]%>'));
+            <%}%>
+            return d;
+        })(), {strokeColor:"orange", strokeWeight:2, strokeOpacity:0.5});
+
+        map2.addOverlay(polyline2);          //增加折线
+        <%}%>
+
+        <% for(i=0; i< hotroute.length; i++) {%>
+        <% for(j=0; j< hotroute[i].geo.length; j++) {%>
+        var circle2 = new BMap.Circle(new BMap.Point('<%=hotroute[i].geo[j][0]%>','<%=hotroute[i].geo[j][1]%>'),800,{strokeColor:"orange", strokeWeight:2, strokeOpacity:0.5,fillOpacity:1}); //创建圆
+        map2.addOverlay(circle2);            //增加点
+        var opts2 = {
+            width : 200,     // 信息窗口宽度
+            height: 20
+        }
+        circle2.addEventListener("click", function(){
+            map2.openInfoWindow(new BMap.InfoWindow('<%=hotroute[i].name[j]%>', opts2),new BMap.Point('<%=hotroute[i].geo[j][0]%>','<%=hotroute[i].geo[j][1]%>')); //开启信息窗口
+        });
+        <%}%>
+        <%}%>
+    </script>
+
+    <script type="text/javascript">
+        // 加载echarts
+        var mapChart = echarts.init(document.getElementById('Map2'));
+        var lineChart = echarts.init(document.getElementById('linegraph'));
+        var radarChart = echarts.init(document.getElementById('radargraph'));
+        var pieChart = echarts.init(document.getElementById('piegraph'));
+        var barChart = echarts.init(document.getElementById('bargraph'));
+
+        /***mapOption***/
+        mapOption = {
+            animation: true,
+            animationDuration: 1000,
+            animationEasing: 'cubicInOut',
+            animationDurationUpdate: 1000,
+            animationEasingUpdate: 'cubicInOut',
+            title: [
+                {
+                    text: '海南省景区主要景区流量',
+                    left: 'center',
+                    textStyle: {
+                        color: '#fff'
+                    }
+                },
+                {
+                    id: 'statistic',
+                    right: 120,
+                    top: 40,
+                    width: 100,
+                    textStyle: {
+                        color: '#fff',
+                        fontSize: 16
+                    }
+                }
+            ],
+            legend: {
+                data: ['所有景区', '流量Top 5'],
+                x:'left',
+                orient: 'vertical',
+                textStyle:{
+                    color:"white"
+                }
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter : function (params) {
+                    if(params.value.length==4) {
+                        return "景区名称："+params.name +  '<br/>'
+                            + "经纬度："+params.value[0] + ', '+params.value[1] +  '<br/>'
+                            + "当月总流量："+params.value[2];
+                    }
+                }
+            },
+            toolbox: {
+                iconStyle: {
+                    normal: {
+                        borderColor: '#fff'
+                    },
+                    emphasis: {
+                        borderColor: '#b1e4ff'
+                    }
+                }
+            },
+            bmap: {
+                center: [109.7, 19.184],
+                zoom: 9,
+                roam: false,
+                mapStyle: {
+                    styleJson: [
+                        {
+                            'featureType': 'water',
+                            'elementType': 'all',
+                            'stylers': {
+                                'color': '#000102'
+                            }
+                        }, 
+                        {
+                            'featureType': 'land',
+                            'elementType': 'all',
+                            'stylers': {
+                                'color': '#031628'
+                            }
+                        }, 
+                        {
+                            'featureType': 'railway',
+                            'elementType': 'all',
+                            'stylers': {
+                                'visibility': '#EBD0BE'
+                            }
+                        }, 
+                        {
+                            'featureType': 'highway',
+                            'elementType': 'all',
+                            'stylers': {
+                                'color': '#2e8592'
+                            }
+                        }, 
+                        {
+                            'featureType': 'highway',
+                            'elementType': 'labels',
+                            'stylers': {
+                                'visibility': '#C4723C'
+                            }
+                        }, 
+                        {
+                            'featureType': 'arterial',
+                            'elementType': 'geometry.fill',
+                            'stylers': {
+                                'color':'#000000'                           
+                            }
+                        }, 
+                        {
+                            'featureType': 'arterial',
+                            'elementType': 'geometry.stroke',
+                            'stylers': {
+                                'color': '#0b3d51'
+                            }
+                        }, 
+                        {
+                            'featureType': 'poi',
+                            'elementType': 'all',
+                            'stylers': {
+                                'visibility': '#2B0F09'
+                            }
+                        },
+                        {
+                            'featureType': 'local',
+                            'elementType': 'geometry',
+                            'stylers': {
+                                'color': '#000000'
+                            }
+                        }, 
+                        {
+                            'featureType': 'subway',
+                            'elementType': 'all',
+                            'stylers': {
+                                'visibility': 'off'
+                            }
+                        }, 
+                        {
+                            'featureType': 'manmade',
+                            'elementType': 'all',
+                            'stylers': {
+                                'color': '#023438'
+                            }
+                        }, 
+                        {
+                            'featureType': 'arterial',
+                            'elementType': 'labels',
+                            'stylers': {
+                                'visibility': 'off'
+                            }
+                        }, 
+                        {
+                            'featureType': 'boundary',
+                            'elementType': 'all',
+                            'stylers': {
+                                'color': '#465b6c'
+                            }
+                        }, 
+                        {
+                            'featureType': 'building',
+                            'elementType': 'all',
+                            'stylers': {
+                                'color': '#023438'
+                            }
+                        },  
+                        {
+                            'featureType': 'all',
+                            'elementType': 'labels.text.fill',
+                            'stylers': {
+                                'color': '#857f7f'
+                            }
+                        },  
+                        {
+                            'featureType': 'all',
+                            'elementType': 'labels.text.stroke',
+                            'stylers': {
+                                'color': '#000000'
+                            }
+                        },  
+                        {
+                            'featureType': 'green',
+                            'elementType': 'geometry',
+                            'stylers': {
+                                'color': '#062032'
+                            }
+                        }
+                    ]
+                }
+            },
+            grid: {
+                right: 40,
+                top: 100,
+                bottom: 40,
+                width: '30%'
+            },
+            xAxis: {
+                type: 'value',
+                scale: true,
+                position: 'top',
+                boundaryGap: false,
+                splitLine: {show: false},
+                axisLine: {show: false},
+                axisTick: {show: false},
+                axisLabel: {margin: 2, textStyle: {color: '#aaa'}},
+            },
+            yAxis: {
+                type: 'category',
+                // name: '选择区域景区流量',
+                nameGap: 16,
+                axisLine: {show: false, lineStyle: {color: '#ddd'}},
+                axisTick: {show: false, lineStyle: {color: '#ddd'}},
+                axisLabel: {interval: 0, textStyle: {color: '#ddd'}},
+                data: []
+            },
+            series : [
+                {
+                    name: '所有景区',
+                    type: 'scatter',
+                    coordinateSystem: 'bmap',
+                    data: (function () {
+                        var res = [];
+                        <% for(j=0; j<scenicInfo.length; j++) {%>
+                            res.push({
+                                name: '<%=scenicInfo[j].sightname%>',
+                                value:['<%=scenicInfo[j].lng%>','<%=scenicInfo[j].lat%>',parseInt('<%=scenicInfo[j].visitormonth%>'),'<%=scenicInfo[j].sightid%>']
+                                });
+                        <% } %>
+                        return res;
+                    })(),
+                    symbolSize: function (val) {
+                        return Math.log(val[2])*2;
+                    },
+                    showEffectOn: 'render',
+                    rippleEffect: {
+                        brushType: 'stroke'
+                    },
+                    hoverAnimation: true,
+                    label: {
+                        normal: {
+                            formatter: '{b}',
+                            position: 'right',
+                            show: false
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: "#FFF68F" ,
+                            shadowBlur: 10,
+                            shadowColor: '#ffffff'
+                        }
+                    },
+                    zlevel: 1
+                },
+                {
+                    name: '流量Top 5',
+                    type: 'effectScatter',
+                    coordinateSystem: 'bmap',
+                    data: (function () {
+                        var res = [];
+                        var res5 = [];
+                        <% for(j=0; j< scenicInfo.length; j++) {%>
+                            res.push({
+                                name: '<%=scenicInfo[j].sightname%>',       
+                                value:['<%=scenicInfo[j].lng%>','<%=scenicInfo[j].lat%>',parseInt('<%=scenicInfo[j].visitormonth%>'),'<%=scenicInfo[j].sightid%>']
+                                });
+                        <%}%>
+                        res.sort(function (a, b) {return b.value[2] - a.value[2];});
+                        for(i=0;i<5;i++)
+                            res5.push(res[i]);
+                        return res5;
+                    })(),
+                    symbolSize: function (val) {
+                        return Math.log(val[2])*2;
+                    },
+                    showEffectOn: 'render',
+                    rippleEffect: {
+                        brushType: 'stroke'
+                    },
+                    hoverAnimation: true,
+                    label: {
+                        normal: {
+                            formatter: '{b}',
+                            position: 'right',
+                            show: false
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: "#F08080" ,
+                            shadowBlur: 10,
+                            shadowColor: '#333'
+                        }
+                    },
+                    zlevel: 1
+                },
+                {
+                    id: 'bar',
+                    zlevel: 2,
+                    type: 'bar',
+                    symbol: 'none',
+                    itemStyle: {
+                        normal: {
+                            color: '#FFF68F'
+                        }
+                    },
+                    data: []
+                }
+            ]
+        };
+        mapChart.setOption(mapOption);
+        /***mapOptiob***/
+        
+        /**lineOption**/
+        lineOption = {
+            backgroundColor: "#000",
+            title : {
+                text: '<%=initdata.sightname%>'+'景区流量图',
+                subtext: '数据来自景区基站',
+                x: 'center',
+                align: 'right',
+                textStyle: {
+                    fontSize: 15,
+                    color: '#fff'
+                }
+            },
+            grid: {
+                bottom: 80
+            },
+            toolbox: {
+                feature: {
+                    dataZoom: {
+                        yAxisIndex: 'none'
+                    },
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            tooltip : {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    animation: false,
+                    label: {
+                        backgroundColor: '#505765'
+                    }
+                }
+            },
+            legend: {
+                data:['流量'],
+                x: 'left',
+                textStyle:{
+                    color:"white"
+                }
+            },
+            dataZoom:{
+                show: true,
+                realtime: true,
+                start: 0,
+                end: 100
+            },       
+            xAxis : {
+                type : 'category',
+                boundaryGap : false,
+                axisLine: {
+                    onZero: false,
+                    lineStyle:{  
+                        color:'#FFF' 
+                    }                                    
+                },
+                data : (function(){
+                    var xAxisData = [];
+                    <% for (i=0; i<initdata.data.length; i++) {%>
+                        var year = '<%=initdata.data[i].date%>'.substring(0, 4);
+                        var month = '<%=initdata.data[i].date%>'.substring(4,6);
+                        <% for (j=0; j<initdata.data[i].visitorflowbyday.length; j++) {%>
+                            <% if (j < 9) {%>
+                                xAxisData.push(year+'-'+month+'-'+'0'+(<%=j%>+1));
+                            <%}else {%>
+                                xAxisData.push(year+'-'+month+'-'+(<%=j%>+1));
+                            <%}%>
+                        <%}%>
+                    <%}%>
+                    return xAxisData;
+                })()             
+            },
+            yAxis: {
+                name: '人数',
+                type: 'value',
+                textStyle:{
+                    color:"white"
+                },
+                axisLine: {
+                    lineStyle:{  
+                        color:'#FFF' 
+                    }                                    
+                }             
+            },
+            series: {
+                name:'流量',
+                type:'line',
+                animation: false,
+                areaStyle: {
+                    normal: {}
+                },
+                lineStyle: {
+                    normal: {
+                        width: 1
+                    }
+                },
+                markArea: {
+                    silent: true,
+                    data: [[{
+                        xAxis: '2009/9/12\n7:00'
+                    }, {
+                        xAxis: '2009/9/22\n7:00'
+                    }]]
+                },
+                data:(function(){
+                    var seriesData = [];
+                    <% for (i=0; i<initdata.data.length; i++) {%>
+                        <% for (j=0; j < initdata.data[i].visitorflowbyday.length; j++) {%>
+                            seriesData.push(<%=initdata.data[i].visitorflowbyday[j]%>);
+                        <%}%>
+                    <%}%>   
+                    return seriesData;  
+                })()
+            }   
+        };                   
+        lineChart.setOption(lineOption);
+        /**lineOption**/
+
+        /**radarOption**/
+        radarOption = {
+            backgroundColor: 'black',//'#161627',
+            title: {
+                text: '<%=initdata.sightname%>'+'客源地指标雷达图',
+                left: 'center',
+                textStyle: {
+                    fontSize: 15,
+                    color: '#FFF'
+                }
+            },
+            radar: {
+                indicator: [
+                    {name: '客源地信息熵', max: 5.0},
+                    {name: '地理集中性', max:100},
+                    {name: '余弦相似度', max: 1.0},
+                    {name: '平均地理距离', max: 2500},
+                ],
+                radius: 70,
+                shape: 'circle',
+                splitNumber: 5,
+                name: {
+                    textStyle: {
+                        color: 'rgb(238, 197, 102)'
+                    }
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: [
+                            'rgba(238, 197, 102, 0.1)', 'rgba(238, 197, 102, 0.2)',
+                            'rgba(238, 197, 102, 0.4)', 'rgba(238, 197, 102, 0.6)',
+                            'rgba(238, 197, 102, 0.8)', 'rgba(238, 197, 102, 1)'
+                        ].reverse()
+                    }
+                },
+                splitArea: {
+                    show: false
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: 'rgba(238, 197, 102, 0.5)'
+                    }
+                }
+            },
+            series: {
+                name: '景区',
+                type: 'radar',
+                lineStyle: {        
+                    normal: {
+                        width: 1,
+                        opacity: 0.5
+                    }
+                },            
+                data: (function() {
+                    var radarData = [];
+                    <% for (i=0; i<initdata.data.length; i++) {%>
+                        var tmp = [];
+                        tmp.push(<%=initdata.data[i].entropy%>);
+                        tmp.push(<%=initdata.data[i].geocentrality%>);
+                        tmp.push(<%=initdata.data[i].cossimilarity%>);
+                        tmp.push(<%=initdata.data[i].geodistance%>);
+                        radarData.push(tmp);                        
+                    <%}%>   
+                    return radarData
+                })(),
+                symbol: 'none',
+                itemStyle: {
+                    normal: {
+                        color: '#F9713C'
+                    }
+                },
+                areaStyle: {
+                    normal: {
+                        opacity: 0.6
+                    }
+                }
+            },
+        };
+        radarChart.setOption(radarOption);
+        /**radarOption**/
+
+        /**pieOption***/
+        pieOption = {
+            title : {
+                text: '<%=initdata.sightname%>'+'游客归属地分布',
+                x:'center',
+                textStyle: {
+                    fontSize: 15,
+                    color: '#FFF'
+                }
+            },
+            backgroundColor: 'black',
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            series : {
+                name: '游客来源',
+                type: 'pie',
+                radius : '45%',
+                center: ['50%', '50%'],
+                data:(function() {
+                    var pieData = [];
+                    var provFlow = [<%=initdata.data[0].prov%>];
+                    var provList = ['广东','四川','上海','湖南','江苏','北京','湖北','广西','河南','浙江',
+                                    '福建','重庆','江西','安徽','河北','陕西','黑龙江','贵州','山东','辽宁',
+                                    '甘肃','新疆','吉林','云南','山西','天津','内蒙古','宁夏','青海','西藏','其它'];
+                    <% for (i=1; i<initdata.data.length; i++) { %>
+                        <% for(j=0; j<initdata.data[i].prov.length; j++) {%>
+                            provFlow[j] += provFlow[j] + <%=initdata.data[i].prov[j]%>;
+                        <%}%>
+                    <%}%>
+                    for (i=0; i<provList.length; i++) {
+                        pieData.push({value:provFlow[i],name:provList[i]});
+                    }
+                    return pieData;
+                })(),
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }        
+        };
+        pieChart.setOption(pieOption);
+        /**pieOption**/
+        
+        /**barOption**/
+        barOption = {
+            backgroundColor: 'black',
+            title : {
+                text: '<%=initdata.sightname%>'+'游客停留时长分布统计',
+                x:'center',
+                textStyle:{
+                    fontSize: 15,
+                    color:"#FFF"
+                }
+            },
+            tooltip : {
+                trigger: 'axis'
+            },
+            grid:{
+                x: 50,
+                x2: 20
+            },
+            calculable : true,
+            xAxis : {
+                type : 'category',
+                axisLine: {
+                    lineStyle: {   
+                        color:'#FFF' 
+                    }                                  
+                }, 
+                axisLabel: {
+                    interval: 0
+                }, 
+                data : ['1h~2h','2h~3h','3h~4h','4h~5h','5h以上']
+            },
+            yAxis : {
+                name: '人数',
+                type : 'value',
+                axisLine: {
+                    lineStyle:{  
+                        color:'#FFF' 
+                    }                                    
+                }  
+            },
+            series : {
+                name:'停留时长',
+                type:'bar',
+                itemStyle: {
+                    normal: {
+                        color: 	'#66CDAA'
+                    }
+                },
+                data: (function() {
+                    var barData = [];
+                    <% for (i=0; i<initdata.data.length; i++) {%>
+                        <% for (j=0; j<initdata.data[i].staydur.length; j++) {%>
+                            barData.push(<%=initdata.data[i].staydur[j]%>);
+                        <%}%>
+                    <%}%>
+                    return barData;                    
+                })()
+            }      
+        };
+        barChart.setOption(barOption);
+        /**barOption**/
+         
+        require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+
+        require(
+            [
+                'echarts',
+                'echarts/chart/map',
+                'echarts/chart/bar'
+            ],
+            function(ec) {
+                /**migration**/
+                var migrationChart = ec.init(document.getElementById('migrationgraph'));
+                migrationOption = {
+                    backgroundColor: '#000',
+                    title : {
+                        text: '<%=initdata.sightname%>'+'游客迁徙图',
+                        x:'center',
+                        textStyle:{
+                            fontSize: 15,
+                            color:"#FFF"
+                        }
+                    },
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: '{b}'
+                    },
+                    dataRange: {
+                        min : 0,
+                        max : 500,
+                        x: 'left',
+                        calculable : true,
+                        color: ['#ff3333', 'orange', 'yellow','lime','aqua'],
+                        textStyle:{
+                            color:'#fff'
+                        }
+                    },
+                    series : [
+                        {
+                            name: '所有景区',
+                            type: 'map',
+                            roam: true,
+                            hoverable: false,
+                            mapType: '海南',
+                            itemStyle:{
+                                normal:{
+                                    borderColor:'rgba(100,149,237,1)',
+                                    borderWidth:0.5,
+                                    areaStyle:{
+                                        color: '#1b1b1b'
+                                    }
+                                }
+                            },
+                            data:[],
+                            geoCoord: {
+                                '南山文化旅游区':[109.2199693,18.31049752],
+                                '南山大小洞天旅游区':[109.184517,18.306514],
+                                '呀诺达雨林文化旅游区':[109.668727,18.44967311],
+                                '分界洲岛旅游区':[110.2067999,18.58193723],
+                                '中国雷琼海口火山群世界地质公园':[110.225955,19.93125],
+                                '甘什岭槟榔谷原生态黎苗文化旅游区':[109.6697331,18.40316348],
+                                '假日海滩旅游区':[110.2436013,20.04262889],
+                                '天涯海角风景区':[109.3614826,18.2983011],
+                                '海南热带野生动植物园':[110.2525057,19.77615147],
+                                '三亚蜈支洲岛度假中心':[109.7342229,18.28065037],
+                                '兴隆热带植物园':[110.2050264,18.73865993],
+                                '博鳌亚洲论坛永久会址':[110.578276,19.146878],
+                                '亚龙湾国家旅游度假区':[109.654556,18.236155],
+                                '三亚大东海旅游景区':[109.530054,18.22879454],
+                                '南湾猴岛生态景区':[109.9902316,18.40271131],
+                                '海口观澜湖旅游度假区':[110.328102,19.917656],
+                                '海南文笔峰盘古文化旅游区':[110.372117,19.558993],
+                                '三亚西岛海洋文化旅游区':[109.374756,18.297797],
+                                '万宁东山岭文化旅游区':[110.435341,18.808551],
+                                '三亚免税店':[109.757208,18.377733],
+                                '三亚解放路步行街':[109.508794,18.255055],
+                                '万宁首创奥特莱斯':[110.301043,18.730906],
+                                '三亚百花谷商业街':[109.650589,18.238808],
+                                '三亚1号港湾城':[109.535533,18.228164],
+                                '东坡书院':[109.365385,19.747813],
+                                '鹿回头公园':[109.508091,18.23177]
+                            },
+                            markLine : {
+                                smooth:true,
+                                effect : {
+                                    show: true,
+                                    scaleSize: 1,
+                                    period: 30,
+                                    color: '#fff',
+                                    shadowBlur: 10
+                                },
+                                itemStyle : {
+                                    normal: {
+                                        borderWidth:1,
+                                        lineStyle: {
+                                            type: 'solid',
+                                            shadowBlur: 10
+                                        }
+                                    }
+                                },
+                                data : [
+                                    
+                                ]
+                            }
+                        }, 
+                        {
+                            name: '南山文化旅游区',
+                            type: 'map',
+                            mapType: '海南',
+                            data:[],
+                            markLine : {
+                                smooth:true,
+                                effect : {
+                                    show: true,
+                                    scaleSize: 1,
+                                    period: 30,
+                                    color: '#fff',
+                                    shadowBlur: 10
+                                },
+                                itemStyle : {
+                                    normal: {
+                                        borderWidth:1,
+                                        lineStyle: {
+                                            type: 'solid',
+                                            shadowBlur: 10
+                                        }
+                                    }
+                                },
+                                data : (function () {
+                                    var d = [];
+                                    <%for(j=0; j< initdata.data[0].migration.length; j++) {%>
+                                        var d1=[];
+                                        d1.push({name:'<%=initdata.sightname%>'});
+                                        d1.push({name:'<%=initdata.data[0].migration[j].outname%>',value:parseInt('<%=initdata.data[0].migration[j].count%>')});
+                                        d.push(d1);
+                                    <%}%>
+                                    return d;
+                                })()
+                            }                                   
+                        }  
+                    ]                     
+                };
+                migrationChart.setOption(migrationOption);
+                /**migration**/
+                /**prostay**/
+                var prostayChart = ec.init(document.getElementById('prostaygraph'));
+
+                prostayOption = {
+                    backgroundColor: '#000',
+                    title : {
+                        text: '来琼游客驻留时间统计',
+                        x:'center',
+                        textStyle:{
+                            fontSize: 15,
+                            color:"#fff"
+                        }
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    grid : {
+                        x: 50,
+                        x2: 20,
+                        borderWidth:0
+
+                    },
+                    xAxis : {
+                        name:'天',
+                        type : 'category',
+                        axisLine: {
+                            lineStyle: {   
+                                color:'#FFF'
+                            }                                                                        
+                        },
+                        axisLabel: {
+                            interval: 0,
+                            textStyle: {
+                                color:'#fff'
+                            }                              
+                        }, 
+                        splitLine:{show: false},
+                        data : ['3','4','5','6','7','8','9','10','11','12','13','14','15']
+                    },
+                    yAxis : {
+                        name: '人数',
+                        type : 'value',
+                        axisLine: {
+                            
+                            lineStyle: {   
+                                color:'#FFF'
+                            }                                                                          
+                        },
+                        axisLabel: {
+                            textStyle: {
+                                color: '#fff'
+                            }
+                        }                            
+                    },
+                    series : [
+                        {
+                            name:'游客数量',
+                            type:'bar',
+                            itemStyle: {
+                                normal: {
+                                    color: '#EE8262'
+                                }
+                            },
+                            data:(function () {
+                                var d = []
+                                <% for(j=0; j< prostaynum[0].stay.length; j++) {%>
+                                    d.push(parseInt('<%=prostaynum[0].stay[j].count%>'));
+                                <%}%>
+                                return d;
+                            })(),
+                        } 
+                    ]               
+                };
+                prostayChart.setOption(prostayOption);
+                /**prostay**/
+                /**transport**/
+                var transChart = ec.init(document.getElementById('transgraph'));
+                transOption = {
+                    title: {
+                        text: '来琼旅客交通方式统计',
+                        x:'center',
+                        textStyle:{
+                            fontSize: 15,
+                            color:"#fff"
+                        }                        
+                    },
+                    backgroundColor: '#000',
+                    grid: {
+                        x: 40,
+                        x2: 20,
+                        y2: 20,
+                        borderWidth: 0
+                    },
+                    tooltip : {
+                        trigger: 'axis',
+                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    legend: {
+                        y: 25,
+                        data:['自驾', '飞机','火车'],
+                        textStyle: {
+                            color: '#fff'
+                        }
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'value',
+                            axisLabel: {
+                                textStyle: {
+                                    color: '#fff'
+                                }
+                            },
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'category',
+                            axisLabel: {
+                                textStyle: {
+                                    color: '#fff'
+                                }
+                            },
+                            data : (function () {
+                                var d = []
+                                <% for(j=0; j< trafficclass.length; j++) {%>
+                                d.push('<%=trafficclass[j].prov%>');
+                                <%}%>
+                                return d;
+                            })()
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'自驾',
+                            type:'bar',
+                            stack: '总量',
+                            itemStyle : { normal: {color: '#F08080'}},
+                            data: (function () {
+                                var d = []
+                                <% for(j=0; j< trafficclass.length; j++) {%>
+                                d.push(parseInt('<%=trafficclass[j].selfcar%>'));
+                                <%}%>
+                                return d;
+                            })()
+                        },
+                        {
+                            name:'飞机',
+                            type:'bar',
+                            stack: '总量',
+                            itemStyle : { normal: {color:'#66CDAA'}},
+                            data: (function () {
+                                var d = []
+                                <% for(j=0; j< trafficclass.length; j++) {%>
+                                d.push(parseInt('<%=trafficclass[j].plane%>'));
+                                <%}%>
+                                return d;
+                            })()
+                        },
+                        {
+                            name:'火车',
+                            type:'bar',
+                            stack: '总量',
+                            itemStyle : { normal: {color:'#FFA500'}},
+                            data: (function () {
+                                var d = []
+                                <% for(j=0; j< trafficclass.length; j++) {%>
+                                d.push(parseInt('<%=trafficclass[j].train%>'));
+                                <%}%>
+                                return d;
+                            })()
+                        }
+                    ]
+                };
+                transChart.setOption(transOption);
+                /**transport**/
+            }
+        );
+        
+        mapChart.on('brushselected', renderBrushed);
+        // 定义点击事件
+        mapChart.on("click", function(params) {           
+            var data = { "sightid": params.value[3] }; 
+            console.log("mapchart " + data.sightid); 
+            $.ajax({
+                type: "get",
+                url: "/searchSID",
+                dataType: "text",                          
+                data: data,               
+                success: function(msg) {
+                    msg = JSON.parse(msg);
+                    
+                    /*****lineOption*****/
+                    var xAxisData = [];
+                    for (i=0; i<msg.data.length; i++){
+                        var year = msg.data[i].date.substring(0,4);
+                        var month = msg.data[i].date.substring(4,6);
+                        for (j=0; j < msg.data[i].visitorflowbyday.length; j++){
+                            if (j < 9){
+                                xAxisData.push(year+'-'+month+'-'+'0'+(j+1));
+                            }else{
+                                xAxisData.push(year+'-'+month+'-'+(j+1));
+                            }
+                        }
+                    }    
+                    var seriesData = [];
+                    for (i=0; i<msg.data.length; i++){
+                        for (j=0; j < msg.data[i].visitorflowbyday.length; j++){
+                            seriesData.push(msg.data[i].visitorflowbyday[j]);
+                        }
+                    }   
+                    lineOption.title.text = params.name + "流量图";
+                    lineOption.xAxis.data = xAxisData;   
+                    lineOption.series.data = seriesData;                    
+                    lineChart.setOption(lineOption);             
+                    /***lineOPtion***/
+
+                    /***radarOption***/
+                    var radarData = [];
+                    for (i=0; i<msg.data.length; i++){
+                        var tmp = [];
+                        tmp.push(msg.data[i].entropy);
+                        tmp.push(msg.data[i].geocentrality);
+                        tmp.push(msg.data[i].cossimilarity);
+                        tmp.push(msg.data[i].geodistance);
+                        radarData.push(tmp);                        
+                    }   
+                    radarOption.title.text = params.name + '客源地指标雷达图';
+                    radarOption.series.data = radarData;
+                    radarChart.setOption(radarOption);                   
+                    /**radarOption**/
+
+                    /***pieOption***/
+                    var pieData = [];
+                    var provFlow = msg.data[0].prov;
+                    var provList = ['广东','四川','上海','湖南','江苏','北京','湖北','广西','河南','浙江',
+                                    '福建','重庆','江西','安徽','河北','陕西','黑龙江','贵州','山东','辽宁',
+                                    '甘肃','新疆','吉林','云南','山西','天津','内蒙古','宁夏','青海','西藏','其它'];
+                    for (i=1; i<msg.data.length; i++) {
+                        for(j=0; j<msg.data[i].prov.length; j++) {
+                            provFlow[j] += provFlow[j] + msg.data[i].prov[j];
+                        }
+                    }
+                    for (i=0; i<provList.length; i++) {
+                        pieData.push({value:provFlow[i],name:provList[i]});
+                    }
+                    pieOption.title.text = params.name + '游客归属地分布';
+                    pieOption.series.data = pieData;
+                    pieChart.setOption(pieOption);
+                    /***pieOption***/
+
+                    /***barOption***/
+                    var barData = [];
+                    for (i=0; i<msg.data.length; i++) {
+                        for (j=0; j<msg.data[i].staydur.length; j++) {
+                            barData.push(msg.data[i].staydur[j]);
+                        }
+                    }
+                    barOption.title.text = params.name + '游客停留时长分布统计';
+                    barOption.series.data = barData;
+                    barChart.setOption(barOption);
+                    /***barOption***/
+
+                    /**migration**/
+                    require.config({
+                        paths: {
+                            echarts: 'http://echarts.baidu.com/build/dist'
+                        }
+                    });
+
+                    require(
+                        [
+                        'echarts',
+                        'echarts/chart/map'
+                        ],
+                        function(ec) {
+                            var migrationChart = ec.init(document.getElementById('migrationgraph'));
+                            migrationOption = {
+                                backgroundColor: '#000',
+                                title : {
+                                    text: params.name+'游客迁徙图',
+                                    x:'center',
+                                    textStyle:{
+                                        fontSize: 15,
+                                        color:"#FFF"
+                                    }
+                                },
+                                tooltip : {
+                                    trigger: 'item',
+                                    formatter: '{b}'
+                                },
+                                dataRange: {
+                                    min : 0,
+                                    max : 500,
+                                    x: 'left',
+                                    calculable : true,
+                                    color: ['#ff3333', 'orange', 'yellow','lime','aqua'],
+                                    textStyle:{
+                                        color:'#fff'
+                                    }
+                                },
+                                series : [
+                                    {
+                                        name: '所有景区',
+                                        type: 'map',
+                                        roam: true,
+                                        hoverable: false,
+                                        mapType: '海南',
+                                        itemStyle:{
+                                            normal:{
+                                                borderColor:'rgba(100,149,237,1)',
+                                                borderWidth:0.5,
+                                                areaStyle:{
+                                                    color: '#1b1b1b'
+                                                }
+                                            }
+                                        },
+                                        data:[],
+                                        geoCoord: {
+                                            '南山文化旅游区':[109.2199693,18.31049752],
+                                            '南山大小洞天旅游区':[109.184517,18.306514],
+                                            '呀诺达雨林文化旅游区':[109.668727,18.44967311],
+                                            '分界洲岛旅游区':[110.2067999,18.58193723],
+                                            '中国雷琼海口火山群世界地质公园':[110.225955,19.93125],
+                                            '甘什岭槟榔谷原生态黎苗文化旅游区':[109.6697331,18.40316348],
+                                            '假日海滩旅游区':[110.2436013,20.04262889],
+                                            '天涯海角风景区':[109.3614826,18.2983011],
+                                            '海南热带野生动植物园':[110.2525057,19.77615147],
+                                            '三亚蜈支洲岛度假中心':[109.7342229,18.28065037],
+                                            '兴隆热带植物园':[110.2050264,18.73865993],
+                                            '博鳌亚洲论坛永久会址':[110.578276,19.146878],
+                                            '亚龙湾国家旅游度假区':[109.654556,18.236155],
+                                            '三亚大东海旅游景区':[109.530054,18.22879454],
+                                            '南湾猴岛生态景区':[109.9902316,18.40271131],
+                                            '海口观澜湖旅游度假区':[110.328102,19.917656],
+                                            '海南文笔峰盘古文化旅游区':[110.372117,19.558993],
+                                            '三亚西岛海洋文化旅游区':[109.374756,18.297797],
+                                            '万宁东山岭文化旅游区':[110.435341,18.808551],
+                                            '三亚免税店':[109.757208,18.377733],
+                                            '三亚解放路步行街':[109.508794,18.255055],
+                                            '万宁首创奥特莱斯':[110.301043,18.730906],
+                                            '三亚百花谷商业街':[109.650589,18.238808],
+                                            '三亚1号港湾城':[109.535533,18.228164],
+                                            '东坡书院':[109.365385,19.747813],
+                                            '鹿回头公园':[109.508091,18.23177]
+                                        },
+                                        markLine : {
+                                            smooth:true,
+                                            effect : {
+                                                show: true,
+                                                scaleSize: 1,
+                                                period: 30,
+                                                color: '#fff',
+                                                shadowBlur: 10
+                                            },
+                                            itemStyle : {
+                                                normal: {
+                                                    borderWidth:1,
+                                                    lineStyle: {
+                                                        type: 'solid',
+                                                        shadowBlur: 10
+                                                    }
+                                                }
+                                            },
+                                            data : []
+                                        }
+                                    }, 
+                                    {
+                                        name: params.name,
+                                        type: 'map',
+                                        mapType: '海南',
+                                        data:[],
+                                        markLine : {
+                                            smooth:true,
+                                            effect : {
+                                                show: true,
+                                                scaleSize: 1,
+                                                period: 30,
+                                                color: '#fff',
+                                                shadowBlur: 10
+                                            },
+                                            itemStyle : {
+                                                normal: {
+                                                    borderWidth:1,
+                                                    lineStyle: {
+                                                        type: 'solid',
+                                                        shadowBlur: 10
+                                                    }
+                                                }
+                                            },
+                                            data : (function () {
+                                                var d = [];
+                                                for(j=0; j< msg.data[0].migration.length; j++) {
+                                                    var d1=[];
+                                                    d1.push({name:params.name});
+                                                    d1.push({name:msg.data[0].migration[j].outname,value:parseInt(msg.data[0].migration[j].count)});
+                                                    d.push(d1);
+                                                }
+                                                return d;
+                                            })()
+                                        }                                   
+                                    }  
+                                ]                     
+                            };
+                            migrationChart.setOption(migrationOption);
+                        }
+                    );
+                    /**migration**/
+                  
+                }
+            });
+        });
+
+        function renderBrushed(params) {
+            console.log(params);
+            var mainSeries = params.batch[0].selected[0];
+
+            var selectedItems = [];
+            var categoryData = [];
+            var barData = [];
+            var maxBar = 30;
+            var sum = 0;
+            var count = 0;
+
+            for (var i = 0; i < mainSeries.dataIndex.length; i++) {
+                var rawIndex = mainSeries.dataIndex[i];
+                var dataItem = option.series[0].data[rawIndex];
+                var pmValue = dataItem.value[2];
+
+                sum += pmValue;
+                count++;
+
+                selectedItems.push(dataItem);
+            }
+
+            selectedItems.sort(function (a, b) {
+                return a.value[2] - b.value[2];
+            });
+
+            for (var i = 0; i < Math.min(selectedItems.length, maxBar); i++) {
+                categoryData.push(selectedItems[i].name);
+                barData.push(selectedItems[i].value[2]);
+            }
+
+            this.setOption({
+                yAxis: {
+                    data: categoryData
+                },
+                xAxis: {
+                    axisLabel: {show: !!count}
+                },
+                title: {
+                    id: 'statistic'
+                },
+                series: {
+                    id: 'bar',
+                    data: barData
+                }
+            });
+        }
+    </script>
+
+    <!-- jQuery -->
+    <script src="media/bower_components/jquery/dist/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="media/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="media/bower_components/metisMenu/dist/metisMenu.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="media/dist/js/sb-admin-2.js"></script>
+
+</body>
+
+</html>

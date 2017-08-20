@@ -1,0 +1,86 @@
+<% include header.ejs %>
+                <div class="row">
+                    <div class="col-lg-12" style="height:25px">
+
+                    </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+            <div class="row">
+                <form method="post" enctype="multipart/form-data" action="/benshengdetail" id="benshengselect">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label>全部联系人个数</label><br/>
+                            <input type="number" name="allcontect1" id="allcontect1"
+                                   min=0 max=1000 value=0>~
+                            <input type="number" name="allcontect2" id="allcontect2"
+                                   min=0 max=1000 value=1000>
+                        </div>
+                        <div class="form-group">
+                            <label>打入联系人个数</label><br/>
+                            <input type="number" name="incontect1" id="incontect1"
+                                   min=0 max=1000 value=0>~
+                            <input type="number" name="incontect2" id="incontect2"
+                                   min=0 max=1000 value=1000>
+                        </div>
+                        <div class="form-group">
+                            <label>打出联系人个数</label><br/>
+                            <input type="number" name="outcontect1" id="outcontect1"
+                                   min=0 max=1000 value=0>~
+                            <input type="number" name="outcontect2" id="outcontect2"
+                                   min=0 max=1000 value=1000>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+
+                    </div>
+
+                    <div class="col-lg-3">
+
+                        <div class="form-group">
+                            <label>平均最早离家时间</label><br/>
+                            <input type="number" name="outtime1" id="outtime1"
+                                   min=0 max=24 value=0> 时~
+                            <input type="number" name="outtime2" id="outtime2"
+                                   min=0 max=24 value=24> 时
+                        </div>
+
+                        <div class="form-group">
+                            <label>平均最晚离开工作地时间</label><br/>
+                            <input type="number" name="leavetime1" id="leavetime1"
+                                   min=0 max=24 value=0> 时~
+                            <input type="number" name="leavetime2" id="leavetime2"
+                                   min=0 max=24 value=24> 时
+                        </div>
+
+                        <div class="form-group">
+                            <label>生活圈半径</label><br/>
+                            <input type="number" name="rad1" id="rad1"
+                                   min=0 max=1000 value=0> km~
+                            <input type="number" name="rad2" id="rad2"
+                                   min=0 max=1000 value=1000> km
+                        </div>
+                    </div>
+
+                    <div class="col-lg-9">
+                         <div class="form-group">
+                             <label>定制化</label>
+                             <textarea class="form-control" rows="1" onfocus="this.rows='30'" onblur="this.rows='1'"></textarea>
+                         </div>
+                    </div>
+
+                    </div>
+                    <div class="panel-footer">
+                        <button type="submit" class="btn btn-primary" style="margin-left: 18px">确定</button>
+                        <button type="reset" class="btn">重置</button>
+                    </div>
+                </div>
+
+                </form>
+                </div>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+<% include footer.ejs %>

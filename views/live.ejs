@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>电信用户洞察</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="media/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="media/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="media/dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="media/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" href="img/favicon.ico" />
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mmh6uKBZs2bvMVvWAYrnkt7G"></script>
+        <script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
+
+</head>
+
+<body onload="openHeatmap()">
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0;">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index"><img src="img/logo.png"  height="28px" /></a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <!--bootstrapmin nav>li>a:hover 和.open>a:hover的颜色可以变-->
+            <ul class="nav navbar-top-links navbar-right" style="margin-right: 30px">
+                <li class="dropdown" >
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw" ></i> <%= req.session.user.username %> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="/settings"><i class="fa fa-gear fa-fw"></i> 设置</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="/login"><i class="fa fa-sign-out fa-fw"></i> 注销</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+
+            </ul>
+            <!-- /.navbar-top-links -->
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                        <li class="active">
+                            <a href="#"><i class="fa fa-dashboard "></i>区域旅游行业分析指标<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/index"><i class="fa fa-circle-o "></i> 景区概览</a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fa fa-circle-o "></i> 归属统计<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li >
+                                            <a href="/guishubyday">&nbsp;○&nbsp;按天统计</a>
+                                        </li>
+                                        <li >
+                                            <a href="/guishubymonth">&nbsp;○&nbsp;按月统计</a>
+                                        </li>
+                                        <li >
+                                            <a href="/guishubysight">&nbsp;○&nbsp;景区统计</a>
+                                        </li>
+                                        <li >
+                                            <a href="/traffic">&nbsp;○&nbsp;交通方式</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class="active">
+                                    <a href="#"><i class="fa fa-circle "></i> 客流统计<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li >
+                                            <a href="/sightflow">&nbsp;○&nbsp;景区流量</a>
+                                        </li>
+                                        <li >
+                                            <a href="/prostay">&nbsp;○&nbsp;省内驻留</a>
+                                        </li>
+                                        <li >
+                                            <a href="/migration">&nbsp;○&nbsp;游客迁徙</a>
+                                        </li>
+                                        <li >
+                                            <a href="/sightstay">&nbsp;○&nbsp;景区驻留</a>
+                                        </li>
+                                        <li >
+                                            <a class="active" href="/live" >&nbsp;●&nbsp;住宿分布</a>
+                                        </li>
+                                        <li >
+                                            <a href="/inandout">&nbsp;○&nbsp;漫入漫出</a>
+                                        </li>
+                                        
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="/zeppelin"><i class="fa fa-circle-o "></i> 景区客源结构分析</a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fa fa-circle-o "></i>行程推荐<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li >
+                                            <a href="/travel">&nbsp;○&nbsp;经典推荐</a>
+                                        </li>
+                                        <li >
+                                            <a href="/personalTravel1">&nbsp;○&nbsp;个性化推荐</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+                        <li>
+                            <a href="#"><i class="fa fa-user"></i> 本省人分析<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/peoplelist"><i class="fa fa-circle-o "></i> 个人列表</a>
+                                </li>
+                                <li>
+                                    <a href="/benshengselect" ><i class="fa fa-circle-o "></i> 人群筛选</a>
+                                </li>
+                                <li>
+                                    <a href="/xingwei" ><i class="fa fa-circle-o "></i> 行为分析</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+                        <li>
+                            <a href="/waishengselect"><i class="fa fa-user-md"></i> 外省人分析</a>
+                        </li>
+<li style="display:none;">                     <a href="/jinghe"><i class="fa fa-certificate"></i> 竞合分析</a>                 </li>
+                        <li>
+                            <a href="#"><i class="fa fa-users"></i> 社交分析<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/shejiaoquan"><i class="fa fa-circle-o "></i> 社交圈分析</a>
+                                </li>
+                                <li>
+                                    <a href="/jingdianxiangguan"><i class="fa fa-circle-o "></i> 用户游览行为的社交关联分析</a>
+                                </li>
+                                <li>
+                                    <a href="/yidongxiangguan"><i class="fa fa-circle-o "></i> 用户移动行为的社交关联分析</a>
+                                </li>
+                                <li>
+                                    <a href="/fourg"><i class="fa fa-circle-o "></i> 兴趣偏好预测及4g案例分析</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+                        <li>
+                            <a href="#"><i class="fa fa-legal"></i> 用户移动行为挖掘<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/motif"><i class="fa fa-circle-o "></i> 移动模式图模型</a>
+                                </li>
+                                <li>
+                                    <a href="/motifOfArea"><i class="fa fa-circle-o "></i> 区域人群移动模式画像与用地分析</a>
+                                </li>
+                                <li>
+                                    <a href="/trafficHeat"><i class="fa fa-circle-o "></i> 道路映射（北京）</a>
+                                </li>
+                                <li>
+                                    <a href="/dbscan"><i class="fa fa-circle-o "></i> 重要位置识别（dbscan)</a>
+                                </li>
+                                <li>
+                                    <a href="/mapmatching"><i class="fa fa-circle-o"></i> 用户移动（北京）</a>
+                                </li>
+                                <li>
+                                    <a href="/recommend"><i class="fa fa-bar-chart-o fa-fw"></i>基于语义轨迹的好友推荐<span class="fa arrow"></span></a>
+                                </li>                               
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="/zaixian"><i class="fa fa-list"></i> 在线大数据分析平台</a>
+                        </li>
+                        <li>
+                            <a href="/guizhou"><i class="fa fa-list"></i> 楼盘平台</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <!-- Page Content -->
+        <div id="page-wrapper">
+                <div class="row">
+                    <div class="col-lg-12" style="height:25px">
+
+                    </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+                <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="panel panel-default">
+                        <!-- /.panel-heading -->
+                        <div class="panel-body" id="Map" style="height: 730px">
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <div class="col-lg-4" id="r-result">
+
+                </div>
+            </div>
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+    <script type="text/javascript">
+        $(document).ready(function(){
+            openHeatmap();
+        });
+
+        //创建热力图函数
+        function openHeatmap(){
+            //var path = (typeof(arguments[0])=="undefined")?"source/heatMapData/homeUrban.csv":fileSrc;
+            //var defaultPoint = [110.32403,20.04583]
+            //var center = (typeof(arguments[0])=="undefined")?defaultPoint:centerPoint;
+
+            var map = new BMap.Map("Map");          // 创建地图实例
+            var point = new BMap.Point(109.844, 19.184);
+            map.centerAndZoom(point, 9);             // 初始化地图，设置中心点坐标和地图级别
+            map.enableScrollWheelZoom(); // 允许滚轮缩放
+            map.setMapStyle({style:'dark'});
+            var local = new BMap.LocalSearch(map, {
+                renderOptions: {map: map, panel: "r-result"}
+            });
+            local.search("酒店");
+            //var myIcon = new BMap.Icon("css/img/point.gif", new BMap.Size(250,117));
+
+            var cr = new BMap.CopyrightControl({anchor: BMAP_ANCHOR_BOTTOM_RIGHT});   //设置版权控件位置
+            map.addControl(cr); //添加版权控件
+
+            var bs = map.getBounds();   //返回地图可视区域
+            cr.addCopyright({id: 1, content: "<div style='background-color: white; height:25px;line-height:25px;font-size:13px'>&nbsp;&nbsp;热力拥挤度图例：" +
+            "<span style='background-color:#87CEEB;margin-right: 2px;color: white'>&nbsp;&nbsp;非常舒适&nbsp;&nbsp;</span>" +
+            "<span style='background-color: #7FFF00;margin-right: 2px;color: white'>&nbsp;&nbsp;舒适&nbsp;&nbsp;</span>" +
+            "<span style='background-color: yellow;margin-right:2px;color: white'>&nbsp;&nbsp;拥挤&nbsp;&nbsp;</span>" +
+            "<span style='background-color: red;margin-right: 2px;color: white'>&nbsp;&nbsp;非常拥挤&nbsp;&nbsp;</span>&nbsp;</div>", bounds: bs});
+
+
+            if(!isSupportCanvas()){
+                alert('热力图目前只支持有canvas支持的浏览器,您所使用的浏览器不能使用热力图功能~')
+            }
+
+            heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":20,"gradient":{'0': 'blue','0.6': 'cyan','0.7': 'lime','0.8': 'yellow', '1.0': '#EE6A50'
+            }});
+            map.addOverlay(heatmapOverlay);
+            heatmapOverlay.setDataSet({data:(function () {
+                var d = []
+                <% for(j=0; j< live.length; j++) {%>
+                d.push({"lng":'<%=live[j].lng%>',"lat":'<%=live[j].lat%>',"count":parseInt('<%=live[j].count%>')});
+                <%}%>
+                return d;
+            })(),max:1000});
+            //var options = {"gradient":{.2:'rgb(0, 255, 255)',.5:'rgb(0, 110, 255)',.95:'rgb(100, 0, 255)'},"opacity":50}
+            //heatmapOverlay.setOptions(options);
+            heatmapOverlay.show();
+
+        }
+
+        //判断浏览区是否支持canvas
+        function isSupportCanvas(){
+            var elem = document.createElement('canvas');
+            return !!(elem.getContext && elem.getContext('2d'));
+        }
+
+
+        function closeHeatmap(){
+            heatmapOverlay.hide();
+        }
+
+        function showInfo(e){
+            alert(e.point.lng + ", " + e.point.lat);
+        }
+
+
+    </script>
+    <!-- jQuery -->
+    <script src="media/bower_components/jquery/dist/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="media/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="media/bower_components/metisMenu/dist/metisMenu.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="media/dist/js/sb-admin-2.js"></script>
+
+</body>
+
+</html>

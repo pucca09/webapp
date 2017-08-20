@@ -1,0 +1,23 @@
+<% include header.ejs %>
+<div class="panel-body">
+	<div class="alert alert-success">
+		查询结果为空。页面将在 <span id="time">3</span> 秒钟后自动跳转至查询页面，
+	<a href="/travel" title="点击访问">或点击此处直接跳转。</a>  
+	</div>
+</div>
+
+<script type="text/javascript">  
+    delayURL();    
+    function delayURL() { 
+    	var delay = document.getElementById("time").innerHTML;
+		var t = setTimeout("delayURL()", 1000);
+		    if (delay > 0) {
+		        delay--;
+		        document.getElementById("time").innerHTML = delay;
+		    } else {
+		 		clearTimeout(t); 
+		        window.location.href = "/travel";
+		    }        
+    } 
+</script>
+<% include footer.ejs %>

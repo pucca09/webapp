@@ -1,0 +1,144 @@
+<% include header.ejs %>
+<br>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+					景区基站自动匹配工具
+			</div>
+		<div class="panel-body">
+			<form role="form">
+				<div class="form-group">
+					<label>请输入景区ID</label>
+                	<input class="form-control" id='scenicID' name='scenicID' value=''>
+                </div>
+                <div class="form-group">
+					<label>请输入景区名字</label>
+                	<input class="form-control"  id='scenicName' name='scenicName' value=''>
+                </div>
+                <div class="form-group">
+					<label>请输入景区等级</label>
+                	<input class="form-control" id='scenicClass' name='scenicClass' value=''>
+                </div>
+
+                <div class="form-group">
+                	<label>请选择自定义景区区域</label>
+                	<div id="allmap" style="overflow:hidden;zoom:1;position:relative;">	
+						<div id="map" style="height:500px;"></div>
+					</div>
+					<br>
+					<div id="result">
+						<button onclick="clearAll()" class="btn btn-default">清除多边形</button>
+					</div>
+                </div>
+                
+                <div class ="row">
+	                <button type="button" id="submitArea" class="btn btn-primary btn-lg btn-block">确定添加该区域</button>
+	                <button type="reset" class="btn btn-primary btn-lg btn-block">重置</button>
+	            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+	// 百度地图API功能
+	var data = {};
+	var _PATH = [];
+    var map = new BMap.Map('map');
+    var myGeo = new BMap.Geocoder();
+    map.addControl(new BMap.ScaleControl()); 
+    // 将地址解析结果显示在地图上,并调整地图视野
+    myGeo.getPoint("大东海", function(point){
+        if (point) {
+            map.centerAndZoom(point, 16);
+            map.enableScrollWheelZoom(); //启用鼠标滚动对地图放大缩小
+        }else{
+            alert("您选择地址没有解析到结果!");
+        }
+    }, "海南省");
+   //鼠标绘制完成回调方法   获取各个点的经纬度
+    var overlays = [];
+    var overlaycomplete = function(e){
+        overlays.push(e.overlay);
+        var path = e.overlay.getPath();//Array<Point> 返回多边型的点数组
+        for(var i=0;i<path.length;i++){
+
+            console.log("lng:"+path[i].lng+"\n lat:"+path[i].lat);
+        }
+     	_PATH = path;
+    	
+    };
+    var styleOptions = {
+        strokeColor:"red",    //边线颜色。
+        fillColor:"red",      //填充颜色。当参数为空时，圆形将没有填充效果。
+        strokeWeight: 3,       //边线的宽度，以像素为单位。
+        strokeOpacity: 0.8,       //边线透明度，取值范围0 - 1。
+        fillOpacity: 0.6,      //填充的透明度，取值范围0 - 1。
+        strokeStyle: 'solid' //边线的样式，solid或dashed。
+    }
+    //实例化鼠标绘制工具
+    var drawingManager = new BMapLib.DrawingManager(map, {
+        isOpen: false, //是否开启绘制模式
+        enableDrawingTool: true, //是否显示工具栏
+        drawingMode:BMAP_DRAWING_POLYGON,//绘制模式  多边形
+        drawingToolOptions: {
+            anchor: BMAP_ANCHOR_TOP_RIGHT, //位置
+            offset: new BMap.Size(5, 5), //偏离值
+            drawingModes:[
+                BMAP_DRAWING_POLYGON
+            ]
+        },
+        polygonOptions: styleOptions //多边形的样式
+    });
+    
+     //添加鼠标绘制工具监听事件，用于获取绘制结果
+    drawingManager.addEventListener('overlaycomplete', overlaycomplete);
+    function clearAll() {
+        for(var i = 0; i < overlays.length; i++){
+            map.removeOverlay(overlays[i]);
+        }
+        overlays.length = 0;
+        _PATH = [];   
+    }
+    $("button#submitArea").on("click",function(){
+    	if($("input#scenicID").val() == '' || $("input#scenicName").val() == '' ){
+    		alert("景区ID或景区名字不得为空")
+
+    	}else if(_PATH.length == 0){
+			alert("景区区域不得为空")
+    	}
+    	else{
+    		data.scenicID = $("input#scenicID").val();
+    		data.scenicName = $("input#scenicName").val();
+    		data.scenicClass = $("input#scenicClass").val();
+            data.path = JSON.stringify(_PATH);
+    		console.log(data);
+    		$.ajax({
+	    		//url:"/hello.text";
+	            type: "get",            //使用的方式，get 还是 post
+	            dataType: "text",       //使用的数据格式
+	            url: "/insertScenicArea",         //发送的地址
+	            data: data,                //需要发送的数据，用json格式来传
+	            success: function(msg){
+	            	if(msg == '0'){
+	            		alert("添加失败!该区域内无法匹配到基站,请重新调整范围。")
+	            	}else{
+	            		alert("添加成功!共插入"+msg+"条记录。")
+	            		window.location.href = "/scenicInfo"
+
+	            	}
+	            }
+	        });
+    	}
+
+    	
+    });
+    
+    
+    
+
+</script>
+<% include footer.ejs %>

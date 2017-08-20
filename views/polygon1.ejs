@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<style type="text/css">
+	body, html{width: 100%;height: 100%;margin:0;font-family:"微软雅黑";}
+	#result {width:100%;font-size:12px;}
+	dl,dt,dd,ul,li{
+		margin:0;
+		padding:0;
+		list-style:none;
+	}
+	p{font-size:12px;}
+	dt{
+		font-size:14px;
+		font-family:"微软雅黑";
+		font-weight:bold;
+		border-bottom:1px dotted #000;
+		padding:5px 0 5px 5px;
+		margin:5px 0;
+	}
+	dd{
+		padding:5px 0 0 5px;
+	}
+	li{
+		line-height:28px;
+	}
+	</style>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mmh6uKBZs2bvMVvWAYrnkt7G"></script>
+	<!--加载鼠标绘制工具-->
+	<script type="text/javascript" src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
+	<link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
+	<!--加载检索信息窗口-->
+	<script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.js"></script>
+	<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.css" />
+	<script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
+	<script src="media/bower_components/jquery/dist/jquery.min.js"></script>
+
+	<title>多边形查找</title>
+</head>
+<body>
+	<div id="allmap" style="position:relative;width:100%;height:100%">
+		<div id="map" style="position:absolute;width:100%;height:100%"></div>
+		<div id="result" style="position:absolute;right:300px; top:60px;width:10px;height:20px">
+			<form method="post" enctype="multipart/form-data" action="/polygon" id="form1">
+				<input type="text" name="polygonlng" id="polygonlng" style="display: none"/>
+				<input type="text" name="polygonlat" id="polygonlat"  style="display: none"/>
+				<input type="button" value="查找起点在选定区域内的路径" onclick="lookfor1()"/>
+			</form>
+		</div>
+	</div>
+
+
+<script type="text/javascript">
+	var overlays = [];
+	// 路径配置
+	require.config({
+		paths: {
+			echarts: 'http://echarts.baidu.com/build/dist'
+		},
+		packages: [
+			{
+				name: 'BMap',
+				location: 'plugin/echarts',
+				main: 'bmap2'
+			}
+		]
+	});
+
+	// 使用
+	require(
+			[
+				'echarts',
+				'BMap',
+				'echarts/chart/map'
+			],
+			function (echarts, BMapExtension) {
+
+				// 初始化地图
+				var BMapExt = new BMapExtension($('#map')[0], BMap, echarts,{
+					enableMapClick: false
+				});
+				var map = BMapExt.getMap();
+				var container = BMapExt.getEchartsContainer();
+
+				var point = new BMap.Point(109.844, 19.184)
+				map.centerAndZoom(point, 12);
+				map.enableScrollWheelZoom(true);
+				// 地图自定义样式
+
+				var overlaycomplete = function(e){
+					e.overlay.enableEditing();
+					overlays=[];
+					overlays.push(e.overlay);
+				};
+				var styleOptions = {
+					strokeColor:"blue",    //边线颜色。
+					fillColor:"white",      //填充颜色。当参数为空时，圆形将没有填充效果。
+					strokeWeight: 3,       //边线的宽度，以像素为单位。
+					strokeOpacity: 0.8,	   //边线透明度，取值范围0 - 1。
+					fillOpacity: 0.5,      //填充的透明度，取值范围0 - 1。
+					strokeStyle: 'solid' //边线的样式，solid或dashed。
+				}
+				//实例化鼠标绘制工具
+				var drawingManager = new BMapLib.DrawingManager(map, {
+					isOpen: false, //是否开启绘制模式
+					enableDrawingTool: true, //是否显示工具栏
+					drawingToolOptions: {
+						anchor: BMAP_ANCHOR_TOP_RIGHT, //位置
+						offset: new BMap.Size(5, 5), //偏离值
+					},
+					circleOptions: styleOptions, //圆的样式
+					polylineOptions: styleOptions, //线的样式
+					polygonOptions: styleOptions, //多边形的样式
+					rectangleOptions: styleOptions //矩形的样式
+				});
+				//添加鼠标绘制工具监听事件，用于获取绘制结果
+				drawingManager.addEventListener('overlaycomplete', overlaycomplete);
+
+				var polygon = new BMap.Polygon((function () {
+					var d = []
+					<%for(i=0; i< pol.length-1; i++) {%>
+					d.push(new BMap.Point('<%=pol[i][0]%>','<%=pol[i][1]%>'));
+					<%}%>
+					return d;
+				})(), styleOptions);
+				map.addOverlay(polygon);           //增加多边形
+
+				option = {
+					color: ['gold','aqua','lime'],
+					title : {
+						text: '多边形区域选择',
+						subtext:'数据纯属虚构',
+						x:'center'
+					},
+//					tooltip : {
+//						trigger: 'item',
+//						formatter: function (v) {
+//							return v[1].replace(':', ' > ');
+//						}
+//					},
+					dataRange: {
+						min : 0,
+						max : 100,
+						range: {
+							start: 0,
+							end: 100
+						},
+						x: 'right',
+						calculable : true,
+						color: ['#ff3333', 'orange', 'yellow','lime','aqua'],
+						textStyle:{
+							color:'#fff'
+						}
+					},
+					series : [
+						{
+							name:'路径',
+							type:'map',
+							mapType: 'none',
+							data:[],
+							markLine : {
+								smooth:true,
+								effect : {
+									show: true,
+									scaleSize: 1,
+									period: 30,
+									color: '#fff',
+									shadowBlur: 10
+								},
+								itemStyle : {
+									normal: {
+										borderWidth:1,
+										lineStyle: {
+											type: 'solid',
+											shadowBlur: 10
+										}
+									}
+								},
+								//修改了bmap2.js
+								//[{geoCoord:[116.395645,39.929986]}, {geoCoord:[121.48, 31.22],value:95}]
+								data : (function () {
+									var d = [];
+									if('<%=line.length%>'!=1){
+										var sum1=0;
+										var sum2=0;
+									<% for(j=0; j< line.length; j++) {%>
+										sum1+=parseFloat('<%=line[j].startPoint.coordinates[0]%>')
+										sum2+=parseFloat('<%=line[j].startPoint.coordinates[1]%>')
+									<%}%>
+
+										<% for(j=0; j< line.length; j++) {%>
+										d.push([{geoCoord:[sum1/'<%=line.length%>',sum2/'<%=line.length%>']},
+											{geoCoord:['<%=line[j].endPoint.coordinates[0]%>','<%=line[j].endPoint.coordinates[1]%>'],value:parseInt(Math.random()*100)}]);
+										<%}%>
+									}
+									return d;
+								})()
+							}
+						}
+					]
+				};
+
+				var myChart = BMapExt.initECharts(container);
+				window.onresize = myChart.onresize;
+				BMapExt.setOption(option);
+
+			}
+	);
+
+	function lookfor1(){
+		var temp="";
+		var temp1="";
+		for(i=0;i<overlays[0].getPath().length;i++){
+			temp=temp+overlays[0].getPath()[i].lng.toString()+",";
+			temp1=temp1+overlays[0].getPath()[i].lat.toString()+",";
+		}
+		temp=temp.substring(0,temp.length-1);
+		temp1=temp1.substring(0,temp1.length-1);
+
+		document.getElementById('polygonlng').value=temp;
+		document.getElementById('polygonlat').value=temp1;
+		document.getElementById('form1').submit();
+	}
+
+</script>
+</body>
+</html>

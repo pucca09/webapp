@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>旅游大数据分析</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="media/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="media/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+    <link href="media/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
+
+    <!-- DataTables Responsive CSS -->
+    <link href="media/bower_components/datatables-responsive/css/dataTables.responsive.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="media/dist/css/sb-admin-2.css" rel="stylesheet">
+    <link rel="shortcut icon" href="img/favicon.ico" />
+    <!-- Custom Fonts -->
+    <link href="media/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mmh6uKBZs2bvMVvWAYrnkt7G"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
+    <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0;">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index"><img src="img/logo.png"  height="28px" /></a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <!--bootstrapmin nav>li>a:hover 和.open>a:hover的颜色可以变-->
+            <ul class="nav navbar-top-links navbar-right" style="margin-right: 30px">
+                <li class="dropdown" >
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw" ></i> admin <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="/settings"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="/login"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+
+            </ul>
+            <!-- /.navbar-top-links -->
+
+        </nav>
+
+        <div id="page-wrapper1">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header">筛选人群结果展示</h3>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+
+            <ul class="breadcrumb">
+                <li><a href="/waishengselect">外省人分析</a></li>
+                <li class="active">筛选人群结果展示</li>
+            </ul>
+
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-5">
+                    <div class="panel panel-default" id="chart3" style="height: 300px">
+
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <div class="col-lg-3">
+                    <div class="panel panel-default" id="chart4" style="height: 300px">
+
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <div class="col-lg-4">
+                    <div class="panel panel-default" id="chart5" style="height: 300px">
+
+                    </div>
+                    <!-- /.panel -->
+                </div>
+            </div>            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default" >
+                        <div class="panel-body" id="chart1" style="height: 600px">
+
+                        </div>
+                    </div>
+                    <!-- /.panel -->
+                </div>
+            </div>
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <script type="text/javascript">
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+
+        // 使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/pie',
+                    'echarts/chart/scatter',
+                    'echarts/chart/map'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('chart1'),'macarons');
+                    var myChart3 = ec.init(document.getElementById('chart3'),'macarons');
+                    var myChart4 = ec.init(document.getElementById('chart4'),'macarons');
+                    var myChart5 = ec.init(document.getElementById('chart5'),'macarons');
+
+                    option1 = {
+                        timeline:{
+                            type:'number',
+                            data:[
+                                '8:00','12:00','16:00','20:00','24:00'
+                            ],
+                            label : {
+                                formatter : function(s) {
+                                    return s.slice(0, 7);
+                                },
+                                textStyle: {
+                                    color: '#ffffff'
+                                }
+                            },
+                            y:531,
+                            autoPlay : true,
+                            playInterval : 10000
+                        },
+                        options:[
+                            {
+                                backgroundColor: '#1b1b1b',
+                                color: [
+                                    'rgba(255, 255, 255, 0.8)',
+                                    'rgba(14, 241, 242, 0.8)',
+                                    'rgba(37, 140, 249, 0.8)'
+                                ],
+                                title : {
+                                    text: '游客白天和晚上分布',
+                                    x:'center',
+                                    textStyle : {
+                                        color: '#fff'
+                                    }
+                                },
+                                legend: {
+                                    orient: 'vertical',
+                                    x:'left',
+                                    data:['游客位置'],
+                                    textStyle : {
+                                        color: '#fff'
+                                    }
+                                },
+                                series : [
+                                    {
+                                        name: '游客位置',
+                                        type: 'map',
+                                        roam: true,
+                                        hoverable: false,
+                                        mapType: '海南',
+                                        itemStyle:{
+                                            normal:{
+                                                borderColor:'rgba(100,149,237,1)',
+                                                borderWidth:1.5,
+                                                areaStyle:{
+                                                    color: '#1b1b1b'
+                                                }
+                                            }
+                                        },
+                                        data : [],
+                                        markPoint : {
+                                            symbolSize: 2,
+                                            large: true,
+                                            effect : {
+                                                show: true
+                                            },
+                                            data : (function(){
+                                                var data = [];
+                                                <% for(j=0; j< 500; j++) {%>
+                                                    data.push({
+                                                        name :  '<%=live[j].count%>',
+                                                        value : parseInt('<%=live[j].count%>'),
+                                                        geoCoord : ['<%=live[j].lng%>','<%=live[j].lat%>']
+                                                    });
+                                                <%}%>
+                                                return data;
+                                            })()
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                legend: {
+                                    orient: 'vertical',
+                                    x:'left',
+                                    data:['游客位置'],
+                                    textStyle : {
+                                        color: '#fff'
+                                    }
+                                },
+                                series : [
+                                    {
+                                        name: '游客位置',
+                                        type: 'map',
+                                        roam: true,
+                                        hoverable: false,
+                                        mapType: '海南',
+                                        itemStyle:{
+                                            normal:{
+                                                borderColor:'rgba(100,149,237,1)',
+                                                borderWidth:1.5,
+                                                areaStyle:{
+                                                    color: '#1b1b1b'
+                                                }
+                                            }
+                                        },
+                                        data : [],
+                                        markPoint : {
+                                            symbolSize: 2,
+                                            large: true,
+                                            effect : {
+                                                show: true
+                                            },
+                                            data : (function(){
+                                                var data = [];
+                                                <% for(j=500; j< 1000; j++) {%>
+                                                data.push({
+                                                    name :  '<%=live[j].count%>',
+                                                    value : parseInt('<%=live[j].count%>'),
+                                                    geoCoord : ['<%=live[j].lng%>','<%=live[j].lat%>']
+                                                });
+                                                <%}%>
+                                                return data;
+                                            })()
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                legend: {
+                                    orient: 'vertical',
+                                    x:'left',
+                                    data:['游客位置'],
+                                    textStyle : {
+                                        color: '#fff'
+                                    }
+                                },
+                                series : [
+                                    {
+                                        name: '游客位置',
+                                        type: 'map',
+                                        roam: true,
+                                        hoverable: false,
+                                        mapType: '海南',
+                                        itemStyle:{
+                                            normal:{
+                                                borderColor:'rgba(100,149,237,1)',
+                                                borderWidth:1.5,
+                                                areaStyle:{
+                                                    color: '#1b1b1b'
+                                                }
+                                            }
+                                        },
+                                        data : [],
+                                        markPoint : {
+                                            symbolSize: 2,
+                                            large: true,
+                                            effect : {
+                                                show: true
+                                            },
+                                            data : (function(){
+                                                var data = [];
+                                                <% for(j=1000; j< 1500; j++) {%>
+                                                data.push({
+                                                    name :  '<%=live[j].count%>',
+                                                    value : parseInt('<%=live[j].count%>'),
+                                                    geoCoord : ['<%=live[j].lng%>','<%=live[j].lat%>']
+                                                });
+                                                <%}%>
+                                                return data;
+                                            })()
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                legend: {
+                                    orient: 'vertical',
+                                    x:'left',
+                                    data:['游客位置'],
+                                    textStyle : {
+                                        color: '#fff'
+                                    }
+                                },
+                                series : [
+                                    {
+                                        name: '游客位置',
+                                        type: 'map',
+                                        roam: true,
+                                        hoverable: false,
+                                        mapType: '海南',
+                                        itemStyle:{
+                                            normal:{
+                                                borderColor:'rgba(100,149,237,1)',
+                                                borderWidth:1.5,
+                                                areaStyle:{
+                                                    color: '#1b1b1b'
+                                                }
+                                            }
+                                        },
+                                        data : [],
+                                        markPoint : {
+                                            symbolSize: 2,
+                                            large: true,
+                                            effect : {
+                                                show: true
+                                            },
+                                            data : (function(){
+                                                var data = [];
+                                                <% for(j=1500; j< 2000; j++) {%>
+                                                data.push({
+                                                    name :  '<%=live[j].count%>',
+                                                    value : parseInt('<%=live[j].count%>'),
+                                                    geoCoord : ['<%=live[j].lng%>','<%=live[j].lat%>']
+                                                });
+                                                <%}%>
+                                                return data;
+                                            })()
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                legend: {
+                                    orient: 'vertical',
+                                    x:'left',
+                                    data:['游客位置'],
+                                    textStyle : {
+                                        color: '#fff'
+                                    }
+                                },
+                                series : [
+                                    {
+                                        name: '游客位置',
+                                        type: 'map',
+                                        roam: true,
+                                        hoverable: false,
+                                        mapType: '海南',
+                                        itemStyle:{
+                                            normal:{
+                                                borderColor:'rgba(100,149,237,1)',
+                                                borderWidth:1.5,
+                                                areaStyle:{
+                                                    color: '#1b1b1b'
+                                                }
+                                            }
+                                        },
+                                        data : [],
+                                        markPoint : {
+                                            symbolSize: 2,
+                                            large: true,
+                                            effect : {
+                                                show: true
+                                            },
+                                            data : (function(){
+                                                var data = [];
+                                                <% for(j=2000; j< 2500; j++) {%>
+                                                data.push({
+                                                    name :  '<%=live[j].count%>',
+                                                    value : parseInt('<%=live[j].count%>'),
+                                                    geoCoord : ['<%=live[j].lng%>','<%=live[j].lat%>']
+                                                });
+                                                <%}%>
+                                                return data;
+                                            })()
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    };
+
+                    option3 = {
+                        title : {
+                            text: '男性女性收入消费水平分布',
+                            x:'center',
+                            textStyle:{
+                                color:"black",
+                                fontWeight:'bold'
+                            }
+                        },
+                        tooltip : {
+                            trigger: 'axis',
+                            showDelay : 0,
+                            formatter : function (params) {
+                                if (params.value.length > 1) {
+                                    return params.seriesName + ' :<br/>'
+                                            + params.value[0] + '元 '
+                                            + params.value[1] + '元 ';
+                                }
+                                else {
+                                    return params.seriesName + ' :<br/>'
+                                            + params.name + ' : '
+                                            + params.value + '元 ';
+                                }
+                            },
+                            axisPointer:{
+                                show: true,
+                                type : 'cross',
+                                lineStyle: {
+                                    type : 'dashed',
+                                    width : 1
+                                }
+                            }
+                        },
+                        legend: {
+                            x:'left',
+                            data:['女性','男性']
+                        },
+                        xAxis : [
+                            {
+                                type : 'value',
+                                scale:true,
+                                axisLabel : {
+                                    formatter: '{value} 元'
+                                }
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                                scale:true,
+                                axisLabel : {
+                                    formatter: '{value} 元'
+                                }
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'女性',
+                                type:'scatter',
+                                itemStyle: {
+                                    normal: {
+                                        color: 	'#EE8262'
+                                    }
+                                },
+                                data: (function () {
+                                    var d = []
+                                    for(j=0; j< 250; j++) {
+                                    d.push([Math.random() * 15000 + 5000,Math.random() * 10000 + 5000]);
+                                    }
+                                    return d;
+                                })(),
+                                markLine : {
+                                    data : [
+                                        {type : 'average', name: '平均值'}
+                                    ]
+                                }
+                            },
+                            {
+                                name:'男性',
+                                type:'scatter',
+                                data: (function () {
+                                    var d = []
+                                    for(j=0; j< 250; j++) {
+                                        d.push([Math.random() * 25000 + 5000,Math.random() * 10000 + 5000]);
+                                    }
+                                    return d;
+                                })(),
+                                markLine : {
+                                    data : [
+                                        {type : 'average', name: '平均值'}
+                                    ]
+                                }
+                            }
+                        ]
+                    };
+
+                    option4 = {
+                        title : {
+                            text: '性别分布',
+                            x:'center',
+                            textStyle:{
+                                color:"black",
+                                fontWeight:'bold'
+                            }
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            orient : 'vertical',
+                            x : 'left',
+                            data:['男','女']
+                        },
+                        calculable : true,
+                        color: 	['#EE8262','#A4D3EE'],
+                        series : [
+                            {
+                                name:'访问来源',
+                                type:'pie',
+                                radius : ['50%', '70%'],
+                                itemStyle : {
+                                    normal : {
+                                        label : {
+                                            show : false
+                                        },
+                                        labelLine : {
+                                            show : false
+                                        }
+                                    },
+                                    emphasis : {
+                                        label : {
+                                            show : true,
+                                            position : 'center',
+                                            textStyle : {
+                                                fontSize : '30',
+                                                fontWeight : 'bold'
+                                            }
+                                        }
+                                    }
+                                },
+                                data:[
+                                    {value:135, name:'男'},
+                                    {value:154, name:'女'}
+                                ]
+                            }
+                        ]
+                    };
+
+                    option5 = {
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            orient : 'vertical',
+                            x : 'left',
+                            data:['汉族','少数民族','黎族','苗族','回族','其他']
+                        },
+                        color: 	['#EE8262','#A4D3EE','#FFC125','#9400D3','#7FFF00','#B03060'],
+                        calculable : false,
+                        series : [
+                            {
+                                name:'访问来源',
+                                type:'pie',
+                                selectedMode: 'single',
+                                radius : [0, 70],
+
+                                itemStyle : {
+                                    normal : {
+                                        label : {
+                                            position : 'inner'
+                                        },
+                                        labelLine : {
+                                            show : false
+                                        }
+                                    }
+                                },
+                                data:[
+                                    {value:1048, name:'汉族'},
+                                    {value:835, name:'少数民族', selected:true}
+                                ]
+                            },
+                            {
+                                name:'民族分布',
+                                type:'pie',
+                                radius : [100, 140],
+                                itemStyle : {
+                                    normal : {
+                                        label : {
+                                            position : 'inner'
+                                        },
+                                        labelLine : {
+                                            show : false
+                                        }
+                                    }
+                                },
+                                data:[
+                                    {value:1048, name:'汉族'},
+                                    {value:310, name:'黎族'},
+                                    {value:234, name:'苗族'},
+                                    {value:135, name:'回族'},
+                                    {value:156, name:'其他'}
+                                ]
+                            }
+                        ]
+                    };
+
+                    myChart1.setOption(option1);
+                    myChart3.setOption(option3);
+                    myChart4.setOption(option4);
+                    myChart5.setOption(option5);
+                }
+        );
+    </script>
+    <!-- jQuery -->
+    <script src="media/bower_components/jquery/dist/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="media/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="media/bower_components/metisMenu/dist/metisMenu.min.js"></script>
+
+    <!-- DataTables JavaScript -->
+    <script src="media/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="media/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="media/dist/js/sb-admin-2.js"></script>
+
+
+</body>
+
+</html>

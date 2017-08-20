@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>电信用户洞察</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/media/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="/media/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+    <link href="/media/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
+
+    <!-- DataTables Responsive CSS -->
+    <link href="/media/bower_components/datatables-responsive/css/dataTables.responsive.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/media/dist/css/sb-admin-2.css" rel="stylesheet">
+    <link rel="shortcut icon" href="/img/favicon.ico" />
+    <!-- Custom Fonts -->
+    <link href="media/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mmh6uKBZs2bvMVvWAYrnkt7G"></script>
+</head>
+
+<body onload="CreateMap()">
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0;">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index"><img src="/img/logo.png"  height="28px" /></a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <!--bootstrapmin nav>li>a:hover 和.open>a:hover的颜色可以变-->
+            <ul class="nav navbar-top-links navbar-right" style="margin-right: 30px">
+                <li class="dropdown" >
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw" ></i> <%= req.session.user.username %> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="/settings"><i class="fa fa-gear fa-fw"></i> 设置</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="/login"><i class="fa fa-sign-out fa-fw"></i> 注销</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+
+            </ul>
+            <!-- /.navbar-top-links -->
+
+        </nav>
+
+        <div id="page-wrapper1">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header">家和工作地点的频繁路径</h3>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+
+            <ul class="breadcrumb">
+                <li><a href="#">本省人分析</a></li>
+                <li><a href="/peoplelist">个人列表</a></li>
+                <li class="active">家和工作地点的频繁路径</li>
+            </ul>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="panel panel-default" style="height: 500px">
+                        <div class="panel-heading" style="background-color: #ffffff">
+                            用户ID：<%=userdetial.userid%>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>路程长度（km）</th>
+                                        <th>开始时间</th>
+                                        <th>次数</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>110</td>
+                                        <td>8:21</td>
+                                        <td>23</td>
+                                    </tr>
+                                    <tr>
+                                        <td>109</td>
+                                        <td>8:20</td>
+                                        <td>20</td>
+                                    </tr>
+                                    <tr>
+                                        <td>130</td>
+                                        <td>8:12</td>
+                                        <td>15</td>
+                                    </tr>
+                                    <tr>
+                                        <td>160</td>
+                                        <td>8:22</td>
+                                        <td>10</td>
+                                    </tr>
+                                    <tr>
+                                        <td>111</td>
+                                        <td>8:16</td>
+                                        <td>8</td>
+                                    </tr>
+                                    <tr>
+                                        <td>95</td>
+                                        <td>8:19</td>
+                                        <td>7</td>
+                                    </tr>
+                                    <tr>
+                                        <td>104</td>
+                                        <td>8:10</td>
+                                        <td>5</td>
+                                    </tr>
+                                    <tr>
+                                        <td>123</td>
+                                        <td>8:43</td>
+                                        <td>3</td>
+                                    </tr>
+                                    <tr>
+                                        <td>133</td>
+                                        <td>8:42</td>
+                                        <td>2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>121</td>
+                                        <td>8:52</td>
+                                        <td>1</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <div class="col-lg-8">
+                    <div class="panel panel-default" id="Map" style="height: 500px">
+
+                    </div>
+                    <!-- /.panel -->
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+    <script type="text/javascript">
+
+        $(document).ready(function(){
+            CreateMap();
+
+        });
+
+        function CreateMap(){
+            // 百度地图API功能
+            // 百度地图API功能
+            var map = new BMap.Map("Map");
+            var point = new BMap.Point('<%=userdetial.home[0]%>','<%=userdetial.home[1]%>');
+            map.enableScrollWheelZoom(); // 允许滚轮缩放
+            map.centerAndZoom(point, 14);
+            map.addControl(new BMap.NavigationControl());
+
+            var homePoint = new BMap.Point('<%=userdetial.home[0]%>','<%=userdetial.home[1]%>');
+            var myIcon1 = new BMap.Icon("/img/home.ico", new BMap.Size(30,30));
+            var marker1 = new BMap.Marker(homePoint,{icon:myIcon1});  // 创建标注
+            map.addOverlay(marker1);              // 将标注添加到地图中
+
+            var workPoint = new BMap.Point('<%=userdetial.work[0]%>','<%=userdetial.work[1]%>');
+            var myIcon2 = new BMap.Icon("/img/work.ico", new BMap.Size(30,30));
+            var marker2 = new BMap.Marker(workPoint,{icon:myIcon2});  // 创建标注
+            map.addOverlay(marker2);              // 将标注添加到地图中
+
+            var polyline = new BMap.Polyline((function () {
+                var d = []
+                <%for(j=0; j< userdetial.passby.length; j++) {%>
+                d.push(new BMap.Point('<%=userdetial.passby[j][0]%>','<%=userdetial.passby[j][1]%>'));
+                <%}%>
+                return d;
+            })(), {strokeColor:"red", strokeWeight:5, strokeOpacity:0.5});
+            map.addOverlay(polyline);          //增加折线
+        };
+
+
+    </script>
+    <!-- jQuery -->
+    <script src="/media/bower_components/jquery/dist/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/media/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="/media/bower_components/metisMenu/dist/metisMenu.min.js"></script>
+
+    <!-- DataTables JavaScript -->
+    <script src="/media/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="/media/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="/media/dist/js/sb-admin-2.js"></script>
+
+
+</body>
+
+</html>

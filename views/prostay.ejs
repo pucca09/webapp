@@ -1,0 +1,135 @@
+﻿<% include header.ejs %>
+            <div class="row">
+                <div class="col-lg-12" style="height:25px">
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-success">
+                        <div class="panel-body" id="barcharts" style="height: 650px">
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
+    <script type="text/javascript">
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+
+        // 使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/bar' // 使用柱状图就加载bar模块，按需加载
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart = ec.init(document.getElementById('barcharts'),'macarons');
+
+                    option = {
+                        timeline:{
+                            data:(function () {
+                                var d = []
+                                <% for(j=0; j< prostaynum.length; j++) {%>
+                                date='<%=prostaynum[j].date%>';
+                                d.push(date.slice(0,4)+'-'+date.slice(4,6)+'-01');
+                                <%}%>
+                                return d;
+                            })(),
+                            label : {
+                                formatter : function(s) {
+                                    return s.slice(0, 7);
+                                }
+                            },
+                            y:'93%',
+                            autoPlay : true,
+                            playInterval : 1000
+                        },
+                        options:(function () {
+                            var d = []
+                            <% for(i=0; i< prostaynum.length; i++) {%>
+                            d.push({
+                                title : {
+                                    text: '来琼游客驻留时间统计',
+                                    x:'center',
+                                    textStyle:{
+                                        color:"black",
+                                        fontWeight:'bold'
+                                    }
+                                },
+                                tooltip : {
+                                    trigger: 'axis'
+                                },
+                                toolbox: {
+                                    show : true,
+                                    orient:'vertical',
+                                    feature : {
+                                        dataView : {show: true},
+                                        restore : {show: true},
+                                        saveAsImage : {show: true}
+                                    }
+                                },
+                                calculable : true,
+                                xAxis : [
+                                    {
+                                        type : 'category',
+                                        data : ['3天','4天','5天','6天','7天','8天','9天','10天','11天','12天','13天','14天','15天']
+                                    }
+                                ],
+                                yAxis : [
+                                    {
+                                        type : 'value'
+                                    }
+                                ],
+                                series : [
+                                    {
+                                        name:'游客数量',
+                                        type:'bar',
+                                        itemStyle: {
+                                            normal: {
+                                                color:     '#EE8262'
+                                            }
+                                        },
+                                        data:(function () {
+                                            var d = []
+                                            <% for(j=0; j< prostaynum[i].stay.length; j++) {%>
+                                            d.push(parseInt('<%=prostaynum[i].stay[j].count%>'));
+                                            <%}%>
+                                            return d;
+                                        })(),
+                                        markPoint : {
+                                            itemStyle: {
+                                                normal: {
+                                                    color:     '#EE8262'
+                                                }
+                                            },
+                                            data : [
+                                                {type : 'max', name: '最大值'},
+                                                {type : 'min', name: '最小值'}
+                                            ]
+                                        }
+                                    }
+                                ]
+                            });
+                            <%}%>
+                            return d;
+                        })()
+                    };
+
+                    // 为echarts对象加载数据
+                    myChart.setOption(option);
+
+                }
+        );
+    </script>
+<% include footer.ejs %>

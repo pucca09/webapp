@@ -1,0 +1,130 @@
+<% include header.ejs %>
+
+<br>
+<br>
+<div class="panel panel-default">
+    <div class="panel-heading">
+    	<h3 class="centered">行程概览</h3>
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body">
+		<div clss="row">
+			<div class="col-lg-6" id="about">
+			</div>
+			<div class="col-lg-6">
+				<div id="map" style="height: 400px"></div>
+			</div>
+			
+		</div>
+		<div clss="row">
+			<div class="col-lg-6"></div>
+			<div class="col-lg-6" id="dayNav">
+				
+			</div>
+		</div>
+    </div>
+</div>
+<br>
+<br>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="centered">行程详情</h3>
+	</div>
+<!-- /.panel-heading -->
+	<div class="panel-body" id="about">
+		<ul class="timeline">
+		</ul>
+	</div><!-- panel body -->
+</div>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	var map = new BMap.Map("map");
+	var pt = new BMap.Point(109.50567774707332,18.320382307021937);
+    map.centerAndZoom(pt, 9);// 初始化地图，设置中心点坐标和地图级别
+    map.enableScrollWheelZoom();
+    map.addControl(new BMap.NavigationControl()); 
+
+	var traj = <%- JSON.stringify(userlist) %>;
+	console.log(traj)
+	<% for(var i = 0;i < userlist.description.length ;i++){ %>
+		var arr = [];
+		<% for(var j = 0; j< userlist.description[i].length;j++){ %>
+		arr.push('<%=userlist.description[i][j].split("#").slice(1,4).join("|")%>');
+		<%}%>
+		var bt = $("<button type=\"button\"/>").appendTo($("#dayNav")).text("D" + '<%=i+1%>');
+        var row = $("<div class=\"row cqq_padding\">").appendTo($("#about"));
+        var div1 = $("<div class=\"cqq_circle cqq_inline\"/>").appendTo(row);
+        var span = $("<span class=\"Absolute-Center\"/>").appendTo(div1).text("D" + '<%=i+1%>');
+        var div2 = $("<div class=\"cqq_inline cqq_margin_left cqq_vertical_middle_parent\" style=\"height:50px\"/>").appendTo(row);
+        var h3 = $("<h3 class =\"cqq_vertical_middle_child\"></h3>").appendTo(div2).text(arr.join("==>"));
+        var li_head = $("<li></li>").appendTo($(".timeline"));
+        var div_head = $("<div class=\"tldate\"/>").appendTo(li_head).text("Day" + '<%=i+1%>');
+        <% for(var j = 0; j< userlist.description[i].length;j++){ %>
+	        <% if(j%2 == 0){%>
+	        	var li_panel_right = $("<li class=\"timeline-inverted\"/>").appendTo($(".timeline"));
+	        	var div_panel_right = $("<div class=\"timeline-panel\"/>").appendTo(li_panel_right);
+	        	var div_heading = $("<div class=\"tl-heading\"/>").appendTo(div_panel_right);
+	        	var div_body = $("<div class=\"tl-body\"/>").appendTo(div_panel_right);
+	        	var h4 = $("<h4></h4>").appendTo(div_heading).text("RAT:"+'<%=userlist.description[i][j].split("#").slice(1,4).join("|")%>');
+	        	var p_text = $("<p></p>").appendTo(div_body).text('some text.');
+	        	var p_img = $("<p></p>").appendTo(div_body);
+	        	var random_num = Math.ceil(Math.random()*5);
+	        	var img = $("<img src=\"img\\source\\"+'<%=userlist.description[i][j].split("#")[2]%>'+"_"+random_num+".jpg\""+" alt=\"lorem pixel\">").appendTo(p_img);
+
+	        <%}else{%>
+	        	var li_panel_left = $("<li></li>").appendTo($(".timeline"));
+	        	var div_panel_left = $("<div class=\"timeline-panel\"/>").appendTo(li_panel_left);
+	        	var div_heading = $("<div class=\"tl-heading\"/>").appendTo(div_panel_left);
+	        	var div_body = $("<div class=\"tl-body\"/>").appendTo(div_panel_left);
+	        	var h4 = $("<h4></h4>").appendTo(div_heading).text("RAT:"+'<%=userlist.description[i][j].split("#").slice(1,4).join("|")%>');
+	        	var p_text = $("<p></p>").appendTo(div_body).text('some text.');
+	        	var p_img = $("<p></p>").appendTo(div_body);
+	        	var random_num = Math.ceil(Math.random()*5);
+	        	var img = $("<img src=\"img\\source\\"+'<%=userlist.description[i][j].split("#")[2]%>'+"_"+random_num+".jpg\""+" alt=\"lorem pixel\">").appendTo(p_img);
+
+	        <%}%>
+	  //       var lng = parseFloat(userlist.description[i][j].split("#")[0].split("&&")[0]);
+			// var lat = parseFloat(userlist.description[i][j].split("#")[0].split("&&")[1]);
+			// var pt = new BMap.Point(lng,lat);
+			// day_item.push(pt)
+	    <%}%>
+	    // points.push(day_item)
+
+        
+
+	<%}%>
+	
+
+	$("button").on("click",function(){
+		map.clearOverlays();
+		var day = parseInt($(this).text().split("D")[1])-1
+		console.log(day)
+		points=[]
+		for(var j = 0;j<traj.description[day].length;j++){
+			var lng = parseFloat(traj.description[day][j].split("#")[0].split("&&")[0]);
+			var lat = parseFloat(traj.description[day][j].split("#")[0].split("&&")[1]);
+			var pt = new BMap.Point(lng,lat);
+			var img_name = traj.description[day][j].split("#").slice(2,4).join("_")
+			var icon = new BMap.Icon("img/rat/"+img_name+".png",new BMap.Size(100,100));
+			var marker = new BMap.Marker(pt,{icon:icon});
+			map.addOverlay(marker);
+			points.push(pt)
+
+		}
+		
+		var curve = new BMap.Polyline(points, {strokeColor:"red", strokeWeight:5, strokeOpacity:0.5}); //创建折线对象
+		map.addOverlay(curve);
+
+	})
+	
+	
+   
+
+
+});
+</script>
+
+<% include footer.ejs %>

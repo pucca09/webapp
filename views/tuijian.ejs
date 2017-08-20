@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>电信用户洞察</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="media/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="media/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+    <link href="media/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
+
+    <!-- DataTables Responsive CSS -->
+    <link href="media/bower_components/datatables-responsive/css/dataTables.responsive.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="media/dist/css/sb-admin-2.css" rel="stylesheet">
+    <link rel="shortcut icon" href="img/favicon.ico" />
+    <!-- Custom Fonts -->
+    <link href="media/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0;">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index"><img src="img/logo.png"  height="28px" /></a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <!--bootstrapmin nav>li>a:hover 和.open>a:hover的颜色可以变-->
+            <ul class="nav navbar-top-links navbar-right" style="margin-right: 30px">
+                <li class="dropdown" >
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw" ></i> <%= req.session.user.username %> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="/settings"><i class="fa fa-gear fa-fw"></i> 设置</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="/login"><i class="fa fa-sign-out fa-fw"></i> 注销</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+
+            </ul>
+            <!-- /.navbar-top-links -->
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                        <li class="active">
+                            <a href="#"><i class="fa fa-dashboard "></i> 区域人流画像<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/index" ><i class="fa fa-circle-o "></i> 景区概览</a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fa fa-circle-o "></i> 归属统计<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li >
+                                            <a href="/guishubyday">&nbsp;○&nbsp;按天统计</a>
+                                        </li>
+                                        <li >
+                                            <a href="/guishubymonth">&nbsp;○&nbsp;按月统计</a>
+                                        </li>
+                                        <li >
+                                            <a href="/guishubysight">&nbsp;○&nbsp;景区统计</a>
+                                        </li>
+                                        <li >
+                                            <a href="/traffic">&nbsp;○&nbsp;交通方式</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="#"><i class="fa fa-circle-o "></i> 客流统计<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li >
+                                            <a href="/sightflow">&nbsp;○&nbsp;景区流量</a>
+                                        </li>
+                                        <li >
+                                            <a href="/prostay">&nbsp;○&nbsp;省内驻留</a>
+                                        </li>
+                                        <li >
+                                            <a href="/migration">&nbsp;○&nbsp;游客迁徙</a>
+                                        </li>
+                                        <li >
+                                            <a href="/sightstay">&nbsp;○&nbsp;景区驻留</a>
+                                        </li>
+                                        <li >
+                                            <a href="/live">&nbsp;○&nbsp;住宿分布</a>
+                                        </li>
+                                        <li >
+                                            <a href="/inandout">&nbsp;○&nbsp;漫入漫出</a>
+                                        </li>
+                                        <li >
+                                            <a href="/remen">&nbsp;○&nbsp;景区质量影响因素</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="/zeppelin"><i class="fa fa-circle-o "></i> 景区客源结构分析</a>
+                                </li>
+                                <li>
+                                    <a href="/tuijian" class="active"><i class="fa fa-circle "></i> 行程推荐</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+                        <li>
+                            <a href="#"><i class="fa fa-user"></i> 本省人分析<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/peoplelist"><i class="fa fa-circle-o "></i> 个人列表</a>
+                                </li>
+                                <li>
+                                    <a href="/benshengselect" ><i class="fa fa-circle-o "></i> 人群筛选</a>
+                                </li>
+                                <li>
+                                    <a href="/xingwei" ><i class="fa fa-circle-o "></i> 行为分析</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+                        <li>
+                            <a href="/waishengselect"><i class="fa fa-user-md"></i> 外省人分析</a>
+                        </li>
+                        <li style="display:none;">                     <a href="/jinghe"><i class="fa fa-certificate"></i> 竞合分析</a>                 </li>
+                        <li>
+                            <a href="#"><i class="fa fa-users"></i> 社交分析<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/shejiaoquan"><i class="fa fa-circle-o "></i> 社交圈分析</a>
+                                </li>
+                                <li>
+                                    <a href="/jingdianxiangguan"><i class="fa fa-circle-o "></i> 用户游览行为的社交关联分析</a>
+                                </li>
+                                <li>
+                                    <a href="/yidongxiangguan"><i class="fa fa-circle-o "></i> 用户移动行为的社交关联分析</a>
+                                </li>
+                                <li>
+                                    <a href="/fourg"><i class="fa fa-circle-o "></i> 兴趣偏好预测及4g案例分析</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+                        <li>
+                            <a href="#"><i class="fa fa-legal"></i> 用户移动行为挖掘<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/motif"><i class="fa fa-circle-o "></i> 移动模式图模型</a>
+                                </li>
+                                <li>
+                                    <a href="/dbscan"><i class="fa fa-circle-o "></i> 重要位置识别（dbscan)</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="/zaixian"><i class="fa fa-list"></i> 在线大数据分析平台</a>
+                        </li>
+                        <li>
+                            <a href="/guizhou"><i class="fa fa-list"></i> 楼盘平台</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12" style="height:25px">
+                </div>
+                <div class="col-lg-12">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            行程推荐
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label>目的地：</label><input>
+                            </div>
+
+                            <div class="form-group">
+                                <label>游玩天数：</label><input>
+                            </div>
+
+                            <div class="form-group">
+                                <label>游玩风格：</label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="" checked>悠闲型（日均游玩3~5h）
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="">适中型（日均游玩5~8h）
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline3" value="">紧凑型（日均游玩9~14h）
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <label>偏好景点风格：</label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="" checked>海边
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="">文化
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline3" value="">现代
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary" >提交</button>
+                            <button type="reset" class="btn btn-default">重置</button>
+                        </div>
+
+
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="form-group">
+                                <label>目的地：</label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="" checked>海南
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="">贵州
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline3" value="">广东
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline4" value="">云南
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <label>天数：</label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="" checked>1-3天
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="">4-6天
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline3" value="">7-10天
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline3" value="">10天以上
+                                </label>
+
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="col-lg-4" onclick="window.location.href='/tuijiandetial';">
+                                <div style="height: 330px;border:1px solid black" >
+                                    <img src="/img/u71.png" width=100%" /></br></br>
+                                    目的地：三亚</br></br>
+                                    游玩时间：3天
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-4" >
+                                <div style="height: 330px;border:1px solid black" >
+                                    <img src="/img/u71.png" width=100%" /></br></br>
+                                    目的地：三亚</br></br>
+                                    游玩时间：3天
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-4" >
+                                <div style="height: 330px;border:1px solid black" >
+                                    <img src="/img/u71.png" width=100%" /></br></br>
+                                    目的地：三亚</br></br>
+                                    游玩时间：3天
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+            </div>
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="media/bower_components/jquery/dist/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="media/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="media/bower_components/metisMenu/dist/metisMenu.min.js"></script>
+
+    <!-- DataTables JavaScript -->
+    <script src="media/bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="media/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="media/dist/js/sb-admin-2.js"></script>
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+                responsive: true
+        });
+    });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,309 @@
+<% include header.ejs %>
+
+        <div class="row">
+            <div class="col-lg-12" style="height:25px">
+            </div>
+            <div class="col-lg-12">
+                <h4 style="font-weight: bold">背景分析</h4>
+
+                <p style="color:#5C5C5C;">
+                    4g的普及以及手机上网用户的井喷式增加是近年的两大趋势，通过分析4g业务增长的社交关联性以及用户上网兴趣的社交关联性更好地把握用户行为背后的影响因素。</p>
+            </div>
+
+        </div>
+
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#xq" data-toggle="tab">用户上网兴趣的社交关联分析</a>
+            </li>
+            <li ><a href="#4g" data-toggle="tab">4g业务传播</a>
+            </li>
+
+        </ul>
+
+        <div class="tab-content">
+
+            <div class="tab-pane fade in active" id="xq">
+                <div style="height:25px">
+                </div>
+                <div class="panel-group" id="accordion1">
+
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion1" href="#collapseOne1">相关用户提取</a>
+                            </h3>
+                        </div>
+                        <div id="collapseOne1" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h4 style="font-weight: bold">提取规则</h4>
+
+                                        <p style="color:#5C5C5C;">
+                                            根据用户上网数据（IAR）以及通话详细记录（CDR）提取同时有上网记录以及通话记录的用户。</br>
+                                            通过CDR数据将用户划分用户对，分为存在好友关系的用于对以及不存在好友关系的用户对。</br>
+                                            通过IAR数据种的网页分类信息计算用户对之间的上网偏好相似性。</p>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo2">用户上网偏好的社交关联</a>
+                            </h4>
+                        </div>
+                        <div id="collapseTwo2" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h4 style="font-weight: bold">实验方案</h4>
+
+                                        <p style="color:#5C5C5C;">
+                                            通过假设检验验证用户上网偏好之间存在社交关联。分别通过u检验以及t检验进行验证。零假设为用户上网偏好与社交关系无关，备择假设为用户上网偏好与社交关系有关。
+                                            实验使用两个样本集分别是好友关系样本集|X1|，和不具有好友关系样本集|X2|，验证两个样本集中用户对的上网相似性分布存在差异。
+                                        </p>
+                                        <h4 style="font-weight: bold">实验结论</h4>
+
+                                        <p style="color:#5C5C5C;font-weight: bold">1、t检验</p>
+                                        <p style="color:#5C5C5C;">根据数据量和数据分布情况，采用单侧检验，检验水准为α=0.05，对于无限的自由度的概率p = 0.05的值为t0.05 = 1.96。为了增强结论的可靠性，选择五种方式计算用户上网相似性进行假设检验，下图所示为检验结果</p>
+                                        <center><img src="/img/guanlian1.png" width="60%" /></center>
+                                        <p style="color:#5C5C5C;">五种计算方式下得到的t评分均大于t0.05，其中余弦相似度表现最好。由此可得到相应的结论：具有好友关系的用户上网兴趣更相似，也证实了电信用户上网偏好中的确存在社交相关性。 </p>
+                                        <p style="color:#5C5C5C;">从下面的分布图中可以看出在两种用户对的数据集在t评分最高的余弦相似度上可以得到良好区分（为方便区分取余弦相似度对数值为横坐标保证原有数值间关系不变）。</p>
+                                        <center><img src="/img/guanlian2.png" width="60%" /></center>
+                                        <p style="color:#5C5C5C;font-weight: bold">2、u检验</p>
+                                        <p style="color:#5C5C5C;">根据数据量和数据分布情况，采用单侧检验，检验水准为α=0.05，对于无限的自由度的概率p = 0.05的值为z0.05 = 1.96。为了增强结论的可靠性，选择五种方式计算用户上网相似性进行假设检验，下图所示为检验结果</p>
+                                        <center><img src="/img/guanlian3.png" width="60%" /></center>
+                                        <p style="color:#5C5C5C;">五种的相似度方法的z评分均大于 z0.05，其中HierarchySim表现最好， 则可得到与t检验一致的结论：具有好友关系的用户上网兴趣更相似，证实了电信用户上网偏好中的确存在社交相关性。</p>
+                                        <p style="color:#5C5C5C;">从下面的分布图中可以看出在两种用户对的数据集在t评分最高的HierarchySim上可以得到良好区分（为方便区分取余弦相似度对数值为横坐标保证原有数值间关系不变）。</p>
+                                        <center><img src="/img/guanlian4.png" width="60%" /></center>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion1" href="#collapseThree3">电信用户社交强度建模</a>
+                            </h4>
+                        </div>
+                        <div id="collapseThree3" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p style="color:#5C5C5C;">在验证了电信用户上网偏好的社交相关性的基础上，本课题将对电信用户对的社交强度进行建模。以往的研究主要基于用户间通话频次和用户间通话时长建立社交强度度模型，而忽略了用户间通话的周期性变化等通话模式要素，本课题通过将通话频率值加入公式以表达通话模式，建模公式如下：</p>
+                                        <center><img src="/img/guanlian5.png" width="10%" /></center>
+                                        <p style="color:#5C5C5C;">通过归一化的通话时长t、通话频次f以及表达用户间的通话模式的通话频率值F进行定义</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion1" href="#collapseFour4">基于社交关联性的用户上网偏好预测模型</a>
+                            </h3>
+                        </div>
+                        <div id="collapseFour4" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p style="color:#5C5C5C;">利用社交关联行以及新定义的社交强度模型，本课题提出了基于社交关联性的用户上网偏好预测模型：</p>
+                                        <center><img src="/img/guanlian6.png" width="60%" /></center>
+                                        <p style="color:#5C5C5C;">其中S矩阵是用户社交强度矩阵，通过分别使用基于频次、时长的社交强度矩阵和基于通话周期的社交强度矩阵进行对比，我们可以看出基于通化周期的社交强度模型可以带来召回率的明显提升：</p>
+                                        <center><img src="/img/guanlian7.png" width="60%" /></center>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+
+            <div class="tab-pane fade" id="4g">
+                <div style="height:25px">
+                </div>
+                <div class="panel-group" id="accordion">
+
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">4g用户提取</a>
+                            </h3>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h4 style="font-weight: bold">提取规则</h4>
+
+                                        <p style="color:#5C5C5C;">
+                                            利用用户营销宽表里的[product_offer_id]和[offer_del_flag]字段进行提取，规则是：
+                                            [product_offer_id] in (4G套餐id)and offer_del_flag=‘F’。</br>
+                                            利用新规则提取的4g用户明显地多于原先仅仅利用用户宽表里的仅从用户宽表中
+                                            [main_offer_id]与[main_offer_subclass]字段提取的用户。</p>
+                                        <img src="/img/4g1.png" width="40%"/>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">4g用户白描</a>
+                            </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h4 style="font-weight: bold">1、4g用户渗透</h4>
+                                        <img src="/img/4g2.png" width="30%"/>
+                                        <h4 style="font-weight: bold">2、4g用户邻居比例分布</h4>
+
+                                        <p style="color:#5C5C5C;">
+                                            以下三图为不同阶段，内网（电信）用户的4g邻居比例分布。横坐标为4g邻居比例区间，纵坐标为相应的用户占比。（4g邻居比例定义为：本月有过通话的电信4g用户/本月有过通话的电信用户）
+                                        </p>
+                                        <img src="/img/4g3.png" width="70%"/>
+                                        <h4 style="font-weight: bold">3、不同消费档位用户的4g邻居比例分布</h4>
+
+                                        <p style="color:#5C5C5C;">
+                                            根据用户的ARPU值，ARPU值低于40为低端用户，ARPU值介于40-80为中端用户，ARPU值高于80为高端用户，将用户划分成三类群体。下图为三类用户群体在不同阶段的4g邻居比例分布。
+                                            </br>不同价值的用户群体内4g邻居比例分布相差不多，到2015年7月为止，大多数用户的4g邻居比例还是位于0.5以下。
+                                        </p>
+                                        <img src="/img/4g4.png" width="80%"/>
+
+                                        <h4 style="font-weight: bold">4、探寻用户流失原因</h4>
+                                        <img src="/img/4g5.png" width="80%"/>
+
+                                        <p style="color:#5C5C5C;">
+                                            更换套餐后，用户ARPU值和流量使用呈现显著性差异，而本地通话费呈现非显著性差异。且流量差值的均值为负，arpu差值的均值为正，说明更换套餐后用户的流量使用不减反增，而ARPU值却略有下降。由此可以推测，用户更换套餐的动机可能是无法承受4G的昂贵消费</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">4g业务传播的社交关联</a>
+                            </h4>
+                        </div>
+                        <div id="collapseThree" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h4 style="font-weight: bold">1、社交关联简单假设</h4>
+                                        <h4 style="font-weight: bold;color: #003399 ">提出假设</h4>
+
+                                        <p style="color:#5C5C5C;">如果4G业务与用户社交关系存在关联（social
+                                            correlation)，那么拥有4g邻居越多的节点，其被激活成为新的4g节点的概率越高。</p>
+                                        <h4 style="font-weight: bold;color: #003399 ">实验方案</h4>
+                                        <img src="/img/4g6.png" width="50%"/></br>
+                                        <img src="/img/4g7.png" width="40%"/>
+                                        <img src="/img/4g8.png" width="40%"/>
+
+                                        <p style="color:#5C5C5C;">
+                                            左图为基础实验结果：新增4g用户更改为新增存量4g用户。右图不仅只考虑二分类的情况。横坐标为用户4g邻居数目，纵坐标为该4g邻居数目下对应的新增存量4g用户比例。颜色越深代表月份越新。
+                                            由左图可以发现，correlation在4g传播过程中是普遍存在的，但是在初期变化明显，而在后期则趋于平稳。右图中可以发现，月份越新（4g用户越来越多），在相同的4G邻居数目下，新增存量4g用户概率低于传播初期。
+
+                                        </p>
+                                        <h4 style="font-weight: bold;color: #003399 ">实验结果</h4>
+                                        <img src="/img/4g9.png" width="80%"/>
+
+                                        <p style="color:#5C5C5C;">
+                                            上图可以发现，4g用户邻居比例和新增存量4g用户概率不成正比，对大多数月份来说，当用户的4g邻居比例在0.6~0.7附近时，新增4g用户概率最高，而当4g邻居很密集（比例大于0.9时），新增4g用户的概率反而下降。随着时间的推进，用户4g邻居越来越多，此时新增4g存量用户的概率也随之下降。比如，2015年3月新增4g用户的概率最高可达60%，而到2015年7月，最高概率仍低于30%。
+                                        </p>
+
+
+                                        <h4 style="font-weight: bold">2、基于社团划分的4g业务社交关联分析</h4>
+                                        <h4 style="font-weight: bold;color: #003399 ">实验方案</h4>
+
+                                        <p style="color:#5C5C5C;">
+                                            利用社团划分算法，验证社团内部的4g用户渗透率是否高于平均水平，从而得到4g业务传播是否存在社交相关性的结论。</p>
+                                        <h4 style="font-weight: bold;color: #003399 ">社团划分算法</h4>
+
+                                        <p style="color:#5C5C5C;">采用标签传播算法（LPA）
+                                            第一步: 为所有节点指定一个唯一的标签；
+                                            第二步: 逐轮刷新所有节点的标签，直到达到收敛要求为止。对于每一轮刷新，节点标签刷新的规则如下:
+                                            对于某一个节点，考察其所有邻居节点的标签，并进行统计，将出现个数最多的那个标签赋给当前节点。当个数最多的标签不唯一时，随机选一个。
+                                            注：算法中的记号 N_n^k 表示节点 n 的邻居中标签为 k 的所有节点构成的集合。</p>
+                                        <h4 style="font-weight: bold;color: #003399 ">实验结论</h4>
+
+                                        <p style="color:#5C5C5C;">
+                                            发现了两个主要的大社团，剩余的均为小社团。计算两个大社团内部的4g渗透率，结果如下表所示。实验采用的是201411月的数据，11月份的整体4g渗透率是0.046714。由此可见，社团1的中的4g用户渗透率要高于平均水平，而社团2中的4g用户渗透率却明显低于平均水平。可能出现这个结果的原因是，社团1的用户对4g业务传播具有亲和性，而社团2的用户对4g业务的传播具有抵抗性。这一结果也佐证了4g业务传播中的社交关联的存在。</p>
+                                        <img src="/img/4g13.png" width="40%"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">社交影响分析</a>
+                            </h3>
+                        </div>
+                        <div id="collapseFour" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h4 style="font-weight: bold;color: #003399 ">实验方案</h4>
+                                        <img src="/img/4g10.png" width="40%"/>
+
+                                        <p style="color:#5C5C5C;">
+                                            Homophily描述的是用户倾向于和自己相似的人成为朋友；而Influence描述的是用户倾向于follow他好友的行为。基于上述概念，给出了influence的定义：
+                                        </p>
+                                        <img src="/img/4g11.png" width="40%"/>
+                                        <h4 style="font-weight: bold;color: #003399 ">实验结果</h4>
+                                        <img src="/img/4g12.png" width="40%"/>
+
+                                        <p style="color:#5C5C5C;">
+                                            结果发现，4g传播过程中inflence始终存在，在2015年1月~2015年4月之间维持较高水平，从4月以后开始逐渐下降，说明社交营销在4g传播中的作用逐渐减小。
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive">结论</a>
+                            </h3>
+                        </div>
+                        <div id="collapseFive" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h4 style="font-weight: bold;color: #003399 ">
+                                            社交营销在新业务推广前期作用明显，后期可能就因为传媒广告和营业厅推广力度而使社交作用相对降低。
+                                        </h4>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<% include footer.ejs %>

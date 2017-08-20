@@ -1,0 +1,50 @@
+<% include header.ejs %>
+
+<br>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-clock-o fa-fw"></i> 检索经典行程
+    </div>
+    <!-- /.panel-heading -->
+	<div class='panel-body'>
+		<form name="search" method="post" action="/result">
+		    <legend>根据您的游览偏好输入</legend>
+		    <div class='form-group'>
+		      <label class='control-label'>选择游玩天数</label>
+		      <input class="form-control" placeholder="请输入3-10的数字" name="days" value="">
+		    </div>
+		    <div class='form-group'>
+		      <label class='control-label'>选择目的地</label>
+		      <select class='form-control selectpicker show-tick' name='destination'>
+		      	<option value="{'$nin':[]}">所有</option>
+		        <option value='haikou'>海口</option>
+		        <option value='sanya'>三亚</option>
+		      </select>
+		    </div>
+		    <div class='form-group'>
+		      <label class='control-label'>选择季节</label>
+		      <select class='form-control' name='season'>
+		      	<option value="{'$nin':[]}">所有</option>
+		        <option value='201508'>8月</option>
+		        <option value='201512'>12月</option>
+		      </select>
+		    </div>
+		    <!-- <div class='form-group'>
+		      <label class='control-label'>选择游玩强度</label>
+		      <select class='form-control' name='strength'>
+		      	<option value="{'$nin':[]}">所有</option>
+		        <option value='l'>悠闲</option>
+		        <option value='m'>适中</option>
+		        <option value='h'>紧凑</option>
+		      </select>
+		    </div> -->
+		  </fieldset>
+		  <div class='form-actions'>
+		    <button class='btn btn-default' type='submit'>Submit</button>
+		    <a class='btn' href='travel'>Cancel</a>
+		  </div>
+		</form>
+	</div>
+</div>
+
+<% include footer.ejs %>

@@ -1,0 +1,265 @@
+<% include header.ejs %>
+<br>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+					区域移动模式统计&城市用地分析
+			</div>
+		<div class="panel-body">
+			<form role="form">
+				<div class="form-group">
+					<label>请选择查询的日期</label>
+                	<input type="date" id= "date" name="selectdate" id="selectdate" value="2015-08-01"/>
+                </div>
+                <div class="form-group">
+					<label>请选择查询的时段</label>
+                	<select class="form-control">
+                        <option value="{'$nin':[]}">全部</option>
+                        <option value="1">3:00~07:59</option>
+                        <option value="2">8:00~11:29</option>
+                        <option value="3">11:30~13:29</option>
+                        <option value="4">13:30~17:29</option>
+                        <option value="5">17:30~19:29</option>
+                        <option value="6">19:30~02:59</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                	<label>请选择自定义区域</label>
+                	<div id="allmap" style="overflow:hidden;zoom:1;position:relative;">	
+						<div id="map" style="height:500px;"></div>
+					</div>
+					<br>
+					
+                </div>
+                
+            </form>
+            
+
+        </div><!--pannel-->
+        <div id="result">
+            <button id="clearAll" class="btn btn-default btn-lg">清除多边形</button>
+            <button type="reset" class="btn btn-default btn-lg">重置所有选项</button>
+            <button id="submitArea" class="btn btn-danger btn-lg">确定查询</button>
+        </div>
+    </div>
+</div>
+
+<!--motif bar plot -->
+<div class="row" id="chart1" style="visibility: hidden">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <!-- /.panel-heading -->
+            <div class="panel-heading">区域人群移动模式统计</div>
+            <div class="panel-body" id="motif_bar" style="width:100%;height:500px;">
+            </div>
+            <!-- /.panel-body -->
+        </div>
+    </div>
+</div>
+<!--city pie plot -->
+<div class="row" id="chart2" style="visibility: hidden">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <!-- /.panel-heading -->
+            <div class="panel-heading">区域用地性质统计</div>
+            <div class="panel-body" id="motif_pie" style="width:100%;height:500px;">
+            </div>
+            <!-- /.panel-body -->
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+   // 路径配置
+    require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+    require(
+        [
+            'echarts',
+            'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+            'echarts/chart/pie' // 使用饼图就加载pie模块，按需加载
+        ],
+        function (ec){
+            var myChart1 = ec.init(document.getElementById('motif_bar'));
+            var myChart2 = ec.init(document.getElementById('motif_pie'));
+            var option_bar = {
+                title: {
+                    text: '区域人群移动模式统计'
+                },
+                tooltip: {},
+                legend: {
+                    data:['motif']
+                },
+                xAxis: {
+                    data: ["motif-1","motif-2","motif-3","motif-4","motif-5","motif-6","motif-7","motif-8","motif-9","motif-10","motif-11","motif-12","motif-13","motif-14","motif-15","motif-16","motif-17"]
+                },
+                yAxis: {},
+                series: [{
+                    name: 'motif',
+                    type: 'bar',
+                    data: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+                }],
+                noDataLoadingOption: {
+                        text: '暂无数据',
+                        effect: 'bubble',
+                        effectOption: {
+                            effect: {
+                                n: 0
+                            }
+                        }
+                }
+            };
+            var option_pie = {
+                title : {
+                    text: '区域用地性质统计',
+                    x:'center'
+                },
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient : 'vertical',
+                    x : 'left',
+                    data:['居住用地','办公用地','商业用地','道路与交通用地','绿地与广场用地','农业用地']
+                },
+                calculable : true,
+                series : [
+                    {
+                        name:'访问来源',
+                        type:'pie',
+                        radius : '55%',
+                        center: ['50%', '60%'],
+                        data:[
+                                {value:1, name:'居住用地'},
+                                {value:1, name:'办公用地'},
+                                {value:1, name:'商业用地'},
+                                {value:1, name:'道路与交通用地'},
+                                {value:1, name:'绿地与广场用地'},
+                                {value:1, name:'农业用地'}
+                            ]
+                    }
+                ],
+                noDataLoadingOption: {
+                        text: '暂无数据',
+                        effect: 'bubble',
+                        effectOption: {
+                            effect: {
+                                n: 0
+                            }
+                        }
+                }
+            };
+            //初始加载
+            myChart1.setOption(option_bar);
+            myChart2.setOption(option_pie);
+            // 百度地图API功能
+            var data = {};
+            var _PATH = [];
+            var map = new BMap.Map('map');
+            var myGeo = new BMap.Geocoder();
+            map.addControl(new BMap.ScaleControl()); 
+            // 将地址解析结果显示在地图上,并调整地图视野
+            myGeo.getPoint("大东海", function(point){
+                if (point) {
+                    map.centerAndZoom(point, 16);
+                    map.enableScrollWheelZoom(); //启用鼠标滚动对地图放大缩小
+                }else{
+                    alert("您选择地址没有解析到结果!");
+                }
+            }, "海南省");
+           //鼠标绘制完成回调方法   获取各个点的经纬度
+            var overlays = [];
+            var overlaycomplete = function(e){
+                overlays.push(e.overlay);
+                var path = e.overlay.getPath();//Array<Point> 返回多边型的点数组
+                for(var i=0;i<path.length;i++){
+
+                    console.log("lng:"+path[i].lng+"\n lat:"+path[i].lat);
+                }
+                _PATH = path;
+                
+            };
+            var styleOptions = {
+                strokeColor:"red",    //边线颜色。
+                fillColor:"red",      //填充颜色。当参数为空时，圆形将没有填充效果。
+                strokeWeight: 3,       //边线的宽度，以像素为单位。
+                strokeOpacity: 0.8,       //边线透明度，取值范围0 - 1。
+                fillOpacity: 0.6,      //填充的透明度，取值范围0 - 1。
+                strokeStyle: 'solid' //边线的样式，solid或dashed。
+            };
+            //实例化鼠标绘制工具
+            var drawingManager = new BMapLib.DrawingManager(map, {
+                isOpen: false, //是否开启绘制模式
+                enableDrawingTool: true, //是否显示工具栏
+                drawingMode:BMAP_DRAWING_POLYGON,//绘制模式  多边形
+                drawingToolOptions: {
+                    anchor: BMAP_ANCHOR_TOP_RIGHT, //位置
+                    offset: new BMap.Size(5, 5), //偏离值
+                    drawingModes:[
+                        BMAP_DRAWING_POLYGON
+                    ]
+                },
+                polygonOptions: styleOptions //多边形的样式
+            });
+            
+             //添加鼠标绘制工具监听事件，用于获取绘制结果
+            drawingManager.addEventListener('overlaycomplete', overlaycomplete);
+            $("button#clearAll").on("click",function(){
+                for(var i = 0; i < overlays.length; i++){
+                    map.removeOverlay(overlays[i]);
+                }
+                overlays.length = 0
+                _PATH = [];
+            });
+            $("button#submitArea").on("click",function(){
+                if(_PATH.length == 0){
+                    alert("自选区域不得为空")
+                }else{
+                    data.date = $("input#date").val();
+                    data.period = $("select").val();
+                    data.path = JSON.stringify(_PATH);
+                    console.log(data);
+                    $.ajax({
+                        type: "get",            //使用的方式，get 还是 post
+                        dataType: "text",       //使用的数据格式
+                        url: "/searchMotif",         //发送的地址
+                        data: data,                //需要发送的数据，用json格式来传
+                        success: function(msg){  //
+                            console.log("success!");
+                            msg = JSON.parse(msg);
+                            console.log(msg);
+                            $("#chart1").attr("style","visibility:visible;");
+                            $("#chart2").attr("style","visibility:visible;");
+                            option_bar.series[0].data = msg.bar;
+                            //console.log(option_bar);
+                            myChart1.clear();
+                            myChart1.setOption(option_bar);
+
+                            option_pie.series[0].data = msg.pie;
+                            //console.log(option_pie);
+                            myChart2.clear();
+                            myChart2.setOption(option_pie);
+
+                            
+                        }
+
+                    });
+                }//else end
+    
+
+    
+            });//click end
+
+        }
+    );//require end
+     
+
+</script>
+<% include footer.ejs %>

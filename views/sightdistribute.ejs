@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>电信用户洞察</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="media/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="media/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="media/dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="media/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" href="img/favicon.ico" />
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mmh6uKBZs2bvMVvWAYrnkt7G"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+</head>
+
+<body >
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0;">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index"><img src="img/logo.png"  height="28px" /></a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <!--bootstrapmin nav>li>a:hover 和.open>a:hover的颜色可以变-->
+            <ul class="nav navbar-top-links navbar-right" style="margin-right: 30px">
+                <li class="dropdown" >
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw" ></i> <%= req.session.user.username %> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="/settings"><i class="fa fa-gear fa-fw"></i> 设置</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="/login"><i class="fa fa-sign-out fa-fw"></i> 注销</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+
+            </ul>
+            <!-- /.navbar-top-links -->
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                        <li class="active">
+                            <a href="#"><i class="fa fa-dashboard "></i>区域旅游行业分析指标<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/index"><i class="fa fa-circle-o "></i> 景区概览</a>
+                                </li>
+                                <li>
+                                    <a href="/sightdistribute" class="active"><i class="fa fa-circle "></i> 景区分布</a>
+                                </li>                                
+                                <li>
+                                    <a href="#"><i class="fa fa-circle-o "></i> 归属统计<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li >
+                                            <a href="/guishubyday">&nbsp;○&nbsp;按天统计</a>
+                                        </li>
+                                        <li >
+                                            <a href="/guishubymonth">&nbsp;○&nbsp;按月统计</a>
+                                        </li>
+                                        <li >
+                                            <a href="/guishubysight">&nbsp;○&nbsp;景区统计</a>
+                                        </li>
+                                        <li >
+                                            <a href="/traffic">&nbsp;○&nbsp;交通方式</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="#"><i class="fa fa-circle-o "></i> 客流统计<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li >
+                                            <a href="/sightflow">&nbsp;○&nbsp;景区流量</a>
+                                        </li>
+                                        <li >
+                                            <a href="/prostay">&nbsp;○&nbsp;省内驻留</a>
+                                        </li>
+                                        <li >
+                                            <a href="/migration">&nbsp;○&nbsp;游客迁徙</a>
+                                        </li>
+                                        <li >
+                                            <a href="/sightstay">&nbsp;○&nbsp;景区驻留</a>
+                                        </li>
+                                        <li >
+                                            <a href="/live">&nbsp;○&nbsp;住宿分布</a>
+                                        </li>
+                                        <li >
+                                            <a href="/inandout">&nbsp;○&nbsp;漫入漫出</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="/zeppelin"><i class="fa fa-circle-o "></i> 景区客源结构分析</a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fa fa-circle-o "></i>行程推荐<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li >
+                                            <a href="/travel">&nbsp;○&nbsp;经典推荐</a>
+                                        </li>
+                                        <li >
+                                            <a href="/personalTravel1">&nbsp;○&nbsp;个性化推荐</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+                        <li>
+                            <a href="#"><i class="fa fa-user"></i> 本省人分析<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/peoplelist"><i class="fa fa-circle-o "></i> 个人列表</a>
+                                </li>
+                                <li>
+                                    <a href="/benshengselect" ><i class="fa fa-circle-o "></i> 人群筛选</a>
+                                </li>
+                                <li>
+                                    <a href="/xingwei" ><i class="fa fa-circle-o "></i> 行为分析</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+                        <li>
+                            <a href="/waishengselect"><i class="fa fa-user-md"></i> 外省人分析</a>
+                        </li>
+<li style="display:none;">                     <a href="/jinghe"><i class="fa fa-certificate"></i> 竞合分析</a>                 </li>
+                        <li>
+                            <a href="#"><i class="fa fa-users"></i> 社交分析<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/shejiaoquan"><i class="fa fa-circle-o "></i> 社交圈分析</a>
+                                </li>
+                                <li>
+                                    <a href="/jingdianxiangguan"><i class="fa fa-circle-o "></i> 用户游览行为的社交关联分析</a>
+                                </li>
+                                <li>
+                                    <a href="/yidongxiangguan"><i class="fa fa-circle-o "></i> 用户移动行为的社交关联分析</a>
+                                </li>
+                                <li>
+                                    <a href="/fourg"><i class="fa fa-circle-o "></i> 兴趣偏好预测及4g案例分析</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+                        <li>
+                            <a href="#"><i class="fa fa-legal"></i> 用户移动行为挖掘<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/motif"><i class="fa fa-circle-o "></i> 移动模式图模型</a>
+                                </li>
+                                <li>
+                                    <a href="/motifOfArea"><i class="fa fa-circle-o "></i> 区域人群移动模式画像与用地分析</a>
+                                </li>
+                                <li>
+                                    <a href="/trafficHeat"><i class="fa fa-circle-o "></i> 道路映射（北京）</a>
+                                </li>
+                                <li>
+                                    <a href="/dbscan"><i class="fa fa-circle-o "></i> 重要位置识别（dbscan)</a>
+                                </li>
+                                <li>
+                                    <a href="/mapmatching"><i class="fa fa-circle-o"></i> 用户移动（北京）</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="/zaixian"><i class="fa fa-list"></i> 在线大数据分析平台</a>
+                        </li>
+                        <li>
+                            <a href="http://123.56.71.119:8080/1-1%20premiseOverall.html"><i class="fa fa-list"></i> 楼盘平台</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <!-- Page Content -->
+        <div id="page-wrapper">
+                <div class="row">
+                    <div class="col-lg-12" style="height:25px">
+
+                    </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+                <!-- /.row -->
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" >
+                <li class="active" ><a href="#Map" data-toggle="tab">景区分布图</a>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane fade in active"  id="Map" style="height: 700px">
+                </div>
+            </div>
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('Map'));
+
+        option = null;
+
+        option = {
+            animation: true,
+            animationDuration: 1000,
+            animationEasing: 'cubicInOut',
+            animationDurationUpdate: 1000,
+            animationEasingUpdate: 'cubicInOut',
+            title: [
+                {
+                    text: '海南省景区主要景区当月流量',
+                    left: 'center',
+                    textStyle: {
+                        color: 'black'
+                    }
+                },
+                {
+                    id: 'statistic',
+                    right: 120,
+                    top: 40,
+                    width: 100,
+                    textStyle: {
+                        color: 'black',
+                        fontSize: 16
+                    }
+                }
+            ],
+            legend: {
+                data: ['所有景区', '月流量Top 5'],
+                x:'left',
+                orient: 'vertical',
+                textStyle:{
+                    color:"black"
+                }
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter : function (params) {
+                    if(params.value.length==3)
+                        return "景区名称："+params.name +  '<br/>'
+                            + "经纬度："+params.value[0] + ', '+params.value[1] +  '<br/>'
+                            + "当月总流量："+params.value[2];
+                    else
+                        return "景区名称："+params.name +  '<br/>'
+                                + "当月总流量："+params.value;
+                }
+            },
+            toolbox: {
+                iconStyle: {
+                    normal: {
+                        borderColor: 'black'
+                    },
+                    emphasis: {
+                        borderColor: 'purple'
+                    }
+                }
+            },
+            brush: {
+                outOfBrush: {
+                    color: '#abc'
+                },
+                brushStyle: {
+                    borderWidth: 2,
+                    color: 'rgba(0,0,0,0.2)',
+                    borderColor: 'rgba(0,0,0,0.5)',
+                },
+                seriesIndex: [0, 1],
+                throttleType: 'debounce',
+                throttleDelay: 300,
+                geoIndex: 0
+            },
+            bmap: {
+                center: [110.544, 18.784],
+                zoom: 10,
+                roam: 'scale',
+                mapStyle: {
+                    styleJson: [{
+                        'featureType': 'water',
+                        'elementType': 'all',
+                        'stylers': {
+                            'color': '#d1d1d1'
+                        }
+                    }, {
+                        'featureType': 'land',
+                        'elementType': 'all',
+                        'stylers': {
+                            'color': '#f3f3f3'
+                        }
+                    }, {
+                        'featureType': 'railway',
+                        'elementType': 'all',
+                        'stylers': {
+                            'visibility': 'off'
+                        }
+                    }, {
+                        'featureType': 'highway',
+                        'elementType': 'all',
+                        'stylers': {
+                            'color': '#fdfdfd'
+                        }
+                    }, {
+                        'featureType': 'highway',
+                        'elementType': 'labels',
+                        'stylers': {
+                            'visibility': 'off'
+                        }
+                    }, {
+                        'featureType': 'arterial',
+                        'elementType': 'geometry',
+                        'stylers': {
+                            'color': '#fefefe'
+                        }
+                    }, {
+                        'featureType': 'arterial',
+                        'elementType': 'geometry.fill',
+                        'stylers': {
+                            'color': '#fefefe'
+                        }
+                    }, {
+                        'featureType': 'poi',
+                        'elementType': 'all',
+                        'stylers': {
+                            'visibility': 'off'
+                        }
+                    }, {
+                        'featureType': 'green',
+                        'elementType': 'all',
+                        'stylers': {
+                            'visibility': 'off'
+                        }
+                    }, {
+                        'featureType': 'subway',
+                        'elementType': 'all',
+                        'stylers': {
+                            'visibility': 'off'
+                        }
+                    }, {
+                        'featureType': 'manmade',
+                        'elementType': 'all',
+                        'stylers': {
+                            'color': '#d1d1d1'
+                        }
+                    }, {
+                        'featureType': 'local',
+                        'elementType': 'all',
+                        'stylers': {
+                            'color': '#d1d1d1'
+                        }
+                    }, {
+                        'featureType': 'arterial',
+                        'elementType': 'labels',
+                        'stylers': {
+                            'visibility': 'off'
+                        }
+                    }, {
+                        'featureType': 'boundary',
+                        'elementType': 'all',
+                        'stylers': {
+                            'color': '#fefefe'
+                        }
+                    }, {
+                        'featureType': 'building',
+                        'elementType': 'all',
+                        'stylers': {
+                            'color': '#d1d1d1'
+                        }
+                    }, {
+                        'featureType': 'label',
+                        'elementType': 'labels.text.fill',
+                        'stylers': {
+                            'color': '#999999'
+                        }
+                    }]
+                }
+            },
+            grid: {
+                right: 40,
+                top: 100,
+                bottom: 40,
+                width: '30%'
+            },
+            xAxis: {
+                type: 'value',
+                scale: true,
+                position: 'top',
+                boundaryGap: false,
+                splitLine: {show: false},
+                axisLine: {show: false},
+                axisTick: {show: false},
+                axisLabel: {margin: 2, textStyle: {color: '#aaa'}},
+            },
+            yAxis: {
+                type: 'category',
+                name: '选择区域景区流量',
+                nameGap: 16,
+                axisLine: {show: false, lineStyle: {color: 'black'}},
+                axisTick: {show: false, lineStyle: {color: 'black'}},
+                axisLabel: {interval: 0, textStyle: {color: 'black'}},
+                data: []
+            },
+            series : [
+                {
+                    name: '所有景区',
+                    type: 'scatter',
+                    coordinateSystem: 'bmap',
+                    data: (function () {
+                        var res = [];
+                        <% for(j=0; j< hotpoint.length; j++) {%>
+                        res.push({name: '<%=hotpoint[j].sightname%>',value:['<%=hotpoint[j].lng%>','<%=hotpoint[j].lat%>',parseInt('<%=hotpoint[j].visitormonth%>')]});
+                        <%}%>
+                        return res;
+                    })(),
+                    symbolSize: function (val) {
+                        return Math.log(val[2])*2;
+                    },
+                    showEffectOn: 'render',
+                    rippleEffect: {
+                        brushType: 'stroke'
+                    },
+                    hoverAnimation: true,
+                    label: {
+                        normal: {
+                            formatter: '{b}',
+                            position: 'right',
+                            show: false
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: "purple" ,
+                            shadowBlur: 10,
+                            shadowColor: '#ffffff'
+                        }
+                    },
+                    zlevel: 1
+                },
+                {
+                    name: '月流量Top 5',
+                    type: 'effectScatter',
+                    coordinateSystem: 'bmap',
+                    data: (function () {
+                        var res = [];
+                        var res5 = [];
+                        <% for(j=0; j< hotpoint.length; j++) {%>
+                        res.push({name: '<%=hotpoint[j].sightname%>',value:['<%=hotpoint[j].lng%>','<%=hotpoint[j].lat%>',parseInt('<%=hotpoint[j].visitormonth%>')]});
+                        <%}%>
+                        res.sort(function (a, b) {return b.value[2] - a.value[2];});
+                        for(i=0;i<5;i++)
+                            res5.push(res[i]);
+                        return res5;
+                    })(),
+                    symbolSize: function (val) {
+                        return Math.log(val[2])*2;
+                    },
+                    showEffectOn: 'render',
+                    rippleEffect: {
+                        brushType: 'stroke'
+                    },
+                    hoverAnimation: true,
+                    label: {
+                        normal: {
+                            formatter: '{b}',
+                            position: 'right',
+                            show: false
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: "#F08080" ,
+                            shadowBlur: 10,
+                            shadowColor: 'white'
+                        }
+                    },
+                    zlevel: 1
+                },
+                {
+                    id: 'bar',
+                    zlevel: 2,
+                    type: 'bar',
+                    symbol: 'none',
+                    itemStyle: {
+                        normal: {
+                            color: '#FFF68F'
+                        }
+                    },
+                    data: []
+                }
+            ]
+        };
+
+        myChart.on('brushselected', renderBrushed);
+
+        function renderBrushed(params) {
+            var mainSeries = params.batch[0].selected[0];
+
+            var selectedItems = [];
+            var categoryData = [];
+            var barData = [];
+            var maxBar = 30;
+            var sum = 0;
+            var count = 0;
+
+            for (var i = 0; i < mainSeries.dataIndex.length; i++) {
+                var rawIndex = mainSeries.dataIndex[i];
+                var dataItem = option.series[0].data[rawIndex];
+                var pmValue = dataItem.value[2];
+
+                sum += pmValue;
+                count++;
+
+                selectedItems.push(dataItem);
+            }
+
+            selectedItems.sort(function (a, b) {
+                return a.value[2] - b.value[2];
+            });
+
+            for (var i = 0; i < Math.min(selectedItems.length, maxBar); i++) {
+                categoryData.push(selectedItems[i].name);
+                barData.push(selectedItems[i].value[2]);
+            }
+
+            this.setOption({
+                yAxis: {
+                    data: categoryData
+                },
+                xAxis: {
+                    axisLabel: {show: !!count}
+                },
+                title: {
+                    id: 'statistic'
+                },
+                series: {
+                    id: 'bar',
+                    data: barData
+                }
+            });
+        }
+
+        if (option && typeof option === "object") {
+            myChart.setOption(option, true);
+        }
+    </script>
+
+    <!-- jQuery -->
+    <script src="media/bower_components/jquery/dist/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="media/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="media/bower_components/metisMenu/dist/metisMenu.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="media/dist/js/sb-admin-2.js"></script>
+
+</body>
+
+</html>

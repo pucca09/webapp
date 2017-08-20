@@ -1,0 +1,248 @@
+<% include header.ejs %>
+            <div class="row">
+                <div class="col-lg-12" style="height:25px">
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            选择景点: <select name="sightid" id="sightid">
+                                <option value=0>南山文化旅游区</option>
+                                <option value=2>呀诺达雨林文化旅游区</option>
+                                <option value=3>分界洲岛旅游区</option>
+                                <option value=4>中国雷琼海口火山群世界地质公园</option>
+                                <option value=5>甘什岭槟榔谷原生态黎苗文化旅游区</option>
+                                <option value=6>假日海滩旅游区</option>
+                                <option value=7>天涯海角风景区</option>
+                                <option value=8>海南热带野生动植物园</option>
+                                <option value=9>三亚蜈支洲岛度假中心</option>
+                                <option value=10>兴隆热带植物园</option>
+                                <option value=11>博鳌亚洲论坛永久会址</option>
+                                <option value=12>亚龙湾国家旅游度假区</option>
+                                <option value=13>三亚大东海旅游景区</option>
+                                <option value=14>南湾猴岛生态景区</option>
+                                <option value=15>海口观澜湖旅游度假区</option>
+                                <option value=16>海南文笔峰盘古文化旅游区</option>
+                                <option value=17>三亚西岛海洋文化旅游区</option>
+                                <option value=18>万宁东山岭文化旅游区</option>
+                                <option value=19>三亚免税店</option>
+                                <option value=20>三亚解放路步行街</option>
+                                <option value=21>万宁首创奥特莱斯</option>
+                                <option value=22>三亚百花谷商业街</option>
+                                <option value=23>三亚1号港湾城</option>
+                            </select>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body" id="barcharts" style="height: 650px">
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
+    <script type="text/javascript">
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+
+        // 使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/bar' // 使用柱状图就加载bar模块，按需加载
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart = ec.init(document.getElementById('barcharts'),'macarons');
+
+                    option = {
+                        timeline:{
+                            data:(function () {
+                                var d = []
+                                <% for(j=0; j< sightflow.length; j++) {%>
+                                date='<%=sightflow[j].date%>';
+                                d.push(date.slice(0,4)+'-'+date.slice(4,6)+'-01');
+                                <%}%>
+                                return d;
+                            })(),
+                            label : {
+                                formatter : function(s) {
+                                    return s.slice(0, 7);
+                                }
+                            },
+                            y:'93%',
+                            autoPlay : true,
+                            playInterval : 1000
+                        },
+                        options:(function () {
+                            var d = []
+                            <% for(i=0; i< sightflow.length; i++) {%>
+                            d.push({
+                                title : {
+                                    text: '来琼游客归属地统计',
+                                    x:'center',
+                                    textStyle:{
+                                        color:"black",
+                                        fontWeight:'bold'
+                                    }
+                                },
+                                tooltip : {
+                                    trigger: 'axis'
+                                },
+                                toolbox: {
+                                    show : true,
+                                    orient:'vertical',
+                                    feature : {
+                                        dataView : {show: true},
+                                        restore : {show: true},
+                                        saveAsImage : {show: true}
+                                    }
+                                },
+                                calculable : true,
+                                xAxis : [
+                                    {
+                                        type : 'category',
+                                        axisLabel:{
+                                            rotate:10
+                                        },
+                                        data : ['广东','四川','上海','湖南','江苏','北京','湖北','广西','河南','浙江','福建','重庆','江西','安徽','河北',
+                                            '陕西','黑龙江','贵州','山东','辽宁','甘肃','新疆','吉林','云南','山西','天津','内蒙古','宁夏','青海','西藏','其它']
+                                    }
+                                ],
+                                yAxis : [
+                                    {
+                                        type : 'value'
+                                    }
+                                ],
+                                series : [
+                                    {
+                                        name:'游客数量',
+                                        type:'bar',
+                                        itemStyle: {
+                                            normal: {
+                                                color:     '#EE8262'
+                                            }
+                                        },
+                                        data:(function () {
+                                            var d = []
+                                            <% for(j=0; j< sightflow[i].provisitor[0].visitornum.length; j++) {%>
+                                            d.push(parseInt('<%=sightflow[i].provisitor[0].visitornum[j]%>'));
+                                            <%}%>
+                                            return d;
+                                        })(),
+                                        markPoint : {
+                                            itemStyle: {
+                                                normal: {
+                                                    color:     '#EE8262'
+                                                }
+                                            },
+                                            data : [
+                                                {type : 'max', name: '最大值'},
+                                                {type : 'min', name: '最小值'}
+                                            ]
+                                        }
+                                    }
+                                ]
+                            });
+                            <%}%>
+                            return d;
+                        })()
+                    };
+
+                    // 为echarts对象加载数据
+                    myChart.setOption(option);
+
+                    var sightselect=document.getElementById("sightid");
+                    sightselect.addEventListener('change',function(){
+                        option.options=[];       //清空
+                        var k = parseInt(sightselect.value);
+                        <% for(i=0; i< sightflow.length; i++) {%>
+                        option.options.push({
+                            title : {
+                                text: '来琼游客归属地统计',
+                                x:'center',
+                                textStyle:{
+                                    color:"black",
+                                    fontWeight:'bold'
+                                }
+                            },
+                            tooltip : {
+                                trigger: 'axis'
+                            },
+                            toolbox: {
+                                show : true,
+                                orient:'vertical',
+                                feature : {
+                                    dataView : {show: true},
+                                    restore : {show: true},
+                                    saveAsImage : {show: true}
+                                }
+                            },
+                            calculable : true,
+                            xAxis : [
+                                {
+                                    type : 'category',
+                                    axisLabel:{
+                                        rotate:10
+                                    },
+                                    data : ['广东','四川','上海','湖南','江苏','北京','湖北','广西','河南','浙江','福建','重庆','江西','安徽','河北',
+                                        '陕西','黑龙江','贵州','山东','辽宁','甘肃','新疆','吉林','云南','山西','天津','内蒙古','宁夏','青海','西藏','其它']
+                                }
+                            ],
+                            yAxis : [
+                                {
+                                    type : 'value'
+                                }
+                            ],
+                            series : [
+                                {
+                                    name:'游客数量',
+                                    type:'bar',
+                                    itemStyle: {
+                                        normal: {
+                                            color:     '#EE8262'
+                                        }
+                                    },
+                                    data:(function () {
+                                        var d = []
+                                        <% for(j=0; j< sightflow[i].provisitor.length; j++) {%>
+                                        if('<%=sightflow[i].provisitor[j].sightid%>'==k){
+                                            <% for(l=0; l<sightflow[i].provisitor[j].visitornum.length; l++) {%>
+                                            d.push(parseInt('<%=sightflow[i].provisitor[j].visitornum[l]%>'));
+                                            <%}%>
+                                        }
+                                        <%}%>
+                                        return d;
+                                    })(),
+                                    markPoint : {
+                                        itemStyle: {
+                                            normal: {
+                                                color:     '#EE8262'
+                                            }
+                                        },
+                                        data : [
+                                            {type : 'max', name: '最大值'},
+                                            {type : 'min', name: '最小值'}
+                                        ]
+                                    }
+                                }
+                            ]
+                        });
+                        <%}%>
+                        myChart.clear();
+                        myChart.setOption(option);
+                    });
+
+                }
+        );
+    </script>
+<% include footer.ejs %>

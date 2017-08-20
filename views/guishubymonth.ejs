@@ -1,0 +1,148 @@
+<% include header.ejs %>
+            <div class="row">
+                <div class="col-lg-12" style="height:25px">
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-success">
+                        <div class="panel-body" id="mapcharts" style="height: 650px">
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+    <script type="text/javascript">
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+
+        // 使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/map' // 使用柱状图就加载bar模块，按需加载
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart = ec.init(document.getElementById('mapcharts'),'macarons');
+
+                    option = {
+                        timeline:{
+                            data:(function () {
+                                var d = []
+                                <% for(j=0; j< monthflow.length; j++) {%>
+                                date='<%=monthflow[j].date%>';
+                                d.push(date.slice(0,4)+'-'+date.slice(4,6)+'-01');
+                                <%}%>
+                                return d;
+                            })(),
+                            label : {
+                                formatter : function(s) {
+                                    return s.slice(0, 7);
+                                }
+                            },
+                            autoPlay : true,
+                            playInterval : 1000
+                        },
+                        options:(function () {
+                            var d = []
+                            <% for(i=0; i< monthflow.length; i++) {%>
+                            d.push({
+                                title : {
+                                    text: '来琼游客归属地按月统计',
+                                    x:'center',
+                                    textStyle:{
+                                        color:"black",
+                                        fontWeight:'bold'
+                                    }
+                                },
+                                tooltip : {
+                                    trigger: 'item'
+                                },
+                                dataRange: {
+                                    min: 0,
+                                    max: 200000,
+                                    x: 'left',
+                                    y: 'bottom',
+                                    color:  ['maroon','purple','red','orange','yellow','lightgreen'],
+                                    text:['高','低'],           // 文本，默认为数值文本
+                                    calculable : true
+                                },
+                                toolbox: {
+                                    show: true,
+                                    orient : 'vertical',
+                                    x: 'right',
+                                    y: 'center',
+                                    feature : {
+                                        dataView : {show: true},
+                                        restore : {show: true},
+                                        saveAsImage : {show: true}
+                                    }
+                                },
+                                series : [
+                                    {
+                                        name: '游客数目',
+                                        type: 'map',
+                                        mapType: 'china',
+                                        roam: false,
+                                        itemStyle:{
+                                            normal:{label:{show:true}},
+                                            emphasis:{label:{show:true}}
+                                        },
+                                        data:(function () {
+                                            var f = []
+                                            f.push({name: '广东',value:'<%=monthflow[i].provisitor[0]%>'});
+                                            f.push({name: '四川',value:'<%=monthflow[i].provisitor[1]%>'});
+                                            f.push({name: '上海',value:'<%=monthflow[i].provisitor[2]%>'});
+                                            f.push({name: '湖南',value:'<%=monthflow[i].provisitor[3]%>'});
+                                            f.push({name: '江苏',value:'<%=monthflow[i].provisitor[4]%>'});
+                                            f.push({name: '北京',value:'<%=monthflow[i].provisitor[5]%>'});
+                                            f.push({name: '湖北',value:'<%=monthflow[i].provisitor[6]%>'});
+                                            f.push({name: '广西',value:'<%=monthflow[i].provisitor[7]%>'});
+                                            f.push({name: '河南',value:'<%=monthflow[i].provisitor[8]%>'});
+                                            f.push({name: '浙江',value:'<%=monthflow[i].provisitor[9]%>'});
+                                            f.push({name: '福建',value:'<%=monthflow[i].provisitor[10]%>'});
+                                            f.push({name: '重庆',value:'<%=monthflow[i].provisitor[11]%>'});
+                                            f.push({name: '江西',value:'<%=monthflow[i].provisitor[12]%>'});
+                                            f.push({name: '安徽',value:'<%=monthflow[i].provisitor[13]%>'});
+                                            f.push({name: '河北',value:'<%=monthflow[i].provisitor[14]%>'});
+                                            f.push({name: '陕西',value:'<%=monthflow[i].provisitor[15]%>'});
+                                            f.push({name: '黑龙江',value:'<%=monthflow[i].provisitor[16]%>'});
+                                            f.push({name: '贵州',value:'<%=monthflow[i].provisitor[17]%>'});
+                                            f.push({name: '山东',value:'<%=monthflow[i].provisitor[18]%>'});
+                                            f.push({name: '辽宁',value:'<%=monthflow[i].provisitor[19]%>'});
+                                            f.push({name: '甘肃',value:'<%=monthflow[i].provisitor[20]%>'});
+                                            f.push({name: '新疆',value:'<%=monthflow[i].provisitor[21]%>'});
+                                            f.push({name: '吉林',value:'<%=monthflow[i].provisitor[22]%>'});
+                                            f.push({name: '云南',value:'<%=monthflow[i].provisitor[23]%>'});
+                                            f.push({name: '山西',value:'<%=monthflow[i].provisitor[24]%>'});
+                                            f.push({name: '天津',value:'<%=monthflow[i].provisitor[25]%>'});
+                                            f.push({name: '内蒙古',value:'<%=monthflow[i].provisitor[26]%>'});
+                                            f.push({name: '宁夏',value:'<%=monthflow[i].provisitor[27]%>'});
+                                            f.push({name: '青海',value:'<%=monthflow[i].provisitor[28]%>'});
+                                            f.push({name: '西藏',value:'<%=monthflow[i].provisitor[29]%>'});
+                                            return f;
+                                        })()
+                                    }
+                                ]
+                            });
+                            <%}%>
+                            return d;
+                        })()
+                    };
+
+                    // 为echarts对象加载数据
+                    myChart.setOption(option);
+                }
+        );
+    </script>
+<% include footer.ejs %>

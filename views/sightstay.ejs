@@ -1,0 +1,223 @@
+<% include header.ejs %>
+            <div class="row">
+                <div class="col-lg-12" style="height:25px">
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-success">
+                        <!-- /.panel-heading -->
+                        <div class="panel-body" id="barcharts" style="height:400px">
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            选择景点: <select name="sightid" id="sightid">
+                                <option value=0>南山文化旅游区</option>
+                                <option value=2>呀诺达雨林文化旅游区</option>
+                                <option value=3>分界洲岛旅游区</option>
+                                <option value=4>中国雷琼海口火山群世界地质公园</option>
+                                <option value=5>甘什岭槟榔谷原生态黎苗文化旅游区</option>
+                                <option value=6>假日海滩旅游区</option>
+                                <option value=7>天涯海角风景区</option>
+                                <option value=8>海南热带野生动植物园</option>
+                                <option value=9>三亚蜈支洲岛度假中心</option>
+                                <option value=10>兴隆热带植物园</option>
+                                <option value=11>博鳌亚洲论坛永久会址</option>
+                                <option value=12>亚龙湾国家旅游度假区</option>
+                                <option value=13>三亚大东海旅游景区</option>
+                                <option value=14>南湾猴岛生态景区</option>
+                                <option value=15>海口观澜湖旅游度假区</option>
+                                <option value=16>海南文笔峰盘古文化旅游区</option>
+                                <option value=17>三亚西岛海洋文化旅游区</option>
+                                <option value=18>万宁东山岭文化旅游区</option>
+                                <option value=19>三亚免税店</option>
+                                <option value=20>三亚解放路步行街</option>
+                                <option value=21>万宁首创奥特莱斯</option>
+                                <option value=22>三亚百花谷商业街</option>
+                                <option value=23>三亚1号港湾城</option>
+                            </select>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body" id="barcharts1" style="height: 400px">
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
+    <script type="text/javascript">
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+
+        // 使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/bar' // 使用柱状图就加载bar模块，按需加载
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart = ec.init(document.getElementById('barcharts'),'macarons');
+                    var myChart1 = ec.init(document.getElementById('barcharts1'),'macarons');
+
+                    option = {
+                        title : {
+                            text: '景区游客平均驻留时间统计',
+                            x:'center',
+                            textStyle:{
+                                color:"black",
+                                fontWeight:'bold'
+                            }
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:['平均驻留时间（小时）'],
+                            x:'left'
+                        },
+                        toolbox: {
+                            show : true,
+                            orient:'vertical',
+                            feature : {
+                                dataView : {show: true},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis : [
+                            {
+                                type : 'category',
+                                axisLabel:{
+                                    rotate:30
+                                },
+                                data : ['南山文化旅游区','呀诺达雨林文化旅游区','分界洲岛旅游区','中国雷琼海口火山群世界地质公园','甘什岭槟榔谷原生态黎苗文化旅游区',
+                                    '假日海滩旅游区','天涯海角风景区','海南热带野生动植物园','三亚蜈支洲岛度假中心','兴隆热带植物园','博鳌亚洲论坛永久会址',
+                                    '亚龙湾国家旅游度假区','三亚大东海旅游景区','南湾猴岛生态景区','海口观澜湖旅游度假区','海南文笔峰盘古文化旅游区','三亚西岛海洋文化旅游区',
+                                    '万宁东山岭文化旅游区','三亚免税店','三亚解放路步行街','万宁首创奥特莱斯','三亚百花谷商业街','三亚1号港湾城']
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value'
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'平均驻留时间（小时）',
+                                type:'bar',
+                                itemStyle: {
+                                    normal: {
+                                        color: 	'#FFA54F'
+                                    }
+                                },
+                                data:[2.090776694709239,2,2.102927608771031,2.2772353359625708,6.693674404451416,1.858901731354642,5.362248346311634,2.089400018431782,2.136179266136162
+                                    ,3.7615304470417934,1.6566578081077037,5.046651094862273,4.654439829351729,3.6161846581531054,1.5937247139833424,4.042546726777494,2.082377777777778
+                                    ,3.0509671443417057,3.789532387190686,2.8710661735104117,2.969774266625216,1.8931500475061847,4.311177687349134,3.317874300881741]
+                            }
+                        ]
+                    };
+
+                    option1 = {
+                        title : {
+                            text: '某景区游客不同停留时长分布统计',
+                            subtext: '（2015-08-01至2015-08-31）',
+                            x:'center',
+                            textStyle:{
+                                color:"black",
+                                fontWeight:'bold'
+                            }
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:['停留时长'],
+                            x:'left'
+                        },
+                        toolbox: {
+                            show : true,
+                            orient:'vertical',
+                            feature : {
+                                dataView : {show: true},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis : [
+                            {
+                                type : 'category',
+                                data : ['1h~2h','2h~3h','3h~4h','4h~5h','5h以上']
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value'
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'停留时长',
+                                type:'bar',
+                                itemStyle: {
+                                    normal: {
+                                        color: 	'#66CDAA'
+                                    }
+                                },
+                                data:(function () {
+                                    var d = []
+                                    <% for(j=0; j< stay[0].staydur.length; j++) {%>
+                                    d.push(parseInt('<%=stay[0].staydur[j]%>'));
+                                    <%}%>
+                                    return d;
+                                })(),
+                            }
+                        ]
+                    };
+
+                    // 为echarts对象加载数据
+                    myChart.setOption(option);
+                    myChart1.setOption(option1);
+
+                    var temp=[];
+                    <% for(i=0; i< stay.length; i++) {%>
+                    <% for(j=0; j< stay[i].staydur.length; j++) {%>
+                    temp.push(parseInt('<%=stay[i].staydur[j]%>'));
+                    <%}%>
+                    <%}%>
+
+                    var sightselect=document.getElementById("sightid");
+                    sightselect.addEventListener('change',function(){
+                        option1.series[0].data=[];       //清空data
+                        var k = parseInt(sightselect.value);
+                        for(l=0;l< 5; l++) {
+                            option1.series[0].data.push(temp[5*k+l]);
+                        }
+                        myChart1.clear();
+                        myChart1.setOption(option1);
+                    });
+                }
+        );
+    </script>
+<% include footer.ejs %>

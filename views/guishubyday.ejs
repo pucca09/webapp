@@ -1,0 +1,131 @@
+<% include header.ejs %>
+            <div class="row">
+                <div class="col-lg-12" style="height:25px">
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            统计日期: <input type="date" name="selectdate" id="selectdate" value="2015-08-01"/>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body" id="barcharts" style="height: 550px">
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
+    <script type="text/javascript">
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+
+        // 使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/bar' // 使用柱状图就加载bar模块，按需加载
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart = ec.init(document.getElementById('barcharts'),'macarons');
+
+                    option = {
+                        title : {
+                            text: '来琼游客归属地统计',
+                            x:'center',
+                            textStyle:{
+                                color:"black",
+                                fontWeight:'bold'
+                            }
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:['游客数量'],
+                            x:'left'
+                        },
+                        toolbox: {
+                            show : true,
+                            orient:'vertical',
+                            feature : {
+                                dataView : {show: true},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis : [
+                            {
+                                type : 'category',
+                                axisLabel:{
+                                    rotate:45
+                                },
+                                data : ['广东','四川','上海','湖南','江苏','北京','湖北','广西','河南','浙江','福建','重庆','江西','安徽','河北',
+                                    '陕西','黑龙江','贵州','山东','辽宁','甘肃','新疆','吉林','云南','山西','天津','内蒙古','宁夏','青海','西藏','其它']
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value'
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'游客数量',
+                                type:'bar',
+                                itemStyle: {
+                                    normal: {
+                                        color: 	'#EE8262'
+                                    }
+                                },
+                                data:(function () {
+                                    var d = []
+                                    <% for(j=0; j< dayflow[0].provisitor.length; j++) {%>
+                                    d.push(parseInt('<%=dayflow[0].provisitor[j]%>'));
+                                    <%}%>
+                                    return d;
+                                })(),
+                                markPoint : {
+                                    data : [
+                                        {type : 'max', name: '最大值'},
+                                        {type : 'min', name: '最小值'}
+                                    ]
+                                }
+                            }
+                        ]
+                    };
+
+                    // 为echarts对象加载数据
+                    myChart.setOption(option);
+
+                    var dateinput=document.getElementById("selectdate");
+                    dateinput.addEventListener('change',function(){
+                        option.series[0].data=[];       //清空data
+                        var m = dateinput.value.replace("-","").replace("-","");
+
+                        <% for(i=0; i< dayflow.length; i++) {%>
+                         if('<%=dayflow[i].date%>'==m){
+                             <% for(j=0; j< dayflow[i].provisitor.length; j++) {%>
+                             option.series[0].data.push(parseInt('<%=dayflow[i].provisitor[j]%>'));
+                             <%}%>
+                        }
+                        <%}%>
+                        myChart.clear();
+                        myChart.setOption(option);
+                    });
+                }
+        );
+    </script>
+<% include footer.ejs %>

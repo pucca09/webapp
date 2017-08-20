@@ -1,0 +1,115 @@
+<% include header.ejs %>
+<br>
+
+<div class="tab-content">
+    <div class="row" style="height:25px;">
+        <p>通过输入用户ID检索用户轨迹</p>
+    </div>
+</div>
+<br>
+<!--检索框-->
+<div class="row">
+    <div class="form-group col-md-8">
+        <input class="form-control" placeholder="请输入用户id，例如：F48BFBD11330088020DB0CE73886A3D7" name="uid" id=userid_input value="F48BFBD11330088020DB0CE73886A3D7">
+    </div>
+    <div class="form-group col-md-4">
+        <button class="btn btn-default" type="submit" id="userid_submit">Submit</button>
+    </div>
+</div>
+<div class="row" id="map" style="height:700px">
+</div>
+
+<script type="text/javascript">
+    var map = new BMap.Map("map");
+    map.centerAndZoom(new BMap.Point(116.404, 39.915), 11);
+    map.enableScrollWheelZoom();
+    var marker = new BMap.Marker(new BMap.Point(116.404, 39.915));
+    // map.addOverlay(marker);
+    $("button").on('click',function(e){
+        var buttonID = e.target.id;
+        var uid = $("#userid_input").val();
+        var data = {"uid": uid};
+        if(uid == ""){
+            alert("the input is null!");
+        }else{
+            $.ajax({
+                type: "get",
+                dataType: "text",
+                url: "/searchUID",
+                data: data,
+                success: function(msg){
+                    msg = JSON.parse(msg);
+                    var map = new BMap.Map("map");
+                    map.centerAndZoom(new BMap.Point(116.404, 39.915), 12);
+                    map.enableScrollWheelZoom();
+                    if(msg.length == 0){
+                        alert("查询为空！");
+                    }else{
+                        console.log(msg);
+                        map.clearOverlays();
+                        var myIcon = new BMap.Icon("/img/1616.png",new BMap.Size(50,50),{anchor:new BMap.Size(8,8)});
+                        var myIcon2 = new BMap.Icon("/img/1616(y).png",new BMap.Size(50,50),{anchor:new BMap.Size(8,8)});
+                 
+                        var points = [];
+                        var points1 = [];
+                        // before map matching
+                        for(i=0; i < msg.traj.beforemm.length; i++){
+                            points1.push(new BMap.Point(msg.traj.beforemm[i].lng, msg.traj.beforemm[i].lat));
+                        }
+                        for(i=0; i < points1.length; i++){                         
+                            marker = new BMap.Marker(points1[i],{icon:myIcon2});             
+                            map.addOverlay(marker);
+
+                            var content = "道路映射前："+"</br>时间："+msg.traj.beforemm[i].date;
+                            console.log(content);
+                            addClickHandler(content, marker);
+                        }
+                        // after map matching
+                        for(i=0; i < msg.traj.aftermm.length; i++){
+                            points.push(new BMap.Point(msg.traj.aftermm[i].lng, msg.traj.aftermm[i].lat));
+                        }
+                        for(i=0; i < points.length; i++){                         
+                            marker = new BMap.Marker(points[i],{icon:myIcon});             
+                            map.addOverlay(marker);
+                            var transport = "";
+                            if(msg.traj.aftermm[i].transport==1){
+                                transport = "步行";
+                            }else if(msg.traj.aftermm[i].transport==2){
+                                transport = "乘车";
+                            }else if(msg.traj.aftermm[i].transport==3){
+                                transport = "地铁";
+                            }
+                            var content = "道路映射后："+"</br>时间："+msg.traj.aftermm[i].date+
+                            "</br>速度："+msg.traj.aftermm[i].speed+
+                            " km/h</br>交通方式："+transport;
+                            console.log(content);
+                            addClickHandler(content, marker);
+                        }
+
+                        var opts = {
+                            width :200,
+                            height:100,
+                            title:"详细信息"
+                        };
+
+                        function addClickHandler(content, marker){
+                            marker.addEventListener("mouseover",function(e){
+                                openInfo(content, e)
+                            });
+                            marker.addEventListener("mouseout",function(e){
+                                map.closeInfoWindow();
+                            })
+                        }
+                        function openInfo(content, e){
+                            var p = e.target;
+                            var point = new BMap.Point(p.getPosition().lng,p.getPosition().lat);
+                            var infoWindow = new BMap.InfoWindow(content, opts);
+                            map.openInfoWindow(infoWindow,point);
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
+<% include footer.ejs %>

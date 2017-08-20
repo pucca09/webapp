@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<style type="text/css">
+	body, html{width: 100%;height: 100%;margin:0;font-family:"微软雅黑";}
+	#allmap {width: 100%; height:800px; overflow: hidden;}
+	#result {width:100%;font-size:12px;}
+	dl,dt,dd,ul,li{
+		margin:0;
+		padding:0;
+		list-style:none;
+	}
+	p{font-size:12px;}
+	dt{
+		font-size:14px;
+		font-family:"微软雅黑";
+		font-weight:bold;
+		border-bottom:1px dotted #000;
+		padding:5px 0 5px 5px;
+		margin:5px 0;
+	}
+	dd{
+		padding:5px 0 0 5px;
+	}
+	li{
+		line-height:28px;
+	}
+	</style>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mmh6uKBZs2bvMVvWAYrnkt7G"></script>
+	<!--加载鼠标绘制工具-->
+	<script type="text/javascript" src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
+	<link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
+	<!--加载检索信息窗口-->
+	<script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.js"></script>
+	<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.css" />
+	<title>路径</title>
+</head>
+<body>
+	<div id="allmap" style="overflow:hidden;zoom:1;position:relative;">	
+		<div id="map" style="height:100%;-webkit-transition: all 0.5s ease-in-out;transition: all 0.5s ease-in-out;"></div>
+	</div>
+	<div id="result">
+	<textarea class="form-control" rows="10" name="lnglat" id="lnglat"style="width: 1000px">
+110.424157,19.773597
+110.451753,19.797204
+110.479349,19.802442
+110.520743,19.820943
+110.534541,19.80353
+110.53914,19.769243
+110.559262,19.756724
+110.558112,19.739304
+110.579384,19.71317
+110.577084,19.709359
+110.534541,19.647818</textarea>
+	<input type="button" value="显示路径" onclick="CreateMap(document.getElementById('lnglat').value)"/>
+
+	</div>
+	<script type="text/javascript">
+		function CreateMap(arg){
+			// 百度地图API功能
+			var points=[];
+		    var line=arg.split('\n');
+			for(i=0;i<line.length;i++){
+				var nn=line[i].split(',');
+				points.push([nn[0],nn[1]]);
+			}
+
+			var map = new BMap.Map("map");
+
+			var point = new BMap.Point(points[0][0],points[0][1]);
+			map.centerAndZoom(point, 11);
+			map.addControl(new BMap.NavigationControl());
+			map.enableScrollWheelZoom();
+
+			var polyline = new BMap.Polyline((function () {
+				var d = []
+				for(i=0; i< points.length; i++) {
+				d.push(new BMap.Point(points[i][0],points[i][1]));
+				}
+				return d;
+			})(), {strokeColor:"green", strokeWeight:6, strokeOpacity:0.5});
+			map.addOverlay(polyline);          //增加折线
+
+		};
+	</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+exports.config={
+    dbconfig:{
+        mongodb_url:"mongodb://127.0.0.1:27017/dianxinweb"
+    },
+    webconfig:{
+        web_port:"3001"
+    },
+    deployconfig:{
+        num_threads:1
+    },
+    logconfig:[
+        { type:"console" },
+        {
+            type:"file",
+            filename:"logs/access.log",
+            backups:3
+        }
+    ]
+}

@@ -1,0 +1,8 @@
+数据重建：
+npm update
+mongorestore -h localhost -d dianxinweb <rootdir>/dianxinweb
+数据备份：
+mongodump -h localhost -d dianxinweb -o <rootdir>
+运行：
+node web.js
+打开 http://127.0.0.1/login

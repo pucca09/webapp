@@ -1,0 +1,407 @@
+<% include header.ejs %>
+        <div class="row">
+            <div class="col-lg-12" style="height:25px">
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-success">
+                    <div class="panel-body" id="sightmigrate" style="height: 820px">
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+
+<script type="text/javascript">
+    // 路径配置
+    require.config({
+        paths: {
+            echarts: 'http://echarts.baidu.com/build/dist'
+        },
+        packages: [
+            {
+                name: 'BMap',
+                location: 'plugin/echarts',
+                main: 'bmap3'
+            }
+        ]
+    });
+
+    // 使用
+    require(
+            [
+                'echarts',
+                //'BMap',
+                'echarts/chart/map'
+            ],
+            function (ec) {
+                var myChart = ec.init(document.getElementById('sightmigrate'),'macarons');
+                // 初始化地图
+//                var BMapExt = new BMapExtension($('#sightmigrate')[0], BMap, echarts,{
+//                    enableMapClick: false
+//                });
+//                var map = BMapExt.getMap();
+//                var container = BMapExt.getEchartsContainer();
+//
+//                var point = new BMap.Point(108.8, 19.184);
+//                map.centerAndZoom(point, 9);
+//                map.enableScrollWheelZoom(true);
+//                // 地图自定义样式
+//                map.setMapStyle({style:'midnight'});
+
+                option = {
+                    timeline:{
+                        type:'number',
+                        data:['4','8','12','16','20','24'],
+                        label : {
+                            formatter : function(s) {
+                                return s.slice(0, 7);
+                            },
+                            textStyle: {
+                                color: 'white'
+                            }
+                        },
+                        x:'23%',
+                        y:'93%',
+                        autoPlay : true,
+                        playInterval : 1000
+                    },
+                    options:[{
+                        backgroundColor: '#1b1b1b',
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: '{b}'
+                        },
+                        legend: {
+                            orient: 'vertical',
+                            x: 'left',
+                            data: ['所有景区', '南山文化旅游区（起）', '呀诺达雨林文化旅游区（起）', '分界洲岛旅游区（起）', '中国雷琼海口火山群世界地质公园（起）', '甘什岭槟榔谷原生态黎苗文化旅游区（起）',
+                                '假日海滩旅游区（起）', '天涯海角风景区（起）', '海南热带野生动植物园（起）', '三亚蜈支洲岛度假中心（起）', '兴隆热带植物园（起）', '博鳌亚洲论坛永久会址（起）',
+                                '亚龙湾国家旅游度假区（起）', '三亚大东海旅游景区（起）', '南湾猴岛生态景区（起）', '海口观澜湖旅游度假区（起）', '海南文笔峰盘古文化旅游区（起）', '三亚西岛海洋文化旅游区（起）',
+                                '万宁东山岭文化旅游区（起）', '三亚免税店（起）', '三亚解放路步行街（起）', '万宁首创奥特莱斯（起）', '三亚百花谷商业街（起）', '三亚1号港湾城（起）',
+                                '南山文化旅游区（终）', '呀诺达雨林文化旅游区（终）', '分界洲岛旅游区（终）', '中国雷琼海口火山群世界地质公园（终）', '甘什岭槟榔谷原生态黎苗文化旅游区（终）',
+                                '假日海滩旅游区（终）', '天涯海角风景区（终）', '海南热带野生动植物园（终）', '三亚蜈支洲岛度假中心（终）', '兴隆热带植物园（终）', '博鳌亚洲论坛永久会址（终）',
+                                '亚龙湾国家旅游度假区（终）', '三亚大东海旅游景区（终）', '南湾猴岛生态景区（终）', '海口观澜湖旅游度假区（终）', '海南文笔峰盘古文化旅游区（终）', '三亚西岛海洋文化旅游区（终）',
+                                '万宁东山岭文化旅游区（终）', '三亚免税店（终）', '三亚解放路步行街（终）', '万宁首创奥特莱斯（终）', '三亚百花谷商业街（终）', '三亚1号港湾城（终）'],
+                            selectedMode: 'single',
+                            selected: {
+                                '所有景区': false,
+                                '呀诺达雨林文化旅游区（起）': false,
+                                '分界洲岛旅游区（起）': false,
+                                '中国雷琼海口火山群世界地质公园（起）': false,
+                                '甘什岭槟榔谷原生态黎苗文化旅游区（起）': false,
+                                '假日海滩旅游区（起）': false,
+                                '天涯海角风景区（起）': false,
+                                '海南热带野生动植物园（起）': false,
+                                '三亚蜈支洲岛度假中心（起）': false,
+                                '兴隆热带植物园（起）': false,
+                                '博鳌亚洲论坛永久会址（起）': false,
+                                '亚龙湾国家旅游度假区（起）': false,
+                                '三亚大东海旅游景区（起）': false,
+                                '南湾猴岛生态景区（起）': false,
+                                '海口观澜湖旅游度假区（起）': false,
+                                '海南文笔峰盘古文化旅游区（起）': false,
+                                '三亚西岛海洋文化旅游区（起）': false,
+                                '万宁东山岭文化旅游区（起）': false,
+                                '三亚免税店（起）': false,
+                                '三亚解放路步行街（起）': false,
+                                '万宁首创奥特莱斯（起）': false,
+                                '三亚百花谷商业街（起）': false,
+                                '三亚1号港湾城（起）': false,
+                                '南山文化旅游区（终）': false,
+                                '呀诺达雨林文化旅游区（终）': false,
+                                '分界洲岛旅游区（终）': false,
+                                '中国雷琼海口火山群世界地质公园（终）': false,
+                                '甘什岭槟榔谷原生态黎苗文化旅游区（终）': false,
+                                '假日海滩旅游区（终）': false,
+                                '天涯海角风景区（终）': false,
+                                '海南热带野生动植物园（终）': false,
+                                '三亚蜈支洲岛度假中心（终）': false,
+                                '兴隆热带植物园（终）': false,
+                                '博鳌亚洲论坛永久会址（终）': false,
+                                '亚龙湾国家旅游度假区（终）': false,
+                                '三亚大东海旅游景区（终）': false,
+                                '南湾猴岛生态景区（终）': false,
+                                '海口观澜湖旅游度假区（终）': false,
+                                '海南文笔峰盘古文化旅游区（终）': false,
+                                '三亚西岛海洋文化旅游区（终）': false,
+                                '万宁东山岭文化旅游区（终）': false,
+                                '三亚免税店（终）': false,
+                                '三亚解放路步行街（终）': false,
+                                '万宁首创奥特莱斯（终）': false,
+                                '三亚百花谷商业街（终）': false,
+                                '三亚1号港湾城（终）': false,
+                            },
+                            textStyle: {
+                                color: '#fff',
+                            }
+                        },
+                        toolbox: {
+                            show: true,
+                            orient: 'vertical',
+                            x: 'right',
+                            y: 'center',
+                            feature: {
+                                dataView: {show: true, readOnly: false},
+                                restore: {show: true},
+                                saveAsImage: {show: true}
+                            }
+                        },
+                        dataRange: {
+                            min: 0,
+                            max: 200,
+                            x: 'right',
+                            calculable: true,
+                            color: ['#ff3333', 'orange', 'yellow', 'lime', 'aqua'],
+                            textStyle: {
+                                color: '#fff'
+                            }
+                        },
+                        series: (function () {
+                            var d = [];
+                            var allsight = ['南山文化旅游区', '呀诺达雨林文化旅游区', '分界洲岛旅游区', '中国雷琼海口火山群世界地质公园', '甘什岭槟榔谷原生态黎苗文化旅游区',
+                                '假日海滩旅游区', '天涯海角风景区', '海南热带野生动植物园', '三亚蜈支洲岛度假中心', '兴隆热带植物园', '博鳌亚洲论坛永久会址',
+                                '亚龙湾国家旅游度假区', '三亚大东海旅游景区', '南湾猴岛生态景区', '海口观澜湖旅游度假区', '海南文笔峰盘古文化旅游区', '三亚西岛海洋文化旅游区',
+                                '万宁东山岭文化旅游区', '三亚免税店', '三亚解放路步行街', '万宁首创奥特莱斯', '三亚百花谷商业街', '三亚1号港湾城'];
+                            d.push({
+                                mapLocation: {x:'45%',width:'75%',height:'75%'},
+                                name: '所有景区',
+                                type:'map',
+                                //mapType: 'none',
+                                mapType: '海南',
+                                hoverable: false,
+                                itemStyle:{
+                                    normal:{
+                                        borderColor:'rgba(100,149,237,1)',
+                                        borderWidth:0.5,
+                                        areaStyle:{
+                                            color: '#1b1b1b'
+                                        }
+                                    }
+                                },
+                                data:[],
+                                geoCoord: {
+                                    '南山文化旅游区': [109.2199693, 18.31049752],
+                                    '南山大小洞天旅游区': [109.184517, 18.306514],
+                                    '呀诺达雨林文化旅游区': [109.668727, 18.44967311],
+                                    '分界洲岛旅游区': [110.2067999, 18.58193723],
+                                    '中国雷琼海口火山群世界地质公园': [110.225955, 19.93125],
+                                    '甘什岭槟榔谷原生态黎苗文化旅游区': [109.6697331, 18.40316348],
+                                    '假日海滩旅游区': [110.2436013, 20.04262889],
+                                    '天涯海角风景区': [109.3614826, 18.2983011],
+                                    '海南热带野生动植物园': [110.2525057, 19.77615147],
+                                    '三亚蜈支洲岛度假中心': [109.7342229, 18.28065037],
+                                    '兴隆热带植物园': [110.2050264, 18.73865993],
+                                    '博鳌亚洲论坛永久会址': [110.578276, 19.146878],
+                                    '亚龙湾国家旅游度假区': [109.654556, 18.236155],
+                                    '三亚大东海旅游景区': [109.530054, 18.22879454],
+                                    '南湾猴岛生态景区': [109.9902316, 18.40271131],
+                                    '海口观澜湖旅游度假区': [110.328102, 19.917656],
+                                    '海南文笔峰盘古文化旅游区': [110.372117, 19.558993],
+                                    '三亚西岛海洋文化旅游区': [109.374756, 18.297797],
+                                    '万宁东山岭文化旅游区': [110.435341, 18.808551],
+                                    '三亚免税店': [109.757208, 18.377733],
+                                    '三亚解放路步行街': [109.508794, 18.255055],
+                                    '万宁首创奥特莱斯': [110.301043, 18.730906],
+                                    '三亚百花谷商业街': [109.650589, 18.238808],
+                                    '三亚1号港湾城': [109.535533, 18.228164],
+                                    '东坡书院': [109.365385, 19.747813],
+                                    '鹿回头公园': [109.508091, 18.23177]
+                                },
+                                markLine: {
+                                    smooth: true,
+                                    effect: {
+                                        show: true,
+                                        scaleSize: 1,
+                                        period: 30,
+                                        color: '#fff',
+                                        shadowBlur: 10
+                                    },
+                                    itemStyle: {
+                                        normal: {
+                                            borderWidth: 1,
+                                            lineStyle: {
+                                                type: 'solid',
+                                                shadowBlur: 10
+                                            }
+                                        }
+                                    },
+                                    data: (function () {
+                                        var d = []
+                                        <% for(j=0; j< move.length; j++) {%>
+                                        var d1 = []
+                                        d1.push({name: '<%=move[j].inname%>'});
+                                        d1.push({name: '<%=move[j].outname%>', value: parseInt('<%=move[j].count%>')});
+                                        d.push(d1);
+                                        <%}%>
+                                        return d;
+                                    })()
+                                },
+                                markPoint: {
+                                    symbol: 'emptyCircle',
+                                    symbolSize: function (v) {
+                                        return 10 + v / 10
+                                    },
+                                    effect: {
+                                        show: true,
+                                        shadowBlur: 0
+                                    },
+                                    itemStyle: {
+                                        normal: {
+                                            label: {show: false}
+                                        },
+                                        emphasis: {
+                                            label: {position: 'top'}
+                                        }
+                                    },
+                                    data: []
+                                }
+                            });
+                            for (i = 0; i < allsight.length; i++) {
+                                d.push({
+                                    name: allsight[i] + '（起）',
+                                    type:'map',
+                                    //mapType: 'none',
+                                    mapType: '海南',
+                                    hoverable: false,
+                                    data:[],
+                                    markLine: {
+                                        smooth: true,
+                                        effect: {
+                                            show: true,
+                                            scaleSize: 1,
+                                            period: 30,
+                                            color: '#fff',
+                                            shadowBlur: 10
+                                        },
+                                        itemStyle: {
+                                            normal: {
+                                                borderWidth: 1,
+                                                lineStyle: {
+                                                    type: 'solid',
+                                                    shadowBlur: 10
+                                                }
+                                            }
+                                        },
+                                        data: (function () {
+                                            var d = []
+                                            <% for(j=0; j< move.length; j++) {%>
+                                            var d1 = []
+                                            if ('<%=move[j].inname%>' == allsight[i]) {
+                                                d1.push({name: '<%=move[j].inname%>'});
+                                                d1.push({
+                                                    name: '<%=move[j].outname%>',
+                                                    value: parseInt('<%=move[j].count%>')
+                                                });
+                                                d.push(d1);
+                                            }
+                                            <%}%>
+                                            console.log(d);
+                                            return d;
+                                        })()
+                                    },
+                                    markPoint: {
+                                        symbol: 'emptyCircle',
+                                        symbolSize: function (v) {
+                                            return 10 + v / 10
+                                        },
+                                        effect: {
+                                            show: true,
+                                            shadowBlur: 0
+                                        },
+                                        itemStyle: {
+                                            normal: {
+                                                label: {show: false}
+                                            },
+                                            emphasis: {
+                                                label: {position: 'top'}
+                                            }
+                                        },
+                                        data: []
+                                    }
+                                });
+                            }
+                            for (i = 0; i < allsight.length; i++) {
+                                d.push({
+                                    name: allsight[i] + '（终）',
+                                    type:'map',
+                                    //mapType: 'none',
+                                    mapType: '海南',
+                                    hoverable: false,
+                                    data:[],
+                                    markLine: {
+                                        smooth: true,
+                                        effect: {
+                                            show: true,
+                                            scaleSize: 1,
+                                            period: 30,
+                                            color: '#fff',
+                                            shadowBlur: 10
+                                        },
+                                        itemStyle: {
+                                            normal: {
+                                                borderWidth: 1,
+                                                lineStyle: {
+                                                    type: 'solid',
+                                                    shadowBlur: 10
+                                                }
+                                            }
+                                        },
+                                        data: (function () {
+                                            var d = []
+                                            <% for(j=0; j< move.length; j++) {%>
+                                            var d1 = []
+                                            if ('<%=move[j].outname%>' == allsight[i]) {
+                                                d1.push({name: '<%=move[j].inname%>'});
+                                                d1.push({
+                                                    name: '<%=move[j].outname%>',
+                                                    value: parseInt('<%=move[j].count%>')
+                                                });
+                                                d.push(d1);
+                                            }
+                                            <%}%>
+                                            console.log(d);
+                                            return d;
+                                        })()
+                                    },
+                                    markPoint: {
+                                        symbol: 'emptyCircle',
+                                        symbolSize: function (v) {
+                                            return 10 + v / 10
+                                        },
+                                        effect: {
+                                            show: true,
+                                            shadowBlur: 0
+                                        },
+                                        itemStyle: {
+                                            normal: {
+                                                label: {show: false}
+                                            },
+                                            emphasis: {
+                                                label: {position: 'top'}
+                                            }
+                                        },
+                                        data: []
+                                    }
+                                });
+                            }
+                            return d;
+                        })()
+                    }]
+                };
+
+//                var myChart = BMapExt.initECharts(container);
+//                window.onresize = myChart.onresize;
+//                BMapExt.setOption(option);
+
+                myChart.setOption(option);
+            }
+    );
+</script>
+<% include footer.ejs %>

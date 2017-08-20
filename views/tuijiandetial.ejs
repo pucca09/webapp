@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>电信用户洞察</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="media/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="media/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+    <link href="media/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
+    <!-- Timeline CSS -->
+    <link href="media/dist/css/timeline.css" rel="stylesheet">
+    <!-- DataTables Responsive CSS -->
+    <link href="media/bower_components/datatables-responsive/css/dataTables.responsive.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="media/dist/css/sb-admin-2.css" rel="stylesheet">
+    <link rel="shortcut icon" href="img/favicon.ico" />
+    <!-- Custom Fonts -->
+    <link href="media/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0;">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index"><img src="img/logo.png"  height="28px" /></a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <!--bootstrapmin nav>li>a:hover 和.open>a:hover的颜色可以变-->
+            <ul class="nav navbar-top-links navbar-right" style="margin-right: 30px">
+                <li class="dropdown" >
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw" ></i> <%= req.session.user.username %> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="/settings"><i class="fa fa-gear fa-fw"></i> 设置</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="/login"><i class="fa fa-sign-out fa-fw"></i> 注销</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+
+            </ul>
+            <!-- /.navbar-top-links -->
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                        <li class="active">
+                            <a href="#"><i class="fa fa-dashboard "></i> 区域人流画像<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/index" ><i class="fa fa-circle-o "></i> 景区概览</a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fa fa-circle-o "></i> 归属统计<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li >
+                                            <a href="/guishubyday">&nbsp;○&nbsp;按天统计</a>
+                                        </li>
+                                        <li >
+                                            <a href="/guishubymonth">&nbsp;○&nbsp;按月统计</a>
+                                        </li>
+                                        <li >
+                                            <a href="/guishubysight">&nbsp;○&nbsp;景区统计</a>
+                                        </li>
+                                        <li >
+                                            <a href="/traffic">&nbsp;○&nbsp;交通方式</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="#"><i class="fa fa-circle-o "></i> 客流统计<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li >
+                                            <a href="/sightflow">&nbsp;○&nbsp;景区流量</a>
+                                        </li>
+                                        <li >
+                                            <a href="/prostay">&nbsp;○&nbsp;省内驻留</a>
+                                        </li>
+                                        <li >
+                                            <a href="/migration">&nbsp;○&nbsp;游客迁徙</a>
+                                        </li>
+                                        <li >
+                                            <a href="/sightstay">&nbsp;○&nbsp;景区驻留</a>
+                                        </li>
+                                        <li >
+                                            <a href="/live">&nbsp;○&nbsp;住宿分布</a>
+                                        </li>
+                                        <li >
+                                            <a href="/inandout">&nbsp;○&nbsp;漫入漫出</a>
+                                        </li>
+                                        <li >
+                                            <a href="/remen">&nbsp;○&nbsp;景区质量影响因素</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="/zeppelin"><i class="fa fa-circle-o "></i> 景区客源结构分析</a>
+                                </li>
+                                <li>
+                                    <a href="/tuijian" class="active"><i class="fa fa-circle "></i> 行程推荐</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+                        <li>
+                            <a href="#"><i class="fa fa-user"></i> 本省人分析<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/peoplelist"><i class="fa fa-circle-o "></i> 个人列表</a>
+                                </li>
+                                <li>
+                                    <a href="/benshengselect" ><i class="fa fa-circle-o "></i> 人群筛选</a>
+                                </li>
+                                <li>
+                                    <a href="/xingwei" ><i class="fa fa-circle-o "></i> 行为分析</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+                        <li>
+                            <a href="/waishengselect"><i class="fa fa-user-md"></i> 外省人分析</a>
+                        </li>
+                        <li style="display:none;">                     <a href="/jinghe"><i class="fa fa-certificate"></i> 竞合分析</a>                 </li>
+                        <li>
+                            <a href="#"><i class="fa fa-users"></i> 社交分析<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/shejiaoquan"><i class="fa fa-circle-o "></i> 社交圈分析</a>
+                                </li>
+                                <li>
+                                    <a href="/jingdianxiangguan"><i class="fa fa-circle-o "></i> 用户游览行为的社交关联分析</a>
+                                </li>
+                                <li>
+                                    <a href="/yidongxiangguan"><i class="fa fa-circle-o "></i> 用户移动行为的社交关联分析</a>
+                                </li>
+                                <li>
+                                    <a href="/fourg"><i class="fa fa-circle-o "></i> 兴趣偏好预测及4g案例分析</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+                        <li>
+                            <a href="#"><i class="fa fa-legal"></i> 用户移动行为挖掘<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/motif"><i class="fa fa-circle-o "></i> 移动模式图模型</a>
+                                </li>
+                                <li>
+                                    <a href="/dbscan"><i class="fa fa-circle-o "></i> 重要位置识别（dbscan)</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="/zaixian"><i class="fa fa-list"></i> 在线大数据分析平台</a>
+                        </li>
+                        <li>
+                            <a href="/guizhou"><i class="fa fa-list"></i> 楼盘平台</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12" style="height:25px">
+                </div>
+
+                <h4 class="page-header">行程概览</h4>
+                    <!-- /.panel -->
+                <div class="row">
+
+                    <div class="col-lg-7" style="height:250px" >
+                        <p style="color:#5C5C5C;"><span>D1</span>&nbsp;&nbsp;&nbsp;&nbsp;大东海 → 鹿回头公园 → 第一市场</p>
+                        <p style="color:#5C5C5C;"><span>D2</span>&nbsp;&nbsp;&nbsp;&nbsp;呀诺达雨林文化旅游区</p>
+                        <p style="color:#5C5C5C;"><span>D3</span>&nbsp;&nbsp;&nbsp;&nbsp;三亚大东海旅游景区 → 三亚1号港湾城 → 亚龙湾国家旅游度假区→ 三亚百花谷商业街</p>
+                        <p style="color:#5C5C5C;"><span>D4</span>&nbsp;&nbsp;&nbsp;&nbsp;蜈支洲岛 → 情人桥 → 白沙滩→ 三亚百花谷商业街</p>
+                        <p style="color:#5C5C5C;"><span>D5</span>&nbsp;&nbsp;&nbsp;&nbsp;返程</p>
+                        <a href="#">收起</a>
+                    </div>
+                    <div class="col-lg-1" style="height:250px" ></div>
+
+                    <div class="col-lg-4" style="height:250px" id="routeshort">
+                        <img src="/img/mfw.png" width=80%"/>
+                    </div>
+                </div>
+
+                <h4 class="page-header">行程详情</h4>
+
+                <h4>D1 三亚</h4>
+                <ul class="timeline">
+                    <li>
+                        <div class="timeline-badge "><i class="fa fa-map-marker"></i>
+                        </div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="timeline-title">大东海</h4>
+
+                            </div>
+                            <div class="timeline-body">
+                                <p>“大东海是三亚最早被开发的热带滨海度假区，也是离市区最近的海湾。这里消费适中，夜晚也较为热闹。大东海的沙滩和海水质量比亚龙湾逊色，但比三亚湾要好很多，能见度很高，来这里晒日光浴的人较多。”</p></br>
+                                <img style="float: left" src="/img/u71.png" width=50%" />
+                                <div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;门票：无</br></br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;开放时间：全天候开放</br></br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;交通方式：坐xxx路公交</br></br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;建议游玩时间：2.5小时</br></br>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                    <li class="timeline-inverted">
+                        <div class="timeline-badge"><i class="fa fa-map-marker"></i>
+                        </div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="timeline-title">鹿回头山顶公园</h4>
+
+                            </div>
+                            <div class="timeline-body">
+                                <p>“大东海是三亚最早被开发的热带滨海度假区，也是离市区最近的海湾。这里消费适中，夜晚也较为热闹。大东海的沙滩和海水质量比亚龙湾逊色，但比三亚湾要好很多，能见度很高，来这里晒日光浴的人较多。”</p></br>
+                                <img style="float: left" src="/img/u71.png" width=50%" />
+                                <div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;门票：无</br></br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;开放时间：全天候开放</br></br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;交通方式：坐xxx路公交</br></br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;建议游玩时间：2.5小时</br></br>
+                            </div>
+                        </div>
+                            </div>
+                    </li>
+
+                    <li>
+                        <div class="timeline-badge"><i class="fa fa-map-marker"></i>
+                        </div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="timeline-title">第一市场</h4>
+                            </div>
+                            <div class="timeline-body">
+                                <p>“大东海是三亚最早被开发的热带滨海度假区，也是离市区最近的海湾。这里消费适中，夜晚也较为热闹。大东海的沙滩和海水质量比亚龙湾逊色，但比三亚湾要好很多，能见度很高，来这里晒日光浴的人较多。”</p></br>
+                                <img style="float: left" src="/img/u71.png" width=50%" />
+                                <div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;门票：无</br></br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;开放时间：全天候开放</br></br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;交通方式：坐xxx路公交</br></br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;建议游玩时间：2.5小时</br></br>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="media/bower_components/jquery/dist/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="media/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="media/bower_components/metisMenu/dist/metisMenu.min.js"></script>
+
+    <!-- DataTables JavaScript -->
+    <script src="media/bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="media/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="media/dist/js/sb-admin-2.js"></script>
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+                responsive: true
+        });
+    });
+    </script>
+
+</body>
+
+</html>

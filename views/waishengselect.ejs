@@ -1,0 +1,110 @@
+<% include header.ejs %>
+                <div class="row">
+                    <div class="col-lg-12" style="height:25px">
+
+                    </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+            <div class="row">
+                <form method="post" enctype="multipart/form-data" action="/waishengdetail" id="benshengselect">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label>归属地</label>
+                            <select class="form-control" name="guishu">
+                                <option value="{'$nin':[]}">所有</option>
+                                <option value="301">广东</option>
+                                <option value="302">四川</option>
+                                <option value="303">上海</option>
+                                <option value="304">湖南</option>
+                                <option value="305">江苏</option>
+                                <option value="306">北京</option>
+                                <option value="307">湖北</option>
+                                <option value="308">广西</option>
+                                <option value="309">河南</option>
+                                <option value="310">浙江</option>
+                                <option value="311">福建</option>
+                                <option value="312">重庆</option>
+                                <option value="313">江西</option>
+                                <option value="314">安徽</option>
+                                <option value="315">河北</option>
+                                <option value="316">陕西</option>
+                                <option value="317">黑龙江</option>
+                                <option value="318">贵州</option>
+                                <option value="319">山东</option>
+                                <option value="320">辽宁</option>
+                                <option value="321">甘肃</option>
+                                <option value="322">新疆</option>
+                                <option value="323">吉林</option>
+                                <option value="324">云南</option>
+                                <option value="325">山西</option>
+                                <option value="326">天津</option>
+                                <option value="327">内蒙古</option>
+                                <option value="328">宁夏</option>
+                                <option value="329">青海</option>
+                                <option value="330">西藏</option>
+                                <option value="331">其它</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>游客类型</label>
+                            <select class="form-control" name="visitortype">
+                                <option value="{'$nin':[]}">所有</option>
+                                <option value="none">普通</option>
+                                <option value="bird">候鸟</option>
+                                <option value="business">商务</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>交通方式</label>
+                            <select class="form-control" name="traffic">
+                                <option value="{'$nin':[]}">所有</option>
+                                <option value="0">自驾</option>
+                                <option value="1">飞机</option>
+                                <option value="2">火车</option>
+                                <option value="3">其它</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+
+                    </div>
+
+                    <div class="col-lg-3">
+
+                        <div class="form-group">
+                            <label>是否访问免税店</label>
+                            <select class="form-control" name="mianshui">
+                                <option value="{'$nin':[]}">所有</option>
+                                <option value="0">是</option>
+                                <option value="1">否</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>通话强度</label>
+                            <select class="form-control" name="phone">
+                                <option value="{'$nin':[]}">所有</option>
+                                <option value="1">低</option>
+                                <option value="2">中</option>
+                                <option value="3">高</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    </div>
+                    <div class="panel-footer">
+                        <button type="submit" class="btn btn-primary" style="margin-left: 18px">确定</button>
+                        <button type="reset" class="btn">重置</button>
+                    </div>
+                </div>
+
+                </form>
+                </div>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+<% include footer.ejs %>

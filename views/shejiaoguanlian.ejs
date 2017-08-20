@@ -1,0 +1,49 @@
+<% include header.ejs %>
+            <div class="row">
+                <div class="col-lg-12" style="height:25px">
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <!-- /.col-lg-12 -->
+                <div class="col-lg-12">
+                    <div class="panel panel-warning">
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <h4 style="font-weight: bold">相关用户提取</h4>
+                            <p style="color:#5C5C5C;">根据用户上网数据（IAR）以及通话详细记录（CDR）提取同时有上网记录以及通话记录的用户。通过CDR数据将用户划分用户对，分为存在好友关系的用于对以及不存在好友关系的用户对。通过IAR数据种的网页分类信息计算用户对之间的上网偏好相似性。</p>
+                            <h4 style="font-weight: bold">用户上网偏好的社交关联</h4>
+                            <h4 style="font-weight: bold;color: #003399 ">实验方案</h4>
+                            <p style="color:#5C5C5C;">通过假设检验验证用户上网偏好之间存在社交关联。分别通过u检验以及t检验进行验证。零假设为用户上网偏好与社交关系无关，备择假设为用户上网偏好与社交关系有关。
+                           实验使用两个样本集分别是好友关系样本集|X1|，和不具有好友关系样本集|X2|，验证两个样本集中用户对的上网相似性分布存在差异。</p>
+                            <h4 style="font-weight: bold;color: #003399 ">实验结论</h4>
+                            <p style="color:#5C5C5C;font-weight: bold">1、t检验</p>
+                            <p style="color:#5C5C5C;">根据数据量和数据分布情况，本课题采用单侧检验，检验水准为α=0.05。查 t 评分表得到对于无限的自由度的概率p = 0.05的值为t0.05 = 1.96。为了增强结论的可靠性，本课题选择了五种方式计算用户上网相似性进行假设检验，下图所示为检验结果</p>
+                            <center><img src="/img/guanlian1.png" width="60%" /></center>
+                            <p style="color:#5C5C5C;">五种计算方式下得到的t评分均大于t0.05，其中余弦相似度表现最好。由此可以拒绝零假设从而接受备择假设，从而得到相应的结论：基于上述五种相似度计算方法具有好友关系的用户对比不具有好友关系的用户对中有着更高的相似性值，也证实了电信用户上网偏好中的确存在社交相关性。</p>
+                            <p style="color:#5C5C5C;">从下面的分布图中可以看出在两种用户对的数据集在t评分最高的余弦相似度上可以得到良好区分（为方便区分取余弦相似度对数值为横坐标保证原有数值间关系不变）。</p>
+                            <center><img src="/img/guanlian2.png" width="60%" /></center>
+                            <p style="color:#5C5C5C;font-weight: bold">2、u检验</p>
+                            <p style="color:#5C5C5C;">根据数据量和数据分布情况，本课题采用单侧检验，检验水准为α=0.05。查z评分表得到对于无限的自由度的概率p = 0.05的值为z0.05 = 1.96。为了增强结论的可靠性，本课题选择了五种方式计算用户上网相似性进行假设检验，下图所示为检验结果</p>
+                            <center><img src="/img/guanlian3.png" width="60%" /></center>
+                            <p style="color:#5C5C5C;">本课题在基于上述五种的相似度方法的z评分均大于 z0.05， 其中HierarchySim表现最好， 则本课题可以拒绝零假设从而接受备择假设。从而得到与t检验一致的结论：基于上述五种相似度计算方法具有好友关系的用户对比不具有好友关系的用户对中有着更高的相似性值，也证实了电信用户上网偏好中的确存在社交相关性。</p>
+                            <p style="color:#5C5C5C;">从下面的分布图中可以看出在两种用户对的数据集在t评分最高的HierarchySim上可以得到良好区分（为方便区分取余弦相似度对数值为横坐标保证原有数值间关系不变）。</p>
+                            <center><img src="/img/guanlian4.png" width="60%" /></center>
+
+                            <h4 style="font-weight: bold">电信用户社交强度建模</h4>
+                            <p style="color:#5C5C5C;">在验证了电信用户上网偏好的社交相关性的基础上，本课题将对电信用户对的社交强度进行建模。以往的研究主要基于用户间通话频次和用户间通话时长建立社交强度度模型，而忽略了用户间通话的周期性变化等通话模式要素，本课题通过将通话频率值加入公式以表达通话模式，建模公式如下：</p>
+                            <center><img src="/img/guanlian5.png" width="10%" /></center>
+                            <p style="color:#5C5C5C;">通过归一化的通话时长t、通话频次f以及表达用户间的通话模式的通话频率值F进行定义</p>
+                            <h4 style="font-weight: bold">基于社交关联性的用户上网偏好预测模型</h4>
+                            <p style="color:#5C5C5C;">利用社交关联行以及新定义的社交强度模型，本课题提出了基于社交关联性的用户上网偏好预测模型：</p>
+                            <center><img src="/img/guanlian6.png" width="60%" /></center>
+                            <p style="color:#5C5C5C;">其中S矩阵是用户社交强度矩阵，通过分别使用基于频次、时长的社交强度矩阵和基于通话周期的社交强度矩阵进行对比，我们可以看出基于通化周期的社交强度模型可以带来召回率的明显提升：</p>
+                            <center><img src="/img/guanlian7.png" width="60%" /></center>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- /.row -->
+<% include header.ejs %>

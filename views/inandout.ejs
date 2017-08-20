@@ -1,0 +1,175 @@
+<% include header.ejs %>
+            <div class="row">
+                <div class="col-lg-12" style="height:25px">
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="panel panel-success">
+                        <!-- /.panel-heading -->
+                        <div class="panel-body" id="barcharts" style="height:700px">
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <div class="col-lg-4">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            统计日期: <input type="date" name="selectdate" id="selectdate" value="2015-08-01"/>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body" id="piecharts" style="height: 645px">
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+            </div>
+            <!-- /.row -->
+
+    <script type="text/javascript">
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+
+        // 使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/pie',
+                    'echarts/chart/bar'
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart1 = ec.init(document.getElementById('barcharts'),'macarons');
+                    var myChart2 = ec.init(document.getElementById('piecharts'),'macarons');
+
+
+                    option1 = {
+                        title : {
+                            text: '入出岛游客数按月统计',
+                            subtext: '（2015-08-01至2015-08-31）',
+                            x:'center',
+                            textStyle:{
+                                color:"black",
+                                fontWeight:'bold'
+                            }
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:['入岛','出岛'],
+                            x:'left'
+                        },
+                        calculable : true,
+                        xAxis : [
+                            {
+                                type : 'category',
+                                axisLabel:{
+                                    rotate:45
+                                },
+                                data :['1号','2号','3号','4号','5号','6号','7号','8号','9号','10号','11号',
+                                    '12号','13号','14号','15号','16号','17号','18号','19号','20号','21号','22号',
+                                    '23号','24号','25号','26号','27号','28号','29号','30号','31号']
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value'
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'入岛',
+                                type:'bar',
+                                data:(function () {
+                                    var d = []
+                                    <% for(j=0; j< 31; j++) {%>
+                                    d.push(parseInt('<%=inandout[j].in%>'));
+                                    <%}%>
+                                    return d;
+                                })()
+                            },
+                            {
+                                name:'出岛',
+                                type:'bar',
+                                data:(function () {
+                                    var d = []
+                                    <% for(j=0; j< 31; j++) {%>
+                                    d.push(parseInt('<%=inandout[j].out%>'));
+                                    <%}%>
+                                    return d;
+                                })()
+                            }
+                        ]
+                    };
+
+                    option2 = {
+                        title : {
+                            text: '入出岛游客数按天统计',
+                            x:'center',
+                            textStyle:{
+                                color:"black",
+                                fontWeight:'bold'
+                            }
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            orient : 'vertical',
+                            x : 'left',
+                            data:['入岛','出岛']
+                        },
+                        calculable : true,
+                        series : [
+                            {
+                                name:'游客数量',
+                                type:'pie',
+                                radius : '55%',
+                                center: ['50%', '60%'],
+                                data:[
+                                    {value:'<%=inandout[0].in%>', name:'入岛'},
+                                    {value:'<%=inandout[0].out%>', name:'出岛'}
+                                ]
+                            }
+                        ]
+                    };
+
+                    // 为echarts对象加载数据
+                    myChart1.setOption(option1);
+                    myChart2.setOption(option2);
+
+                    var dateinput=document.getElementById("selectdate");
+                    dateinput.addEventListener('change',function(){
+                        option2.series[0].data=[
+                            {value:0, name:'入岛'},
+                            {value:0, name:'出岛'}
+                        ];       //清空data
+                        var k = dateinput.value.replace("-","").replace("-","");
+
+                        <% for(i=0; i< inandout.length; i++) {%>
+                        if('<%=inandout[i].date%>'==k){
+                            option2.series[0].data=[
+                                {value:'<%=inandout[i].in%>', name:'入岛'},
+                                {value:'<%=inandout[i].out%>', name:'出岛'}
+                            ];
+                        }
+                        <%}%>
+
+                        myChart2.clear();
+                        myChart2.setOption(option2);
+                    });
+
+                }
+        );
+    </script>
+<% include footer.ejs %>

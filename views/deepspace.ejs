@@ -1,0 +1,109 @@
+<% include header.ejs %>
+
+        <div class="row">
+            <div class="col-lg-12" style="height:25px">
+            </div>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                            <h3 style="font-weight: bold">背景分析</h3>
+
+                            <p style="color:#5C5C5C;">&nbsp;&nbsp;OIDD数据是电信用户在手机使用过程中定期上报的数据，覆盖的用户范围很大。可以通过数据中的基站号，大致确定用户所在的区域，由此运营商可以向服务类应用提供实时查询位置服务的应用。但是在长时间的运营中，有时会出现诸如断电、或者基站故障的情况。此时会造成数据供应的中断，为实时查询位置的服务也就会中断。<br>&nbsp;&nbsp;运用机器学习的技术，可以对此种情况采取补偿措施。利用之前的记录下的用户轨迹的数据，训练出符合用户移动轨迹的模型。当发生数据丢失的问题时，依据得到的模型，和丢失之前的数据，对缺失的位置活动点进行预测生成，并进行补充，从而保证即使数据丢失，依然可以保证位置和活动标签的持续提供。</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+        <div class="panel-group" id="accordion1">
+
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion1" href="#collapseOne1">1.总体流程</a>
+                    </h3>
+                </div>
+                <div id="collapseOne1" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!-- <h3 style="font-weight: bold">提取规则</h3> -->
+
+                                <p style="color:#5C5C5C;">
+                                    通过历史的用户轨迹数据，训练生成模型，在测试的准确率符合条件时，迁移到应用环境中。当数据中断发生时，依据实时的历史数据进行生成。得到生成的基站编号。</p>
+                                <h3 style="font-weight: bold">总体方案</h3>
+                                <center><img src="/img/fangan.jpg"></img></center>
+                                <h3 style="font-weight: bold">训练与应用方案</h3>
+                                <center><img src="/img/xunlian.jpg"></img></center>
+                                <p style="color:#5C5C5C;">&nbsp;&nbsp;详细如下，系统分为训练环境和测试环境。<br>&nbsp;&nbsp;在训练环境下，使用历史的OIDD数据，提取出用户基站号和时间戳的信息，形成用户轨迹序列。利用该轨迹序列，输入到构架好的DeepSpace生成模型中进行训练。在模型训练好后，将模型的参数迁移到测试环境搭建好的模型，以进行测试。同时模型可以在训练环境继续训练，不断优化参数。<br>&nbsp;&nbsp;测试环境中，从实时的OIDD数据中提取轨迹序列，并人为的将其分为历史轨迹和未来轨迹两个部分。将历史轨迹输入DeepSpace生成模型中，生成得到生成轨迹。并和真实的未来轨迹，进行比较，评估其性能。当数据丢失发生时，同样使用测试环境中的模型，将数据丢失前的OIDD数据提取出轨迹序列，作为DeepSpace模型的输入，使其生成序列。</p>
+                                <h3 style="font-weight: bold">架构与流程</h3>
+                                <center><img src="/img/jiagou.jpg"></img></center>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo2">2. 算法模型与详细方案</a>
+                    </h3>
+                </div>
+                <div id="collapseTwo2" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!-- <h3 style="font-weight: bold">实验方案</h3> -->
+
+                                <p style="color:#5C5C5C;">
+                                    某一用户的历史轨迹输入进DeepSpace模型，首先将进入一级粗分类器。一级粗分类器根据历史轨迹中的基站位置特点，将数据导入到各个不同的二级生成器当中。<br>各个二级生成器负责根据历史序列，利用深度学习模型，生成各个子区域的未来序列。</p>
+                                <h3 style="font-weight: bold">一级分类器</h3>
+                                <center><img src="/img/yiji.jpg"></img></center>
+                                <h3 style="font-weight: bold">LSTM结构1</h3>
+                                <center><img src="/img/lstm1.jpg"></img></center>
+                                <h3 style="font-weight: bold">LSTM结构2</h3>
+                                <center><img src="/img/lstm2.jpg"></img></center>
+                                <p style="color:#5C5C5C;">在输入训练集训练时，输入某一用户的历史轨迹序列，抽取151条基站序列。前150条基站序列作为输入，最后一条作为输出，以此作为第一条训练数据 。然后输入窗口向前滚动，从第2个到第151个基站记录作为训练输入，第152作为训练输出。依此类推。当数据中断时，依据中断前的150条，生成第151条记录。然后依据中断前的149条和生成的151条，生成第152条记录。</p>
+                                <h3 style="font-weight: bold">二级生成器</h3>
+                                <center><img src="/img/erji.jpg"></img></center>
+                                <h3 style="font-weight: bold">二级生成器示例</h3>
+                                <center><img src="/img/erjishili.jpg"></img></center>
+                                <h3 style="font-weight: bold">LSTM结构3</h3>
+                                <center><img src="/img/lstm3.jpg"></img></center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion1" href="#collapseThree3">3.实验情况</a>
+                    </h3>
+                </div>
+                <div id="collapseThree3" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <h3 style="font-weight: bold">结果1</h3>
+                                <center><img src="/img/jieguo1.jpg"></img></center>
+                                <h3 style="font-weight: bold">结果2</h3>
+                                <center><img src="/img/jieguo2.jpg"></img></center>
+                                <h3 style="font-weight: bold">结果3</h3>
+                                <center><img src="/img/jieguo3.jpg"></img></center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+<% include footer.ejs %>

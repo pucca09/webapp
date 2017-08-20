@@ -1,0 +1,63 @@
+<% include header.ejs %>
+<br>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+					2016-10-10 8:00~9:00 北京道路交通热力图
+			</div>
+		<div class="panel-body">
+			<div id ="map" style="width: 100%;height: 600px;"></div>
+		</div>
+	</div>
+</div>
+<!--mapv-->
+<script type="text/javascript" src="js/Mapv.min.js"></script>
+<script type="text/javascript" src="js/example.js"></script>
+<script type="text/javascript" src="source/beijingCellDataForDisplay0801.js"></script>
+<script type="text/javascript">
+/**
+ * @file example.js
+ */
+
+// 添加时间戳
+for (var i = 0; i < driveData.length; i++) {
+    driveData[i].count = Math.random() * 10;
+}
+
+console.log(driveData);
+
+bmap.centerAndZoom(new BMap.Point(116.404, 40.055), 11); // 初始化地图,设置中心点坐标和地图级别
+
+// 第一步创建mapv示例
+var mapv = new Mapv({
+    drawTypeControl: true,
+    map: bmap  // 百度地图的map实例
+});
+
+var layer = new Mapv.Layer({
+    zIndex: 1,
+    mapv: mapv,
+    dataType: 'polyline',
+    //coordType: 'bd09mc',
+    data: driveData,
+    drawType: 'heatmap',
+    drawOptions: {
+        blur: true, // 是否有模糊效果
+        shadowBlur: 20,
+        shadowColor: 'black',
+        max: 12, // 设置显示的权重最大值
+        lineWidth: 5, // 半径大小
+        strokeStyle: 'rgba(0, 0, 0, 0.2)',
+        maxOpacity: 0.8,
+        gradient: { // 显示的颜色渐变范围
+            '0': 'blue',
+            '0.6': 'cyan',
+            '0.7': 'lime',
+            '0.8': 'yellow',
+            '1.0': 'red'
+        }
+    }
+});
+</script>
+<% include footer.ejs %>

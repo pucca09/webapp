@@ -1,0 +1,186 @@
+<% include header.ejs %>
+<br>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+					基于语义轨迹的好友推荐
+			</div>
+		
+			<div class="panel-body">
+				<form role="form">
+					<div class="form-group">
+						<label>请输入需要推荐的用户ID</label>
+	                	<input class="form-control" id='userID' name='userID' value='884246CAF7F4FEC94F5A51390FF16E20' placeholder="884246CAF7F4FEC94F5A51390FF16E20"></input>
+	                </div>
+	                
+			    	<button class='btn btn-default' id="submit" type="button">Submit</button>
+			  		
+	            </form>
+	        </div>
+	    </div>
+    </div>
+</div>
+<div class="row" id="userlist" style="visibility:hidden">
+	<div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                推荐好友列表TOP10
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>推荐的好友ID</th>
+                                <th>相似度</th>
+								<th>经度</th>
+								<th>纬度</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.table-responsive -->
+				<div class="row" id="map" style="height:700px" style="visibility:hidden">
+				</div>
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+</div>
+<script type="text/javascript">
+	$("button#submit").click(function(){
+		var input = $("#userID").val();
+		console.log(input);
+		if(input == ''){
+			alert("用户ID不得为空！")
+		}else{
+			var data = {"uid":input};
+			$.ajax({
+    		//url:"/hello.text";
+            type: "get",            //使用的方式，get 还是 post
+            dataType: "text",       //使用的数据格式
+            url: "/friendSearch",         //发送的地址
+            data: data,                //需要发送的数据，用json格式来传
+            success: function(msg){  //得到回复以后的回调函数
+            	console.log("success");
+            	msg = JSON.parse(msg);
+            	// cosole.log(msg);
+            	// alert(msg);
+            	if(msg.length == 0){
+            		alert("查询为空!");
+            	}else{
+            		//alert("查询chengg!");
+            		$("#userlist").attr("style","visibility:visible;");
+					$("map").attr("style","visibility:visible");
+					var userID = msg.userId;
+					var userlist = msg[0].friends;
+                    var map = new BMap.Map("map");
+					var userpoint = new BMap.Point(parseFloat(msg[0].lng),parseFloat(msg[0].lat));
+                    map.centerAndZoom(userpoint, 14);
+                    map.enableScrollWheelZoom();
+					var myIcon = new BMap.Icon("/img/1616.png",new BMap.Size(50,50),{anchor:new BMap.Size(8,8)});
+					var myIcon2 = new BMap.Icon("/img/home.ico",new BMap.Size(50,50),{anchor:new BMap.Size(8,8)});	
+					var userMarker = new BMap.Marker(userpoint,{icon:myIcon});
+					map.addOverlay(userMarker);
+					var points1 = [];
+					// before map matching
+					for(i=0; i < userlist.length; i++){
+						points1.push(new BMap.Point(parseFloat(userlist[i].split("#")[2]),parseFloat( userlist[i].split("#")[3])));
+					}
+					for(i=0; i < points1.length; i++){                         
+						marker = new BMap.Marker(points1[i],{icon:myIcon2});             
+						map.addOverlay(marker);
+
+						var content = "好友："+userlist[i].split("#")[0]+"</br>相似度："+userlist[i].split("#")[1];
+						console.log(content);
+						addClickHandler(content, marker);
+					}
+					// after map matching
+					// for(i=0; i < msg[0].traj.aftermm.length; i++){
+					// 	points.push(new BMap.Point(msg.traj.aftermm[i].lng, msg.traj.aftermm[i].lat));
+					// }
+					// for(i=0; i < points.length; i++){                         
+					// 	marker = new BMap.Marker(points[i],{icon:myIcon});             
+					// 	map.addOverlay(marker);
+					// 	var transport = "";
+					// 	if(msg.traj.aftermm[i].transport==1){
+					// 		transport = "步行";
+					// 	}else if(msg.traj.aftermm[i].transport==2){
+					// 		transport = "乘车";
+					// 	}else if(msg.traj.aftermm[i].transport==3){
+					// 		transport = "地铁";
+					// 	}
+					// 	var content = "道路映射后："+"</br>时间："+msg.traj.aftermm[i].date+
+					// 	"</br>速度："+msg.traj.aftermm[i].speed+
+					// 	" km/h</br>交通方式："+transport;
+					// 	console.log(content);
+					// 	addClickHandler(content, marker);
+					// }
+
+					var opts = {
+						width :350,
+						height:100,
+						title:"详细信息"
+					};
+
+					function addClickHandler(content, marker){
+						marker.addEventListener("mouseover",function(e){
+							openInfo(content, e)
+						});
+						marker.addEventListener("mouseout",function(e){
+							map.closeInfoWindow();
+						})
+					}
+					function openInfo(content, e){
+						var p = e.target;
+						var point = new BMap.Point(p.getPosition().lng,p.getPosition().lat);
+						var infoWindow = new BMap.InfoWindow(content, opts);
+						map.openInfoWindow(infoWindow,point);
+					}
+            		$("tbody").empty();
+
+					function compare(){
+						return function(a,b){
+							var value1 = a.split("#")[1];
+							var value2 = b.split("#")[1];
+							return value1 - value2;
+						}
+					}
+					var userlist = userlist.sort(compare()).reverse();
+        			for(var i = 0;i < userlist.length;i++){
+						var tr = $("<tr></tr>").appendTo($("tbody"));
+        				var xuhao = $("<td></td>").appendTo($(tr)).text(i+1);
+        				var haoyou = $("<td></td>").appendTo($(tr)).text(userlist[i].split("#")[0]);
+        				var simi = $("<td></td>").appendTo($(tr)).text(userlist[i].split("#")[1]);
+						var lng = $("<td></td>").appendTo($(tr)).text(userlist[i].split("#")[2]);
+        				var lat = $("<td></td>").appendTo($(tr)).text(userlist[i].split("#")[3]);
+						console.log(xuhao+","+haoyou+","+simi+","+lng+","+lat);
+					}
+					if(userlist.length < 10){
+						for(i = userlist.length; i < 10; i++){
+							var tr = $("<tr></tr>").appendTo($("tbody"));
+							var xuhao = $("<td></td>").appendTo($(tr)).text(i+1);
+							var haoyou = $("<td></td>").appendTo($(tr)).text("None");
+							var simi = $("<td></td>").appendTo($(tr));
+							var lng = $("<td></td>").appendTo($(tr));
+							var lat = $("<td></td>").appendTo($(tr));							
+						}
+					}
+				}//else
+
+			}//success
+		});//ajax
+	}//else
+
+	});//click
+	
+		
+</script>
+<% include footer.ejs %>

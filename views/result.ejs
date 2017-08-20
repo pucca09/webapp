@@ -1,0 +1,39 @@
+<% include header.ejs %>
+
+<div class="row">
+    <div class="row text-center pad-bottom">
+        <div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
+            <h2 class="head-set">推荐行程</h2>
+            <p>
+                根据您的旅行偏好，为您推荐以下经典行程。点击查看行程详情。
+            </p>
+        </div>
+    </div>
+    <div class="row text-center portfolio-item">
+    <!-- 动态加载结果-->
+
+    </div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    // console.log('<%= userlist[0]._id%>');
+    <% for(var i = 0;i < userlist.length ;i++){ %>
+        var div1 = $("<div class= \"col-md-4 col-sm-4\"/>").appendTo($(".row.text-center.portfolio-item"));
+        var div2 = $("<div class= \"alert alert-info\"/>").appendTo(div1);
+        var img = $("<img src=\"img\\album.jpg\" class=\"img-responsive \" alt=\"\" />").appendTo(div2);
+        var h3 = $("<h5>"+'<%=userlist[i]._id%>'+"</h5>").appendTo(div2);
+        var h5 = $("<h5></h5>").appendTo(div2);
+        var a = $("<a id="+'<%=userlist[i]._id%>'+">Click Here to view more</a>").appendTo(h5);
+
+    <%}%>
+
+    $("h5 a").click(function(){
+        id = $(this).attr("id");
+        var url = "/routeDetail"; 
+        window.location.href = encodeURI(url + "?id=" + id);
+    });
+});
+</script>
+
+<% include footer.ejs %>

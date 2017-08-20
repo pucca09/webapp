@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>电信用户洞察</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="media/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="media/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+    <link href="media/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
+
+    <!-- DataTables Responsive CSS -->
+    <link href="media/bower_components/datatables-responsive/css/dataTables.responsive.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="media/dist/css/sb-admin-2.css" rel="stylesheet">
+    <link rel="shortcut icon" href="img/favicon.ico" />
+    <!-- Custom Fonts -->
+    <link href="media/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mmh6uKBZs2bvMVvWAYrnkt7G"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
+    <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
+</head>
+
+<body onload="openHeatmap()">
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0;">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index"><img src="img/logo.png"  height="28px" /></a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <!--bootstrapmin nav>li>a:hover 和.open>a:hover的颜色可以变-->
+            <ul class="nav navbar-top-links navbar-right" style="margin-right: 30px">
+                <li class="dropdown" >
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw" ></i> <%= req.session.user.username %> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="/settings"><i class="fa fa-gear fa-fw"></i> 设置</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="/login"><i class="fa fa-sign-out fa-fw"></i> 注销</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+
+            </ul>
+            <!-- /.navbar-top-links -->
+
+        </nav>
+
+        <div id="page-wrapper1">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header">筛选人群结果展示</h3>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+
+            <ul class="breadcrumb">
+                <li><a href="/waishengselect">外省人分析</a></li>
+                <li class="active">筛选人群结果展示</li>
+            </ul>
+
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="panel panel-default" id="chart1" style="height:300px">
+
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <div class="col-lg-4">
+                    <div class="panel panel-default" id="chart2" style="height: 300px">
+
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <div class="col-lg-4">
+                    <div class="panel panel-default" id="chart3" style="height: 300px">
+
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <div class="col-lg-12">
+                    <div class="panel panel-default" id="chart4" style="height: 300px">
+
+                    </div>
+                    <!-- /.panel -->
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="panel panel-default" >
+                        <div class="panel-heading" style="background-color: #ffffff">
+                            游客白天top 3停留地点分布
+                        </div>
+                        <div class="panel-body" id="chart6" style="height: 500px">
+
+                        </div>
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <div class="col-lg-6">
+                    <div class="panel panel-default" >
+                        <div class="panel-heading" style="background-color: #ffffff">
+                            游客夜晚住宿地点分布
+                        </div>
+                        <div class="panel-body" id="chart7" style="height: 500px">
+
+                        </div>
+                    </div>
+                    <!-- /.panel -->
+                </div>
+            </div><!-- /.row -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <script type="text/javascript">
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+
+        // 使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/pie',
+                    'echarts/chart/line',
+                    'echarts/chart/bar'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('chart1'),'macarons');
+                    var myChart2 = ec.init(document.getElementById('chart2'),'macarons');
+                    var myChart3 = ec.init(document.getElementById('chart3'),'macarons');
+                    var myChart4 = ec.init(document.getElementById('chart4'),'macarons');
+
+                    option1 = {
+                        title : {
+                            text: '住宿地酒店类型分布',
+                            x:'center',
+                            textStyle:{
+                                color:"black",
+                                fontWeight:'bold'
+                            }
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            orient : 'vertical',
+                            x : 'left',
+                            data:['商务酒店','民宿','客栈']
+                        },
+                        calculable : true,
+                        color: ['#EE8262','#FFC125','#9400D3','#7FFF00','#B03060','#A4D3EE'],
+                        series : [
+                            {
+                                name:'人数',
+                                type:'pie',
+                                radius : ['50%', '70%'],
+                                itemStyle : {
+                                    normal : {
+                                        label : {
+                                            show : false
+                                        },
+                                        labelLine : {
+                                            show : false
+                                        }
+                                    },
+                                    emphasis : {
+                                        label : {
+                                            show : true,
+                                            position : 'center',
+                                            textStyle : {
+                                                fontSize : '30',
+                                                fontWeight : 'bold'
+                                            }
+                                        }
+                                    }
+                                },
+                                data:[
+                                    {value:205, name:'商务酒店'},
+                                    {value:135, name:'民宿'},
+                                    {value:154, name:'客栈'}
+                                ]
+                            }
+                        ]
+                    };
+
+                    option2 = {
+                        title : {
+                            text: '访问景区个数分布',
+                            x:'center',
+                            textStyle:{
+                                color:"black",
+                                fontWeight:'bold'
+                            }
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            orient : 'vertical',
+                            x : 'left',
+                            data:['无','1个','2个','3个','大于3个']
+                        },
+                        calculable : true,
+                        color: ['#EE8262','#FFC125','#9400D3','#7FFF00','#B03060','#A4D3EE'],
+                        series : [
+                            {
+                                name:'人数',
+                                type:'pie',
+                                radius : ['50%', '70%'],
+                                itemStyle : {
+                                    normal : {
+                                        label : {
+                                            show : false
+                                        },
+                                        labelLine : {
+                                            show : false
+                                        }
+                                    },
+                                    emphasis : {
+                                        label : {
+                                            show : true,
+                                            position : 'center',
+                                            textStyle : {
+                                                fontSize : '30',
+                                                fontWeight : 'bold'
+                                            }
+                                        }
+                                    }
+                                },
+                                data:(function () {
+                                    var n0=0;var n1=0;var n2=0;var n3=0;var n4=0;
+                                    <% for(j=0; j< people.length; j++) {%>
+                                    if('<%=people[j].sightnum%>'==0)
+                                        n0++;
+                                    else if('<%=people[j].sightnum%>'==1)
+                                        n1++;
+                                    else if('<%=people[j].sightnum%>'==2)
+                                        n2++;
+                                    else if('<%=people[j].sightnum%>'==3)
+                                        n3++;
+                                    else
+                                        n4++;
+                                    <%}%>
+                                    var d=[
+                                        {value:n0, name:'无'},
+                                        {value:n1, name:'1个'},
+                                        {value:n2, name:'2个'},
+                                        {value:n3, name:'3个'},
+                                        {value:n4, name:'大于3个'},
+                                    ]
+                                    return d;
+                                })()
+                            }
+                        ]
+                    };
+
+                    option3 = {
+                        title : {
+                            text: '景区总停留时长',
+                            x:'center',
+                            textStyle:{
+                                color:"black",
+                                fontWeight:'bold'
+                            }
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            orient : 'vertical',
+                            x : 'left',
+                            data:['0~5h','5~10h','10~15h','15~20h','20h以上']
+                        },
+                        calculable : true,
+                        color:['#EE8262','#FFC125','#9400D3','#7FFF00','#B03060','#A4D3EE'],
+                        series : [
+                            {
+                                name:'人数',
+                                type:'pie',
+                                radius : ['50%', '70%'],
+                                itemStyle : {
+                                    normal : {
+                                        label : {
+                                            show : false
+                                        },
+                                        labelLine : {
+                                            show : false
+                                        }
+                                    },
+                                    emphasis : {
+                                        label : {
+                                            show : true,
+                                            position : 'center',
+                                            textStyle : {
+                                                fontSize : '30',
+                                                fontWeight : 'bold'
+                                            }
+                                        }
+                                    }
+                                },
+                                data:(function () {
+                                    var n0=0;var n1=0;var n2=0;var n3=0;var n4=0;
+                                    <% for(j=0; j< people.length; j++) {%>
+                                    if('<%=people[j].sightstay%>'<5.0)
+                                        n0++;
+                                    else if(('<%=people[j].sightstay%>'>5)&&('<%=people[j].sightstay%>'<10))
+                                        n1++;
+                                    else if(('<%=people[j].sightstay%>'>10)&&('<%=people[j].sightstay%>'<15))
+                                        n2++;
+                                    else if(('<%=people[j].sightstay%>'>15)&&('<%=people[j].sightstay%>'<20))
+                                        n3++;
+                                    else
+                                        n4++;
+                                    <%}%>
+                                    var d=[
+                                        {value:n0, name:'0~5h'},
+                                        {value:n1, name:'5~10h'},
+                                        {value:n2, name:'10~15h'},
+                                        {value:n3, name:'15~20h'},
+                                        {value:n4, name:'20h以上'},
+                                    ]
+                                    return d;
+                                })()
+                            }
+                        ]
+                    };
+
+                    option4 = {
+                        title : {
+                            text: '游客最远离开住宿地距离',
+                            x:'center',
+                            textStyle:{
+                                color:"black",
+                                fontWeight:'bold'
+                            }
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        calculable : true,
+                        xAxis : [
+                            {
+                                type : 'category',
+                                boundaryGap : false,
+                                data : ['0~20km','20~40km','40~60km','60~80km','80~100km','100~120km','120km以上']
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'人数',
+                                type:'line',
+                                data:(function () {
+                                    var n0=0;var n1=0;var n2=0;var n3=0;var n4=0;var n5=0;var n6=0;
+                                    <% for(j=0; j< people.length; j++) {%>
+                                    if('<%=people[j].livefarest%>'<20)
+                                        n0++;
+                                    else if(('<%=people[j].livefarest%>'>20)&&('<%=people[j].livefarest%>'<40))
+                                        n1++;
+                                    else if(('<%=people[j].livefarest%>'>40)&&('<%=people[j].livefarest%>'<60))
+                                        n2++;
+                                    else if(('<%=people[j].livefarest%>'>60)&&('<%=people[j].livefarest%>'<80))
+                                        n3++;
+                                    else if(('<%=people[j].livefarest%>'>80)&&('<%=people[j].livefarest%>'<100))
+                                        n4++;
+                                    else if(('<%=people[j].livefarest%>'>100)&&('<%=people[j].livefarest%>'<120))
+                                        n5++;
+                                    else
+                                        n6++;
+                                    <%}%>
+                                    var d=[n0,n1,n2,n3,n4,n5,n6]
+                                    return d;
+                                })(),
+                                markPoint : {
+                                    data : [
+                                        {type : 'max', name: '最大值'},
+                                        {type : 'min', name: '最小值'}
+                                    ]
+                                }
+                            }
+                        ]
+                    };
+
+                    myChart1.setOption(option1);
+                    myChart2.setOption(option2);
+                    myChart3.setOption(option3);
+                    myChart4.setOption(option4);
+                }
+        );
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            openHeatmap();
+        });
+
+        //创建热力图函数
+        function openHeatmap(){
+            //var path = (typeof(arguments[0])=="undefined")?"source/heatMapData/homeUrban.csv":fileSrc;
+            //var defaultPoint = [110.32403,20.04583]
+            //var center = (typeof(arguments[0])=="undefined")?defaultPoint:centerPoint;
+
+            var map = new BMap.Map("chart6");          // 创建地图实例
+            var map2 = new BMap.Map("chart7");          // 创建地图实例
+            var point = new BMap.Point(109.844, 19.184);
+            map.centerAndZoom(point, 9);             // 初始化地图，设置中心点坐标和地图级别
+            map.enableScrollWheelZoom(); // 允许滚轮缩放
+
+            map2.centerAndZoom(point, 9);             // 初始化地图，设置中心点坐标和地图级别
+            map2.enableScrollWheelZoom(); // 允许滚轮缩放
+
+            var cr = new BMap.CopyrightControl({anchor: BMAP_ANCHOR_BOTTOM_RIGHT});   //设置版权控件位置
+            map.addControl(cr);
+            map2.addControl(cr); //添加版权控件
+
+            var bs = map.getBounds();   //返回地图可视区域
+            cr.addCopyright({id: 1, content: "<div style='background-color: white; height:25px;line-height:25px;font-size:13px'>&nbsp;&nbsp;热力拥挤度图例：" +
+            "<span style='background-color:#87CEEB;margin-right: 2px;color: white'>&nbsp;&nbsp;非常舒适&nbsp;&nbsp;</span>" +
+            "<span style='background-color: #7FFF00;margin-right: 2px;color: white'>&nbsp;&nbsp;舒适&nbsp;&nbsp;</span>" +
+            "<span style='background-color: yellow;margin-right:2px;color: white'>&nbsp;&nbsp;拥挤&nbsp;&nbsp;</span>" +
+            "<span style='background-color: red;margin-right: 2px;color: white'>&nbsp;&nbsp;非常拥挤&nbsp;&nbsp;</span>&nbsp;</div>", bounds: bs});
+
+
+            if(!isSupportCanvas()){
+                alert('热力图目前只支持有canvas支持的浏览器,您所使用的浏览器不能使用热力图功能~')
+            }
+
+            heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":15});
+            map.addOverlay(heatmapOverlay);
+            heatmapOverlay.setDataSet({data:(function () {
+                var d = []
+                <% for(j=0; j< people.length; j++) {%>
+                d.push({"lng":'<%=people[j].top3[0][0]%>',"lat":'<%=people[j].top3[0][1]%>',"count":1});
+                d.push({"lng":'<%=people[j].top3[1][0]%>',"lat":'<%=people[j].top3[1][1]%>',"count":1});
+                d.push({"lng":'<%=people[j].top3[2][0]%>',"lat":'<%=people[j].top3[2][1]%>',"count":1});
+                <%}%>
+                return d;
+            })(),max:300});
+            heatmapOverlay.show();
+
+            heatmapOverlay2 = new BMapLib.HeatmapOverlay({"radius":15});
+            map2.addOverlay(heatmapOverlay2);
+            heatmapOverlay2.setDataSet({data:(function () {
+                var d = []
+                <% for(j=0; j< people.length; j++) {%>
+                d.push({"lng":'<%=people[j].liveplace[0]%>',"lat":'<%=people[j].liveplace[1]%>',"count":1});
+                <%}%>
+                return d;
+            })(),max:300});
+            heatmapOverlay2.show();
+
+        }
+
+        //判断浏览区是否支持canvas
+        function isSupportCanvas(){
+            var elem = document.createElement('canvas');
+            return !!(elem.getContext && elem.getContext('2d'));
+        }
+
+
+        function closeHeatmap(){
+            heatmapOverlay.hide();
+        }
+
+        function showInfo(e){
+            alert(e.point.lng + ", " + e.point.lat);
+        }
+
+
+    </script>
+    <!-- jQuery -->
+    <script src="media/bower_components/jquery/dist/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="media/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="media/bower_components/metisMenu/dist/metisMenu.min.js"></script>
+
+    <!-- DataTables JavaScript -->
+    <script src="media/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="media/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="media/dist/js/sb-admin-2.js"></script>
+
+
+</body>
+
+</html>
